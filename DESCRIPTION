@@ -14,7 +14,7 @@ Description: Functions to evaluate various fairness metrics along with a confide
 Imports:
   dplyr,
   magrittr
-License: use_mit_license()
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
