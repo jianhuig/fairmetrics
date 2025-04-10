@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_stats_parity}
 \alias{eval_stats_parity}
-\title{Examine statistical parity of a model}
+\title{Examine Statistical Parity of a Model}
 \usage{
 eval_stats_parity(
   data,
@@ -56,7 +56,7 @@ Rate
 }
 }
 \description{
-Examine statistical parity of a model
+Examine Statistical Parity of a Model
 }
 \examples{
 \donttest{

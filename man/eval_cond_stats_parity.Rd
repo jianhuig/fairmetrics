@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_cond_stats_parity}
 \alias{eval_cond_stats_parity}
-\title{Examine conditional statistical parity of a model}
+\title{Examine Conditional Statistical Parity of a Model}
 \usage{
 eval_cond_stats_parity(
   data,
@@ -64,5 +64,5 @@ Rate
 }
 }
 \description{
-Examine conditional statistical parity of a model
+Examine Conditional Statistical Parity of a Model
 }

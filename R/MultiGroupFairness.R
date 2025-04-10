@@ -83,7 +83,7 @@ eval_max_min_diff <- function(data, outcome, group, probs, cutoff = 0.5, digits 
 #' @import dplyr
 #' @importFrom magrittr %>%
 #' @importFrom stats quantile
-#' #' @examples
+#' @examples
 #' \donttest{
 #' library(FairnessTutorial)
 #' library(dplyr)
