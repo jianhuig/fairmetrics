@@ -33,12 +33,38 @@
 #'   \item Ratio: The ratio in False Negative Rates between the two groups.
 #'   \item Ratio CI: The 95% confidence interval for the FNR ratio
 #' }
+#' @importFrom stats qnorm sd
 #' @examples
-#' # Example usage:
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Equal Opportunity Compliance
 #' eval_eq_opp(
-#'   data = your_data, outcome = "actual_outcome",
-#'   group = "sensitive_attribute", probs = "predicted_probs"
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred",
+#'   cutoff = 0.41
 #' )
+#' }
 #' @export
 
 eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
@@ -141,13 +167,39 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #'   - 95% Difference CI: The 95% confidence interval for the rate difference.
 #'   - Ratio: The ratio in False Negative Rates between the two groups.
 #'   - 95% Ratio CI: The 95% confidence interval for the FNR ratio
+#' @importFrom stats qnorm sd
 #' @examples
-#' # Example usage:
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Equalized Odds
 #' eval_eq_odds(
-#'   data = your_data, outcome = "actual_outcome",
-#'   group = "sensitive_attribute", probs = "predicted_probs"
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred",
+#'   cutoff = 0.41
 #' )
-
+#' }
+#' @export
 eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
                          bootstraps = 2500, alpha = 0.05, digits = 2, message = TRUE) {
   # Check if outcome is binary
@@ -229,7 +281,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 }
 
 
-#' Examine statistical parity of a model
+#' Examine Statistical Parity of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -253,6 +305,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #'   - PPR_Ratio_CI: A vector of length 2 containing the lower and upper bounds
 #'   of the 95% confidence interval for the ratio in Positive Prediction
 #'   Rate
+#' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
 #' library(FairnessTutorial)
@@ -285,7 +338,6 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #' )
 #' }
 #' @export
-
 eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                               bootstraps = 2500, alpha = 0.05, digits = 2,
                               message = TRUE) {
@@ -354,7 +406,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
   return(results_df)
 }
 
-#' Examine conditional statistical parity of a model
+#' Examine Conditional Statistical Parity of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -384,6 +436,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #'  - PPR_Ratio_CI: A vector of length 2 containing the lower and upper bounds
 #'  of the 95% confidence interval for the ratio in Positive Prediction
 #'  Rate
+#' @importFrom stats qnorm sd
 #' @export
 
 eval_cond_stats_parity <- function(data, outcome, group,
@@ -434,7 +487,7 @@ eval_cond_stats_parity <- function(data, outcome, group,
   }
 }
 
-#' Examine predictive parity of a model
+#' Examine Predictive Parity of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -458,7 +511,40 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #'  - PPV_Ratio_CI: A vector of length 2 containing the lower and upper bounds
 #'  of the 95% confidence interval for the ratio in Positive Predictive
 #'  Value
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
 #'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Predictive Parity
+#' eval_pred_parity(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred",
+#'   cutoff = 0.41
+#' )
+#' }
+#' }
 #' @export
 
 eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -528,7 +614,7 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
   return(result_df)
 }
 
-#' Examine predictive equality of a model
+#' Examine Predictive Equality of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -550,6 +636,38 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 #' of the 95% confidence interval for the difference in False Positive Rate
 #' - FPR_Ratio_CI: A vector of length 2 containing the lower and upper bounds
 #' of the 95% confidence interval for the ratio in False Positive Rate
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Predictive Equality
+#' eval_pred_equality(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred",
+#'   cutoff = 0.41
+#' )
+#' }
 #' @export
 
 eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -621,7 +739,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
   return(result_df)
 }
 
-#' Examine conditional use accuracy equality of a model
+#' Examine Conditional Use Accuracy Equality of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -647,6 +765,39 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #' - NPV_Diff_CI: A vector of length 2 containing the lower and upper bounds
 #' of the 95% confidence interval for the difference in Negative Predictive
 #' Value
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Conditional Use Accuracy Equality
+#' eval_cond_acc_equality(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred",
+#'   cutoff = 0.41
+#' )
+#' }
+#' @export
 
 eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                                    alpha = 0.05, bootstraps = 2500,
@@ -731,7 +882,7 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
   return(result_df)
 }
 
-#' Examine accuracy parity of a model
+#' Examine Accuracy Parity of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -752,7 +903,40 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #' - A vector of length 2 containing the lower and upper bounds of the 95%
 #' confidence interval for the difference in accuracy
 #' - A vector of length 2 containing the lower and upper bounds of the 95%
-#' confidence interval for the ratio in accuracy
+#' confidence interval for the ratio in accurac
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Accuracy Parity
+#' eval_acc_parity(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred",
+#'   cutoff = 0.41
+#' )
+#' }
+#'
 #' @export
 
 eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -824,7 +1008,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
   return(result_df)
 }
 
-#' Examine Brier Score parity of a model
+#' Examine Brier Score Parity of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -845,6 +1029,37 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' confidence interval for the difference in Brier Score
 #' - A vector of length 2 containing the lower and upper bounds of the 95%
 #' confidence interval for the ratio in Brier Score
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Brier Score Parity
+#' eval_bs_parity(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred"
+#' )
+#' }
 #' @export
 
 eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
@@ -917,7 +1132,7 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
   return(result_df)
 }
 
-#' Examine treatment equality of a model
+#' Examine Treatment Equality of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -939,6 +1154,37 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #' confidence interval for the difference in False Negative / False Positive ratio
 #' - A vector of length 2 containing the lower and upper bounds of the 95%
 #' confidence interval for the ratio in False Negative / False Positive ratio
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Brier Score Parity
+#' eval_treatment_equality(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred"
+#' )
+#' }
 #' @export
 
 eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -1013,7 +1259,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
   return(result_df)
 }
 
-#' Examine balance for positive class of a model
+#' Examine Balance for Positive Class of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1034,6 +1280,37 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #' confidence interval for the difference in average predicted probability
 #' - A vector of length 2 containing the lower and upper bounds of the 95%
 #' confidence interval for the ratio in average predicted probability
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Balance for Positive Class
+#' eval_pos_class_bal(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred"
+#' )
+#' }
 #' @export
 
 eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
@@ -1107,7 +1384,7 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
   return(result_df)
 }
 
-#' Examine balance for negative class of a model
+#' Examine Balance for Negative Class of a Model
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1128,6 +1405,37 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #' confidence interval for the difference in average predicted probability
 #' - A vector of length 2 containing the lower and upper bounds of the 95%
 #' confidence interval for the ratio in average predicted probability
+#' @importFrom stats qnorm sd
+#' @examples
+#' \donttest{
+#' library(FairnessTutorial)
+#' library(dplyr)
+#' library(randomForest)
+#' data("mimic_preprocessed")
+#' set.seed(123)
+#' train_data <- mimic_preprocessed |>
+#'   dplyr::filter(dplyr::row_number() <= 700)
+#' # Fit a random forest model
+#' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+#' # Test the model on the remaining data
+#' test_data <- mimic_preprocessed |>
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+#'   dplyr::filter(dplyr::row_number() > 700)
+#'
+#' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+#'
+#' # Fairness evaluation
+#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
+#'
+#' # Evaluate Balance for Negative Class
+#' eval_neg_class_bal(
+#'   dat = test_data,
+#'   outcome = "day_28_flg",
+#'   group = "gender",
+#'   probs = "pred"
+#' )
+#' }
 #' @export
 
 eval_neg_class_bal <- function(data, outcome, group, probs, confint = TRUE,

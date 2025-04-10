@@ -3,3 +3,7 @@
 ^LICENSE\.md$
 ^\.github$
 docs
+utils
+tests
+vingettes
+^_pkgdown.yml$

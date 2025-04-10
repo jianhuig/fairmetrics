@@ -14,17 +14,20 @@ Description: Functions to evaluate various fairness metrics along with a confide
     available at <https://jianhuig.github.io/FairnessTutorial/>.
 Imports:
   dplyr,
-  magrittr
+  magrittr,
+  stats
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
-  dplyr, 
   corrplot,
   randomForest,
   pROC,
-  SpecsVerification
+  SpecsVerification,
+  knitr,
+  rmarkdown,
+  testthat
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5.0)

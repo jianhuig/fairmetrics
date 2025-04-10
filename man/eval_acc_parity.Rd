@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_acc_parity}
 \alias{eval_acc_parity}
-\title{Examine accuracy parity of a model}
+\title{Examine Accuracy Parity of a Model}
 \usage{
 eval_acc_parity(
   data,
@@ -50,9 +50,42 @@ If confidence intervals are computed (\code{confint = TRUE}):
 \item A vector of length 2 containing the lower and upper bounds of the 95\%
 confidence interval for the difference in accuracy
 \item A vector of length 2 containing the lower and upper bounds of the 95\%
-confidence interval for the ratio in accuracy
+confidence interval for the ratio in accurac
 }
 }
 \description{
-Examine accuracy parity of a model
+Examine Accuracy Parity of a Model
+}
+\examples{
+\donttest{
+library(FairnessTutorial)
+library(dplyr)
+library(randomForest)
+data("mimic_preprocessed")
+set.seed(123)
+train_data <- mimic_preprocessed |>
+  dplyr::filter(dplyr::row_number() <= 700)
+# Fit a random forest model
+rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+# Test the model on the remaining data
+test_data <- mimic_preprocessed |>
+  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+  dplyr::filter(dplyr::row_number() > 700)
+
+test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
+
+# Fairness evaluation
+# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We choose threshold = 0.41 so that the overall FPR is around 5\%.
+
+# Evaluate Accuracy Parity
+eval_acc_parity(
+  dat = test_data,
+  outcome = "day_28_flg",
+  group = "gender",
+  probs = "pred",
+  cutoff = 0.41
+)
+}
+
 }
