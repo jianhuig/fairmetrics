@@ -1083,7 +1083,6 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #'
 #' # Fairness evaluation
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
-#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Brier Score Parity
 #' eval_bs_parity(
