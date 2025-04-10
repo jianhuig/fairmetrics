@@ -20,9 +20,11 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+  dplyr, 
+  corrplot,
+  randomForest,
+  pROC,
+  SpecsVerification
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5.0)
