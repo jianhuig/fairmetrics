@@ -1,5 +1,6 @@
 #' Compute Fairness Metrics for Binary Classification
 #'
+#' DISCLAIMER: THIS DOES NOT WORK YET
 #' This function evaluates various fairness metrics on a binary classification model
 #' across different groups. The metrics are returned in a single data frame.
 #'
@@ -51,63 +52,38 @@
 #' @export
 get_fairness_metrics <- function(data, outcome, group, probs, cutoff = 0.5,
                                  bootstraps = 2500, alpha = 0.05, digits = 2) {
+  # NEED TO ADD ARGS
+  stats_parity <- eval_stats_parity()
+  cond_stats_parity <- eval_cond_stats_parity()
 
-  acc_parity <- eval_acc_parity(
-    data = data, outcome = outcome, group = group, probs = probs,
-    cutoff = cutoff, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
+  eq_opp <- eval_eq_opp()
+  pred_equality <- eval_pred_equality()
+  pos_class_bal<- eval_pos_class_bal()
+  negative_class_bal <- eval_neg_class_bal()
 
-  bs_parity <- eval_bs_parity(
-    data = data, outcome = outcome, group = group, probs = probs, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
+  pred_parity <- eval_pred_parity()
 
+  bs_parity <- eval_bs_parity()
+  acc_parity <- eval_acc_parity()
+  treatment_equality <-eval_treatment_equality()
 
-  eq_opp <- eval_eq_opp(
-    data = data, outcome = outcome, group = group, probs = probs,
-    cutoff = cutoff, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
-
-  neg_class_bal <- eval_neg_class_bal(
-    data = data, outcome = outcome, group = group, probs = probs,
-    alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
-
-  pos_class_bal <- eval_pos_class_bal(
-    data = data, outcome = outcome, group = group, probs = probs, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
-
-  pred_equality <- eval_pred_equality(
-    data = data, outcome = outcome, group = group, probs = probs,
-    cutoff = cutoff, confint = confint, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
-
-  stats_parity <- eval_stats_parity(
-    data = data, outcome = outcome, group = group, probs = probs,
-    cutoff = cutoff, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
-
-  treatment_equality <- eval_pred_equality(
-    data = data, outcome = outcome, group = group, probs = probs,
-    cutoff = cutoff, alpha = alpha, bootstraps = bootstraps,
-    digits = digits, message = FALSE
-  )
-
-  results <- list(
-    acc_parity,
-    bs_parity,
-    eq_opp,
-    neg_class_bal,
-    pos_class_bal,
-    pred_equality,
+  list(
     stats_parity,
+    cond_stats_parity,
+    eq_opp,
+    pred_equality,
+    pos_class_bal,
+    negative_class_bal,
+    pred_parity,
+    bs_parity,
+    acc_parity,
     treatment_equality
-  )
-  return(results)
+  )|>
+    lapply(
+      _,
+      function(x){
+
+      }
+    ) |>
+    do.call(what = rbind, args = _)
 }

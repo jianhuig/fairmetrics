@@ -3,8 +3,7 @@
 \name{eval_mean_abs_dev}
 \alias{eval_mean_abs_dev}
 \title{Examine Mean Absolute Deviation of a Model
-#' This function evaluates the mean absolute deviation in model
-performance metrics across different groups.}
+This function evaluates the mean absolute deviation in model performance metrics across different groups.}
 \usage{
 eval_mean_abs_dev(data, outcome, group, probs, cutoff = 0.5, digits = 2)
 }
@@ -32,8 +31,7 @@ A data frame containing the following elements:
 }
 \description{
 Examine Mean Absolute Deviation of a Model
-#' This function evaluates the mean absolute deviation in model
-performance metrics across different groups.
+This function evaluates the mean absolute deviation in model performance metrics across different groups.
 }
 \examples{
 \donttest{

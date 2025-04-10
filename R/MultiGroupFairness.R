@@ -191,8 +191,7 @@ eval_max_abs_diff <- function(data, outcome, group, probs, cutoff = 0.5,
 
 #' Examine Mean Absolute Deviation of a Model
 #
-#' #' This function evaluates the mean absolute deviation in model
-#' performance metrics across different groups.
+#' This function evaluates the mean absolute deviation in model performance metrics across different groups.
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' group
 #' @param outcome Name of the outcome variable, it must be binary
@@ -256,8 +255,7 @@ eval_mean_abs_dev <- function(data, outcome, group, probs, cutoff = 0.5,
 
 #' Examine Variance of a Model
 #
-#' #' This function evaluates the variance in model
-#' performance metrics across different groups.
+#' This function evaluates the variance in model performance metrics across different groups.
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' group
 #' @param outcome Name of the outcome variable, it must be binary
@@ -320,7 +318,7 @@ eval_variance <- function(data, outcome, group, probs, cutoff = 0.5,
 
 #' Examine Generalized Entropy Index of a model
 #
-#' #' This function evaluates the generalized entropy index in model
+#' This function evaluates the generalized entropy index in model
 #' performance metrics across different groups.
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' group

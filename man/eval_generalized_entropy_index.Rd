@@ -3,7 +3,7 @@
 \name{eval_generalized_entropy_index}
 \alias{eval_generalized_entropy_index}
 \title{Examine Generalized Entropy Index of a model
-#' This function evaluates the generalized entropy index in model
+This function evaluates the generalized entropy index in model
 performance metrics across different groups.}
 \usage{
 eval_generalized_entropy_index(
@@ -42,7 +42,7 @@ A data frame containing the following elements:
 }
 \description{
 Examine Generalized Entropy Index of a model
-#' This function evaluates the generalized entropy index in model
+This function evaluates the generalized entropy index in model
 performance metrics across different groups.
 }
 \examples{

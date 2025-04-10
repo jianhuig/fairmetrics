@@ -73,7 +73,6 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
 # We will use sex as the sensitive attribute and day_28_flg as the outcome.
-# We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Brier Score Parity
 eval_bs_parity(

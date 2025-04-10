@@ -37,4 +37,4 @@ A BibTeX entry for LaTeX users is
 
 ## References
 
-[TODO]
+1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org https://arxiv.org/abs/2406.09307 (2024).

@@ -3,8 +3,7 @@
 \name{eval_variance}
 \alias{eval_variance}
 \title{Examine Variance of a Model
-#' This function evaluates the variance in model
-performance metrics across different groups.}
+This function evaluates the variance in model performance metrics across different groups.}
 \usage{
 eval_variance(data, outcome, group, probs, cutoff = 0.5, digits = 2)
 }
@@ -32,8 +31,7 @@ A data frame containing the following elements:
 }
 \description{
 Examine Variance of a Model
-#' This function evaluates the variance in model
-performance metrics across different groups.
+This function evaluates the variance in model performance metrics across different groups.
 }
 \examples{
 \donttest{
