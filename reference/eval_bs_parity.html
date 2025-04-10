@@ -46,6 +46,7 @@
 <span>  <span class="va">outcome</span>,</span>
 <span>  <span class="va">group</span>,</span>
 <span>  <span class="va">probs</span>,</span>
+<span>  confint <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  bootstraps <span class="op">=</span> <span class="fl">2500</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -74,6 +75,10 @@ sensitive attribute</p></dd>
 <dd><p>Predicted probabilities</p></dd>
 
 
+<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
+<dd><p>Logical indicating whether to calculate confidence intervals</p></dd>
+
+
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
 <dd><p>The 1 - significance level for the confidence interval, default is 0.05</p></dd>
 
@@ -89,19 +94,18 @@ sensitive attribute</p></dd>
 <dt id="arg-message">message<a class="anchor" aria-label="anchor" href="#arg-message"></a></dt>
 <dd><p>Whether to print the results, default is TRUE</p></dd>
 
-
-<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
-<dd><p>Logical indicating whether to calculate confidence intervals</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing the following elements:</p><ul><li><p>Brier Score for Group 1</p></li>
 <li><p>Brier Score for Group 2</p></li>
-<li><p>Difference in Brier Score
+<li><p>Difference in Brier Score</p></li>
+<li><p>Ratio in Brier Score
 If confidence intervals are computed (<code>confint = TRUE</code>):</p></li>
 <li><p>A vector of length 2 containing the lower and upper bounds of the 95%
 confidence interval for the difference in Brier Score</p></li>
+<li><p>A vector of length 2 containing the lower and upper bounds of the 95%
+confidence interval for the ratio in Brier Score</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

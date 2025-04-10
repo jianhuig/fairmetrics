@@ -114,7 +114,9 @@ defaults to 2.</p></dd>
 <li><p>Group1: Rate for the first group.</p></li>
 <li><p>Group2: Rate for the second group.</p></li>
 <li><p>Difference: The difference in rates between the two groups.</p></li>
-<li><p>95% CI: The 95% confidence interval for the rate difference。</p></li>
+<li><p>95% Difference CI: The 95% confidence interval for the rate difference.</p></li>
+<li><p>Ratio: The ratio in False Negative Rates between the two groups.</p></li>
+<li><p>95% Ratio CI: The 95% confidence interval for the FNR ratio</p></li>
 </ul></div>
 
     <div class="section level2">
@@ -124,7 +126,7 @@ defaults to 2.</p></dd>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">your_data</span>, outcome <span class="op">=</span> <span class="st">"actual_outcome"</span>,</span></span>
 <span class="r-in"><span>  group <span class="op">=</span> <span class="st">"sensitive_attribute"</span>, probs <span class="op">=</span> <span class="st">"predicted_probs"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'your_data' not found</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval_eq_odds(data = your_data, outcome = "actual_outcome", group = "sensitive_attribute",     probs = "predicted_probs"):</span> could not find function "eval_eq_odds"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -47,6 +47,7 @@
 <span>  <span class="va">group</span>,</span>
 <span>  <span class="va">probs</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  confint <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bootstraps <span class="op">=</span> <span class="fl">2500</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -79,6 +80,10 @@ sensitive attribute</p></dd>
 <dd><p>Threshold for the predicted outcome, default is 0.5</p></dd>
 
 
+<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
+<dd><p>Whether to compute 95% confidence interval, default is TRUE</p></dd>
+
+
 <dt id="arg-bootstraps">bootstraps<a class="anchor" aria-label="anchor" href="#arg-bootstraps"></a></dt>
 <dd><p>Number of bootstrap samples, default is 2500</p></dd>
 
@@ -94,19 +99,19 @@ sensitive attribute</p></dd>
 <dt id="arg-message">message<a class="anchor" aria-label="anchor" href="#arg-message"></a></dt>
 <dd><p>Whether to print the results, default is TRUE</p></dd>
 
-
-<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
-<dd><p>Whether to compute 95% confidence interval, default is TRUE</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing the following elements:</p><ul><li><p>PPR_Group1: Positive Prediction Rate for the first group</p></li>
 <li><p>PPR_Group2: Positive Prediction Rate for the second group</p></li>
-<li><p>PPR_Diff: Difference in Positive Prediction Rate
+<li><p>PPR_Diff: Difference in Positive Prediction Rate</p></li>
+<li><p>PPR_Ratio: The ratio in Positive Prediction Rate between the two groups.
 If confidence intervals are computed (<code>confint = TRUE</code>):</p></li>
 <li><p>PPR_Diff_CI: A vector of length 2 containing the lower and upper bounds
 of the 95% confidence interval for the difference in Positive Prediction
+Rate</p></li>
+<li><p>PPR_Ratio_CI: A vector of length 2 containing the lower and upper bounds
+of the 95% confidence interval for the ratio in Positive Prediction
 Rate</p></li>
 </ul></div>
 
