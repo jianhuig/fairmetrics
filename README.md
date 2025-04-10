@@ -1,4 +1,4 @@
-# FairnessEval: Fairness evaluation metrics with confidence intervals  <a href='https://github.com/jianhuig/FairnessTutorial'><img src='https://github.com/benyamindsmith/FairnessTutorial/raw/main/utils/png/hex_sticker.png' align="right" height="300" /></a>
+# FairnessEval: Fairness evaluation metrics with confidence intervals  <a href='https://github.com/jianhuig/FairnessTutorial'><img src='utils/png/hex_sticker.png' align="right" height="300" /></a>
 
 R package and reproducible real-world data examples for *A tutorial on fairness in machine learning in healthcare*.
 
