@@ -10,6 +10,7 @@ eval_acc_parity(
   group,
   probs,
   cutoff = 0.5,
+  confint = TRUE,
   alpha = 0.05,
   bootstraps = 2500,
   digits = 2,
@@ -28,6 +29,8 @@ sensitive attribute}
 
 \item{cutoff}{Cutoff value for the predicted probabilities}
 
+\item{confint}{Logical indicating whether to calculate confidence intervals}
+
 \item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
 
 \item{bootstraps}{Number of bootstraps to use for confidence intervals}
@@ -35,8 +38,6 @@ sensitive attribute}
 \item{digits}{Number of digits to round the results to, default is 2}
 
 \item{message}{Whether to print the results, default is TRUE}
-
-\item{confint}{Logical indicating whether to calculate confidence intervals}
 }
 \value{
 A list containing the following elements:
@@ -44,9 +45,12 @@ A list containing the following elements:
 \item Accuracy for Group 1
 \item Accuracy for Group 2
 \item Difference in accuracy
+\item Ratio in accuracy
 If confidence intervals are computed (\code{confint = TRUE}):
 \item A vector of length 2 containing the lower and upper bounds of the 95\%
 confidence interval for the difference in accuracy
+\item A vector of length 2 containing the lower and upper bounds of the 95\%
+confidence interval for the ratio in accuracy
 }
 }
 \description{

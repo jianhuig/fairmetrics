@@ -9,6 +9,7 @@ eval_bs_parity(
   outcome,
   group,
   probs,
+  confint = TRUE,
   alpha = 0.05,
   bootstraps = 2500,
   digits = 2,
@@ -25,6 +26,8 @@ sensitive attribute}
 
 \item{probs}{Predicted probabilities}
 
+\item{confint}{Logical indicating whether to calculate confidence intervals}
+
 \item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
 
 \item{bootstraps}{Number of bootstraps to use for confidence intervals}
@@ -32,8 +35,6 @@ sensitive attribute}
 \item{digits}{Number of digits to round the results to, default is 2}
 
 \item{message}{Whether to print the results, default is TRUE}
-
-\item{confint}{Logical indicating whether to calculate confidence intervals}
 }
 \value{
 A list containing the following elements:
@@ -41,9 +42,12 @@ A list containing the following elements:
 \item Brier Score for Group 1
 \item Brier Score for Group 2
 \item Difference in Brier Score
+\item Ratio in Brier Score
 If confidence intervals are computed (\code{confint = TRUE}):
 \item A vector of length 2 containing the lower and upper bounds of the 95\%
 confidence interval for the difference in Brier Score
+\item A vector of length 2 containing the lower and upper bounds of the 95\%
+confidence interval for the ratio in Brier Score
 }
 }
 \description{

@@ -47,7 +47,9 @@ Returns a dataframe with the following columns:
 \item Group1: Rate for the first group.
 \item Group2: Rate for the second group.
 \item Difference: The difference in rates between the two groups.
-\item 95\% CI: The 95\% confidence interval for the rate difference。
+\item 95\% Difference CI: The 95\% confidence interval for the rate difference.
+\item Ratio: The ratio in False Negative Rates between the two groups.
+\item 95\% Ratio CI: The 95\% confidence interval for the FNR ratio
 }
 }
 \description{

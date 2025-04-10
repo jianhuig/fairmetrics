@@ -10,6 +10,7 @@ eval_pred_equality(
   group,
   probs,
   cutoff = 0.5,
+  confint = TRUE,
   alpha = 0.05,
   bootstraps = 2500,
   digits = 2,
@@ -28,6 +29,8 @@ sensitive attribute}
 
 \item{cutoff}{Threshold for the predicted outcome, default is 0.5}
 
+\item{confint}{Whether to compute 95\% confidence interval, default is TRUE}
+
 \item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
 
 \item{bootstraps}{Number of bootstrap samples, default is 2500}
@@ -35,8 +38,6 @@ sensitive attribute}
 \item{digits}{Number of digits to round the results to, default is 2}
 
 \item{message}{Whether to print the results, default is TRUE}
-
-\item{confint}{Whether to compute 95\% confidence interval, default is TRUE}
 }
 \value{
 A list containing the following elements:
@@ -44,9 +45,12 @@ A list containing the following elements:
 \item FPR_Group1: False Positive Rate for the first group
 \item FPR_Group2: False Positive Rate for the second group
 \item FPR_Diff: Difference in False Positive Rate
+\item FPR_Ratio: Ratio in False Positive Rate
 If confidence intervals are computed (\code{confint = TRUE}):
 \item FPR_Diff_CI: A vector of length 2 containing the lower and upper bounds
 of the 95\% confidence interval for the difference in False Positive Rate
+\item FPR_Ratio_CI: A vector of length 2 containing the lower and upper bounds
+of the 95\% confidence interval for the ratio in False Positive Rate
 }
 }
 \description{
