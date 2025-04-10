@@ -1,5 +1,5 @@
-Package: FairnessTutorial
-Title: A tutorial on fairness of machine learning models in healthcare
+Package: FairnessEval
+Title: Fairness evaluation metrics with confidence intervals
 Version: 1.0.0
 Authors@R: 
     c(
