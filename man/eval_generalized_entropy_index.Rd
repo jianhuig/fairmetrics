@@ -26,6 +26,8 @@ group}
 
 \item{probs}{Name of the predicted outcome variable}
 
+\item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
+
 \item{cutoff}{Threshold for the predicted outcome, default is 0.5}
 
 \item{digits}{Number of digits to round the results to, default is 2}

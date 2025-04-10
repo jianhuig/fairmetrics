@@ -327,7 +327,7 @@ eval_variance <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @param outcome Name of the outcome variable, it must be binary
 #' @param group Name of the group
 #' @param probs Name of the predicted outcome variable
-#' @param alpha
+#' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param cutoff Threshold for the predicted outcome, default is 0.5
 #' @param digits Number of digits to round the results to, default is 2
 #' @return A data frame containing the following elements:
