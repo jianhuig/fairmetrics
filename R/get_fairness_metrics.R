@@ -50,40 +50,169 @@
 #'
 #'
 #' @export
-get_fairness_metrics <- function(data, outcome, group, probs, cutoff = 0.5,
+get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition = NULL, probs, cutoff = 0.5,
                                  bootstraps = 2500, alpha = 0.05, digits = 2) {
   # NEED TO ADD ARGS
-  stats_parity <- eval_stats_parity()
-  cond_stats_parity <- eval_cond_stats_parity()
+  stats_parity <- eval_stats_parity(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
 
-  eq_opp <- eval_eq_opp()
-  pred_equality <- eval_pred_equality()
-  pos_class_bal<- eval_pos_class_bal()
-  negative_class_bal <- eval_neg_class_bal()
+  )
 
-  pred_parity <- eval_pred_parity()
+  if(!(is.null(group2) & is.null(condition))){
+    cond_stats_parity <- eval_cond_stats_parity(
+      data = data,
+      outcome = outcome,
+      group = group,
+      group2 = group2,
+      condition = condition,
+      probs = probs,
+      cutoff = cutoff,
+      bootstraps = bootstraps,
+      alpha = alpha,
+      digits = digits,
+      message = FALSE
+    )
+  }
+  eq_opp <- eval_eq_opp(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+  pred_equality <- eval_pred_equality(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+  pos_class_bal<- eval_pos_class_bal(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    #cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+  negative_class_bal <- eval_neg_class_bal(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    #cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
 
-  bs_parity <- eval_bs_parity()
-  acc_parity <- eval_acc_parity()
-  treatment_equality <-eval_treatment_equality()
+  pred_parity <- eval_pred_parity(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
 
-  list(
-    stats_parity,
-    cond_stats_parity,
-    eq_opp,
-    pred_equality,
-    pos_class_bal,
-    negative_class_bal,
-    pred_parity,
-    bs_parity,
-    acc_parity,
-    treatment_equality
-  )|>
-    lapply(
-      _,
+  bs_parity <- eval_bs_parity(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    #cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+  acc_parity <- eval_acc_parity(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+  treatment_equality <-eval_treatment_equality(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+
+  if(!(is.null(group2) & is.null(condition))){
+    result <-lapply(
+      list(
+        stats_parity,
+        cond_stats_parity,
+        eq_opp,
+        pred_equality,
+        pos_class_bal,
+        negative_class_bal,
+        pred_parity,
+        bs_parity,
+        acc_parity,
+        treatment_equality
+      ),
       function(x){
-
+        x
       }
-    ) |>
-    do.call(what = rbind, args = _)
+    )
+
+  } else{
+    result <-lapply(
+      list(
+        stats_parity,
+        eq_opp,
+        pred_equality,
+        pos_class_bal,
+        negative_class_bal,
+        pred_parity,
+        bs_parity,
+        acc_parity,
+        treatment_equality
+      ),
+      function(x){
+        x
+      }
+    )
+
+  }
+
+
+  return(
+    result
+  )
 }

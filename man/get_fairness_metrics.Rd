@@ -8,6 +8,8 @@ get_fairness_metrics(
   data,
   outcome,
   group,
+  group2 = NULL,
+  condition = NULL,
   probs,
   cutoff = 0.5,
   bootstraps = 2500,
