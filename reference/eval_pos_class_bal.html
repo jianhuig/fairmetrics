@@ -129,11 +129,10 @@ confidence interval for the ratio in average predicted probability</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fairness evaluation</span></span></span>
 <span class="r-in"><span><span class="co"># We will use sex as the sensitive attribute and day_28_flg as the outcome.</span></span></span>
-<span class="r-in"><span><span class="co"># We choose threshold = 0.41 so that the overall FPR is around 5%.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate Balance for Positive Class</span></span></span>
 <span class="r-in"><span><span class="fu">eval_pos_class_bal</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">test_data</span>,</span></span>
 <span class="r-in"><span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span></span>
 <span class="r-in"><span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span></span>
 <span class="r-in"><span>  probs <span class="op">=</span> <span class="st">"pred"</span></span></span>

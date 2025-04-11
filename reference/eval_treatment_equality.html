@@ -119,6 +119,7 @@ confidence interval for the ratio in False Negative / False Positive ratio</p></
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jianhuig.github.io/FairnessTutorial/" class="external-link">FairnessEval</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Data for tests</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mimic_preprocessed"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">mimic_preprocessed</span> <span class="op">|&gt;</span></span></span>
@@ -134,16 +135,22 @@ confidence interval for the ratio in False Negative / False Positive ratio</p></
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fairness evaluation</span></span></span>
 <span class="r-in"><span><span class="co"># We will use sex as the sensitive attribute and day_28_flg as the outcome.</span></span></span>
-<span class="r-in"><span><span class="co"># We choose threshold = 0.41 so that the overall FPR is around 5%.</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Evaluate Brier Score Parity</span></span></span>
+<span class="r-in"><span><span class="co"># Evaluate Treatment Equality</span></span></span>
 <span class="r-in"><span><span class="fu">eval_treatment_equality</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">test_data</span>,</span></span>
 <span class="r-in"><span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span></span>
 <span class="r-in"><span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span></span>
-<span class="r-in"><span>  probs <span class="op">=</span> <span class="st">"pred"</span></span></span>
+<span class="r-in"><span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span></span>
+<span class="r-in"><span>  cutoff <span class="op">=</span> <span class="fl">0.41</span>,</span></span>
+<span class="r-in"><span>  confint <span class="op">=</span><span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span></span>
+<span class="r-in"><span>  bootstraps <span class="op">=</span> <span class="fl">2500</span>,</span></span>
+<span class="r-in"><span>  digits <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>  message <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in if (lower_ci &gt; 0 || upper_ci &lt; 0) {    cat("There is evidence that the model does not satisfy\n            treatment equality.\n")} else {    cat("There is not enough evidence that the model does not satisfy\n            treatment equality.\n")}:</span> missing value where TRUE/FALSE needed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Metric GroupFemale GroupMale Difference 95% Diff CI Ratio 95% Ratio CI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 FN/FP Ratio         NaN       NaN        NaN  [NaN, NaN]   NaN   [NaN, NaN]</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

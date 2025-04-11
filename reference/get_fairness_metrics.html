@@ -55,6 +55,7 @@ data frame containing metric values, optionally with bootstrap confidence interv
 <span>  condition <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">probs</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  confint <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  bootstraps <span class="op">=</span> <span class="fl">2500</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fl">2</span></span>
@@ -97,6 +98,10 @@ the sign of the condition and the value to threshold the continuous variable
 <dd><p>Numeric threshold for classification. Default is 0.5.</p></dd>
 
 
+<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
+<dd><p>Logical; whether to compute bootstrap confidence intervals. Default is TRUE.</p></dd>
+
+
 <dt id="arg-bootstraps">bootstraps<a class="anchor" aria-label="anchor" href="#arg-bootstraps"></a></dt>
 <dd><p>Number of bootstrap samples. Default is 2500.</p></dd>
 
@@ -107,10 +112,6 @@ the sign of the condition and the value to threshold the continuous variable
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
 <dd><p>Number of digits to round the metrics to. Default is 2.</p></dd>
-
-
-<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
-<dd><p>Logical; whether to compute bootstrap confidence intervals. Default is TRUE.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -142,7 +143,7 @@ positive outcomes are similar across groups.</p></li>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jianhuig.github.io/FairnessTutorial/" class="external-link">FairnessTutorial</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jianhuig.github.io/FairnessTutorial/" class="external-link">FairnessEval</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mimic_preprocessed"</span><span class="op">)</span></span></span>
