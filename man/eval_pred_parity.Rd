@@ -61,7 +61,7 @@ Examine Predictive Parity of a Model
 \examples{
 \donttest{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

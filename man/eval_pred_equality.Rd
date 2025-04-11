@@ -58,7 +58,7 @@ Examine Predictive Equality of a Model
 }
 \examples{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

@@ -60,7 +60,7 @@ for binary outcomes across these groups, adhering to the equalized odds fairness
 }
 \examples{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

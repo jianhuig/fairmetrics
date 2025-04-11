@@ -60,7 +60,7 @@ towards any group for binary outcomes.
 }
 \examples{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

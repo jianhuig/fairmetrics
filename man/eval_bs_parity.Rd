@@ -26,8 +26,6 @@ sensitive attribute}
 
 \item{probs}{Predicted probabilities}
 
-\item{confint}{Logical indicating whether to calculate confidence intervals}
-
 \item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
 
 \item{bootstraps}{Number of bootstraps to use for confidence intervals}
@@ -55,7 +53,7 @@ Examine Brier Score Parity of a Model
 }
 \examples{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

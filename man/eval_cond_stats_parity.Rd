@@ -68,7 +68,7 @@ Examine Conditional Statistical Parity of a Model
 }
 \examples{
 \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")
@@ -94,7 +94,7 @@ eval_cond_stats_parity(
   outcome = "day_28_flg",
   group = "gender",
   group2 = "service_unit",
-  condition = "MICU"
+  condition = "MICU",
   probs = "pred",
   cutoff = 0.41
 )

@@ -36,7 +36,7 @@
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -170,7 +170,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -308,7 +308,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -439,7 +439,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' #' library(FairnessTutorial)
+#' #' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -465,7 +465,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   group2 = "service_unit",
-#'   condition = "MICU"
+#'   condition = "MICU",
 #'   probs = "pred",
 #'   cutoff = 0.41
 #' )
@@ -548,7 +548,7 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #' @examples
 #' \donttest{
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -672,7 +672,7 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -801,7 +801,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -940,7 +940,7 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1047,7 +1047,6 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' @param outcome Name of the outcome variable
 #' @param group Name of the sensitive attribute
 #' @param probs Predicted probabilities
-#' @param confint Logical indicating whether to calculate confidence intervals
 #' @param bootstraps Number of bootstraps to use for confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
@@ -1065,7 +1064,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1189,7 +1188,7 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1315,7 +1314,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1440,7 +1439,7 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
