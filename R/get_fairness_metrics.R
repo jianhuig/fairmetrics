@@ -66,7 +66,7 @@
 #'  group2 = "service_unit",
 #'  condition = "MICU",
 #'  probs = "pred",
-#'  cutoff = 0.5
+#'  cutoff = 0.41
 #' )
 #' }
 #'
