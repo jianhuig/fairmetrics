@@ -12,7 +12,6 @@ get_fairness_metrics(
   condition = NULL,
   probs,
   cutoff = 0.5,
-  confint = TRUE,
   bootstraps = 2500,
   alpha = 0.05,
   digits = 2
@@ -36,8 +35,6 @@ the sign of the condition and the value to threshold the continuous variable
 \item{probs}{The name of the column with predicted probabilities.}
 
 \item{cutoff}{Numeric threshold for classification. Default is 0.5.}
-
-\item{confint}{Logical; whether to compute bootstrap confidence intervals. Default is TRUE.}
 
 \item{bootstraps}{Number of bootstrap samples. Default is 2500.}
 
@@ -95,11 +92,11 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Evaluate Accuracy Parity
 get_fairness_metrics(
- dat = test_data,
+ data = test_data,
  outcome = "day_28_flg",
  group = "gender",
- group2 = "service_unit",
- condition = "MICU",
+ group2 = "age",
+ condition = ">=60",
  probs = "pred",
  cutoff = 0.41
 )
