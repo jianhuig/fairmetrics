@@ -58,7 +58,7 @@
 #'
 #' # Evaluate Equal Opportunity Compliance
 #' eval_eq_opp(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -192,7 +192,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #'
 #' # Evaluate Equalized Odds
 #' eval_eq_odds(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -330,7 +330,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #'
 #' # Evaluate Statistical Parity
 #' eval_stats_parity(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -459,9 +459,10 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
-#' Evaluate Conditional Statistical Parity
+#' # Evaluate Conditional Statistical Parity
+#'
 #' eval_cond_stats_parity(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   group2 = "service_unit",
@@ -570,7 +571,7 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #'
 #' # Evaluate Predictive Parity
 #' eval_pred_parity(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -694,7 +695,7 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 #'
 #' # Evaluate Predictive Equality
 #' eval_pred_equality(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -823,7 +824,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #'
 #' # Evaluate Conditional Use Accuracy Equality
 #' eval_cond_acc_equality(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -962,7 +963,7 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #'
 #' # Evaluate Accuracy Parity
 #' eval_acc_parity(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -1048,6 +1049,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' @param group Name of the sensitive attribute
 #' @param probs Predicted probabilities
 #' @param bootstraps Number of bootstraps to use for confidence intervals
+#' @param confint Logical indicating whether to calculate confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
 #' @param message Whether to print the results, default is TRUE
@@ -1085,7 +1087,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #'
 #' # Evaluate Brier Score Parity
 #' eval_bs_parity(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred"
@@ -1191,6 +1193,7 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
+#' # Data for tests
 #' data("mimic_preprocessed")
 #' set.seed(123)
 #' train_data <- mimic_preprocessed |>
@@ -1206,14 +1209,19 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #'
 #' # Fairness evaluation
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
-#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
-#' # Evaluate Brier Score Parity
+#' # Evaluate Treatment Equality
 #' eval_treatment_equality(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
-#'   probs = "pred"
+#'   probs = "pred",
+#'   cutoff = 0.41,
+#'   confint =TRUE,
+#'   alpha = 0.05,
+#'   bootstraps = 2500,
+#'   digits = 2,
+#'   message = FALSE
 #' )
 #' }
 #' @export
@@ -1231,7 +1239,6 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
     data = data, outcome = outcome, group = group, probs = probs,
     cutoff = cutoff, digits = digits
   )
-
   err_ratio_diff <- err_ratio[[1]] - err_ratio[[2]]
   err_ratio_ratio <- err_ratio[[1]] / err_ratio[[2]]
 
@@ -1332,11 +1339,10 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #'
 #' # Fairness evaluation
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
-#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Balance for Positive Class
 #' eval_pos_class_bal(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred"
@@ -1457,11 +1463,10 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #'
 #' # Fairness evaluation
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
-#' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Balance for Negative Class
 #' eval_neg_class_bal(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred"

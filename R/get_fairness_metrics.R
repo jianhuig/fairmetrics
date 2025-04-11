@@ -29,7 +29,6 @@
 #' (e.g. "<50", ">50", "<=50", ">=50").
 #' @param probs The name of the column with predicted probabilities.
 #' @param cutoff Numeric threshold for classification. Default is 0.5.
-#' @param confint Logical; whether to compute bootstrap confidence intervals. Default is TRUE.
 #' @param bootstraps Number of bootstrap samples. Default is 2500.
 #' @param alpha Significance level for confidence intervals. Default is 0.05.
 #' @param digits Number of digits to round the metrics to. Default is 2.
@@ -38,7 +37,7 @@
 #'
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -156,7 +155,6 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
-    #cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
     digits = digits,
@@ -167,7 +165,6 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
-    #cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
     digits = digits,
@@ -191,7 +188,6 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
-    #cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
     digits = digits,

@@ -12,6 +12,7 @@ get_fairness_metrics(
   condition = NULL,
   probs,
   cutoff = 0.5,
+  confint = TRUE,
   bootstraps = 2500,
   alpha = 0.05,
   digits = 2
@@ -36,13 +37,13 @@ the sign of the condition and the value to threshold the continuous variable
 
 \item{cutoff}{Numeric threshold for classification. Default is 0.5.}
 
+\item{confint}{Logical; whether to compute bootstrap confidence intervals. Default is TRUE.}
+
 \item{bootstraps}{Number of bootstrap samples. Default is 2500.}
 
 \item{alpha}{Significance level for confidence intervals. Default is 0.05.}
 
 \item{digits}{Number of digits to round the metrics to. Default is 2.}
-
-\item{confint}{Logical; whether to compute bootstrap confidence intervals. Default is TRUE.}
 }
 \value{
 A data frame with the evaluated fairness metrics.
@@ -72,7 +73,7 @@ positive outcomes are similar across groups.
 }
 \examples{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

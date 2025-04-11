@@ -230,7 +230,7 @@ get_avg_prob <- function(data, outcome, group, probs, digits = 2) {
 #' @return a Data frame of all metrics
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -250,7 +250,7 @@ get_avg_prob <- function(data, outcome, group, probs, digits = 2) {
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
-#' # Evaluate Brier Score Parity
+#' # Calculate All Metrics
 #' get_all_metrics(
 #'   dat = test_data,
 #'   outcome = "day_28_flg",

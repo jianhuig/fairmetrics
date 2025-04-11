@@ -23,7 +23,7 @@
 #' @importFrom stats quantile
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -85,7 +85,7 @@ eval_max_min_diff <- function(data, outcome, group, probs, cutoff = 0.5, digits 
 #' @importFrom stats quantile
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -147,7 +147,7 @@ eval_max_min_ratio <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats quantile
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -210,7 +210,7 @@ eval_max_abs_diff <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats mad
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -232,7 +232,7 @@ eval_max_abs_diff <- function(data, outcome, group, probs, cutoff = 0.5,
 #'
 #' # Evaluate Mean Absolute Deviation
 #' eval_mean_abs_dev(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -274,7 +274,7 @@ eval_mean_abs_dev <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats var
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -296,7 +296,7 @@ eval_mean_abs_dev <- function(data, outcome, group, probs, cutoff = 0.5,
 #'
 #' # Evaluate Variance
 #' eval_variance(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
 #'   probs = "pred",
@@ -338,7 +338,7 @@ eval_variance <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats quantile
 #' @examples
 #' \donttest{
-#' library(FairnessTutorial)
+#' library(FairnessEval)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -360,10 +360,11 @@ eval_variance <- function(data, outcome, group, probs, cutoff = 0.5,
 #'
 #' # Evaluate Generalized Entropy Index
 #' eval_generalized_entropy_index(
-#'   dat = test_data,
+#'   data = test_data,
 #'   outcome = "day_28_flg",
 #'   group = "gender",
-#'   probs = "pred"
+#'   probs = "pred",
+#'   cutoff = 0.41
 #' )
 #' }
 #'

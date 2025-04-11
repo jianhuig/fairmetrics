@@ -84,7 +84,7 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Evaluate Conditional Use Accuracy Equality
 eval_cond_acc_equality(
-  dat = test_data,
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred",

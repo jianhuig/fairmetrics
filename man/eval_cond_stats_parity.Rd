@@ -88,9 +88,10 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 # We will use sex as the sensitive attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
-Evaluate Conditional Statistical Parity
+# Evaluate Conditional Statistical Parity
+
 eval_cond_stats_parity(
-  dat = test_data,
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
   group2 = "service_unit",

@@ -80,7 +80,7 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Evaluate Accuracy Parity
 eval_acc_parity(
-  dat = test_data,
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred",

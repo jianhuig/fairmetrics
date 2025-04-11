@@ -26,6 +26,8 @@ sensitive attribute}
 
 \item{probs}{Predicted probabilities}
 
+\item{confint}{Logical indicating whether to calculate confidence intervals}
+
 \item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
 
 \item{bootstraps}{Number of bootstraps to use for confidence intervals}
@@ -74,7 +76,7 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Evaluate Brier Score Parity
 eval_bs_parity(
-  dat = test_data,
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred"

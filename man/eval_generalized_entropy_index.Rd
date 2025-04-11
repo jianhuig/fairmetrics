@@ -47,7 +47,7 @@ performance metrics across different groups.
 }
 \examples{
 \donttest{
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")
@@ -69,10 +69,11 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Evaluate Generalized Entropy Index
 eval_generalized_entropy_index(
-  dat = test_data,
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
-  probs = "pred"
+  probs = "pred",
+  cutoff = 0.41
 )
 }
 

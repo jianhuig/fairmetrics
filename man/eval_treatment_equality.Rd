@@ -61,6 +61,7 @@ Examine Treatment Equality of a Model
 library(FairnessEval)
 library(dplyr)
 library(randomForest)
+# Data for tests
 data("mimic_preprocessed")
 set.seed(123)
 train_data <- mimic_preprocessed |>
@@ -76,14 +77,19 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
 # We will use sex as the sensitive attribute and day_28_flg as the outcome.
-# We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
-# Evaluate Brier Score Parity
+# Evaluate Treatment Equality
 eval_treatment_equality(
-  dat = test_data,
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
-  probs = "pred"
+  probs = "pred",
+  cutoff = 0.41,
+  confint =TRUE,
+  alpha = 0.05,
+  bootstraps = 2500,
+  digits = 2,
+  message = FALSE
 )
 }
 }
