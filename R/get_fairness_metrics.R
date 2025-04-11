@@ -1,12 +1,17 @@
 #' Compute Fairness Metrics for Binary Classification
 #'
-#' DISCLAIMER: THIS DOES NOT WORK YET
-#' This function evaluates various fairness metrics on a binary classification model
-#' across different groups. The metrics are returned in a single data frame.
+#' This function evaluates a set of common fairness metrics across groups in binary classification models.
+#' It includes metrics such as Statistical Parity, Equal Opportunity, Predictive Parity, and others.
 #'
 #' @param data A data frame containing the outcome, group, and predicted probabilities.
 #' @param outcome The name of the column containing the true binary outcome.
 #' @param group The name of the column representing the sensitive attribute (e.g., race, gender).
+#' @param group2 Define if conditional statistical parity is desired. Name of a secondary group variable used for conditional fairness analysis.
+#' @param condition Define if conditional statistical parity is desired. If the conditional group is categorical, the condition
+#' supplied must be a character of the levels to condition on. If the conditional
+#' group is continuous, the conditions supplied must be a character containing
+#' the sign of the condition and the value to threshold the continuous variable
+#' (e.g. "<50", ">50", "<=50", ">=50").
 #' @param probs The name of the column with predicted probabilities.
 #' @param cutoff Numeric threshold for classification. Default is 0.5.
 #' @param confint Logical; whether to compute bootstrap confidence intervals. Default is TRUE.
@@ -40,19 +45,28 @@
 #'
 #' # Evaluate Accuracy Parity
 #' get_fairness_metrics(
-#'   dat = test_data,
-#'   outcome = "day_28_flg",
-#'   group = "gender",
-#'   probs = "pred",
-#'   cutoff = 0.41
+#'  dat = test_data,
+#'  outcome = "day_28_flg",
+#'  group = "gender",
+#'  group2 = "service_unit",
+#'  condition = "MICU",
+#'  probs = "pred",
+#'  cutoff = 0.5
 #' )
 #' }
 #'
 #'
 #' @export
-get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition = NULL, probs, cutoff = 0.5,
-                                 bootstraps = 2500, alpha = 0.05, digits = 2) {
-  # NEED TO ADD ARGS
+get_fairness_metrics <- function(data,
+                                 outcome,
+                                 group,
+                                 group2 = NULL,
+                                 condition = NULL,
+                                 probs,
+                                 cutoff = 0.5,
+                                 bootstraps = 2500,
+                                 alpha = 0.05,
+                                 digits = 2) {
   stats_parity <- eval_stats_parity(
     data = data,
     outcome = outcome,
@@ -66,7 +80,10 @@ get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition =
 
   )
 
-  if(!(is.null(group2) & is.null(condition))){
+  if (!(is.null(group2) & is.null(condition))) {
+    if (!group2 %in% names(data)) {
+      stop("`group2` not found in data.")
+    }
     cond_stats_parity <- eval_cond_stats_parity(
       data = data,
       outcome = outcome,
@@ -80,6 +97,22 @@ get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition =
       digits = digits,
       message = FALSE
     )
+
+    split_condition <- strsplit(condition, split = '')[[1]]
+    if (split_condition[1] == ">" | split_condition[1] == "=") {
+      cond_stats_parity[["Metric"]] <- paste0("Conditional Statistical Parity (",
+                                              group2,
+                                              " ",
+                                              condition,
+                                              ")")
+    } else {
+      cond_stats_parity[["Metric"]] <- paste0("Conditional Statistical Parity (",
+                                              condition,
+                                              " ",
+                                              group2,
+                                              ")")
+    }
+
   }
   eq_opp <- eval_eq_opp(
     data = data,
@@ -103,7 +136,7 @@ get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition =
     digits = digits,
     message = FALSE
   )
-  pos_class_bal<- eval_pos_class_bal(
+  pos_class_bal <- eval_pos_class_bal(
     data = data,
     outcome = outcome,
     group = group,
@@ -114,7 +147,7 @@ get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition =
     digits = digits,
     message = FALSE
   )
-  negative_class_bal <- eval_neg_class_bal(
+  neg_class_bal <- eval_neg_class_bal(
     data = data,
     outcome = outcome,
     group = group,
@@ -160,7 +193,7 @@ get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition =
     digits = digits,
     message = FALSE
   )
-  treatment_equality <-eval_treatment_equality(
+  treatment_equality <- eval_treatment_equality(
     data = data,
     outcome = outcome,
     group = group,
@@ -172,47 +205,52 @@ get_fairness_metrics <- function(data, outcome, group, group2= NULL, condition =
     message = FALSE
   )
 
-  if(!(is.null(group2) & is.null(condition))){
-    result <-lapply(
+  # Rename metrics so that its easy to read
+  stats_parity[["Metric"]] <- "Statistical Parity"
+  eq_opp[["Metric"]] <- "Equal Opportunity"
+  pred_equality[["Metric"]] <- "Predictive Equality"
+  pos_class_bal[["Metric"]] <- "Balance for Positive Class"
+  neg_class_bal[["Metric"]] <- "Balance for Negative Class"
+  pred_parity[["Metric"]] <- "Predictive Parity"
+  bs_parity[["Metric"]] <- "Brier Score Parity"
+  acc_parity[["Metric"]] <- "Overall Accuracy Parity"
+  treatment_equality[["Metric"]] <- "Treatment Equality"
+
+  if (!(is.null(group2) & is.null(condition))) {
+    result <- do.call(
+      rbind,
       list(
         stats_parity,
         cond_stats_parity,
         eq_opp,
         pred_equality,
         pos_class_bal,
-        negative_class_bal,
+        neg_class_bal,
         pred_parity,
         bs_parity,
         acc_parity,
         treatment_equality
-      ),
-      function(x){
-        x
-      }
+      )
     )
 
   } else{
-    result <-lapply(
+    result <- do.call(
+      rbind,
       list(
         stats_parity,
         eq_opp,
         pred_equality,
         pos_class_bal,
-        negative_class_bal,
+        neg_class_bal,
         pred_parity,
         bs_parity,
         acc_parity,
         treatment_equality
-      ),
-      function(x){
-        x
-      }
+      )
     )
 
   }
 
 
-  return(
-    result
-  )
+  return(result)
 }

@@ -2,7 +2,7 @@
 # SUMMARY:
 # Remove columns with more than 10% missing data and impute the rest with median.
 # Remove columns that are highly correlated with the outcome variable.
-library(FairnessTutorial)
+library(FairnessEval)
 library(dplyr)
 data("mimic")
 # Calculate the number of missing values per column

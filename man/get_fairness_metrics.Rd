@@ -24,6 +24,14 @@ get_fairness_metrics(
 
 \item{group}{The name of the column representing the sensitive attribute (e.g., race, gender).}
 
+\item{group2}{Define if conditional statistical parity is desired. Name of a secondary group variable used for conditional fairness analysis.}
+
+\item{condition}{Define if conditional statistical parity is desired. If the conditional group is categorical, the condition
+supplied must be a character of the levels to condition on. If the conditional
+group is continuous, the conditions supplied must be a character containing
+the sign of the condition and the value to threshold the continuous variable
+(e.g. "<50", ">50", "<=50", ">=50").}
+
 \item{probs}{The name of the column with predicted probabilities.}
 
 \item{cutoff}{Numeric threshold for classification. Default is 0.5.}
@@ -40,9 +48,8 @@ get_fairness_metrics(
 A data frame with the evaluated fairness metrics.
 }
 \description{
-DISCLAIMER: THIS DOES NOT WORK YET
-This function evaluates various fairness metrics on a binary classification model
-across different groups. The metrics are returned in a single data frame.
+This function evaluates a set of common fairness metrics across groups in binary classification models.
+It includes metrics such as Statistical Parity, Equal Opportunity, Predictive Parity, and others.
 }
 \examples{
 \donttest{
@@ -68,11 +75,13 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Evaluate Accuracy Parity
 get_fairness_metrics(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = 0.41
+ dat = test_data,
+ outcome = "day_28_flg",
+ group = "gender",
+ group2 = "service_unit",
+ condition = "MICU",
+ probs = "pred",
+ cutoff = 0.6
 )
 }
 
