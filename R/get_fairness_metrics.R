@@ -59,11 +59,11 @@
 #'
 #' # Evaluate Accuracy Parity
 #' get_fairness_metrics(
-#'  dat = test_data,
+#'  data = test_data,
 #'  outcome = "day_28_flg",
 #'  group = "gender",
-#'  group2 = "service_unit",
-#'  condition = "MICU",
+#'  group2 = "age",
+#'  condition = ">=60",
 #'  probs = "pred",
 #'  cutoff = 0.41
 #' )

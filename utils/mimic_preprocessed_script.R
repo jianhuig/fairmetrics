@@ -21,7 +21,7 @@ cols_with_one_value <- sapply(mimic, function(x) length(unique(x)) == 1)
 mimic_preprocessed <- mimic[, !cols_with_one_value]
 # Remove columns that are highly correlated with the outcome variable
 # corrplot::corrplot(cor(select_if(mimic, is.numeric)), method = "color", tl.cex = 0.5)
-mimic <- mimic %>%
+mimic_preprocessed <- mimic_preprocessed %>%
   dplyr::select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
 
 save(mimic_preprocessed, file = "./data/mimic_preprocessed.rda")
