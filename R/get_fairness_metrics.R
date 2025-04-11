@@ -1,7 +1,22 @@
 #' Compute Fairness Metrics for Binary Classification
 #'
-#' This function evaluates a set of common fairness metrics across groups in binary classification models.
-#' It includes metrics such as Statistical Parity, Equal Opportunity, Predictive Parity, and others.
+#' This function evaluates a comprehensive set of fairness metrics for binary classification models
+#' across groups defined by a sensitive attribute (e.g., race, gender). It returns a unified
+#' data frame containing metric values, optionally with bootstrap confidence intervals.
+#'
+#' ### Metrics Included:
+#' - **Statistical Parity**: Difference in positive prediction rates across groups.
+#' - **Conditional Statistical Parity** *(if group2 and condition are specified)*:
+#'   Parity conditioned on a second group and value.
+#' - **Equal Opportunity**: Difference in true positive rates (TPR) across groups.
+#' - **Predictive Equality**: Difference in false positive rates (FPR) across groups.
+#' - **Balance for Positive Class**: Checks whether the predicted probability distributions for
+#'   positive outcomes are similar across groups.
+#' - **Balance for Negative Class**: Same as above, but for negative outcomes.
+#' - **Predictive Parity**: Difference in positive predictive values (precision) across groups.
+#' - **Brier Score Parity**: Difference in Brier scores across groups.
+#' - **Overall Accuracy Parity**: Difference in overall accuracy across groups.
+#' - **Treatment Equality**: Ratio of false negatives to false positives across groups.
 #'
 #' @param data A data frame containing the outcome, group, and predicted probabilities.
 #' @param outcome The name of the column containing the true binary outcome.

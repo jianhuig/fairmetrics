@@ -48,8 +48,27 @@ the sign of the condition and the value to threshold the continuous variable
 A data frame with the evaluated fairness metrics.
 }
 \description{
-This function evaluates a set of common fairness metrics across groups in binary classification models.
-It includes metrics such as Statistical Parity, Equal Opportunity, Predictive Parity, and others.
+This function evaluates a comprehensive set of fairness metrics for binary classification models
+across groups defined by a sensitive attribute (e.g., race, gender). It returns a unified
+data frame containing metric values, optionally with bootstrap confidence intervals.
+}
+\details{
+\subsection{Metrics Included:}{
+\itemize{
+\item \strong{Statistical Parity}: Difference in positive prediction rates across groups.
+\item \strong{Conditional Statistical Parity} \emph{(if group2 and condition are specified)}:
+Parity conditioned on a second group and value.
+\item \strong{Equal Opportunity}: Difference in true positive rates (TPR) across groups.
+\item \strong{Predictive Equality}: Difference in false positive rates (FPR) across groups.
+\item \strong{Balance for Positive Class}: Checks whether the predicted probability distributions for
+positive outcomes are similar across groups.
+\item \strong{Balance for Negative Class}: Same as above, but for negative outcomes.
+\item \strong{Predictive Parity}: Difference in positive predictive values (precision) across groups.
+\item \strong{Brier Score Parity}: Difference in Brier scores across groups.
+\item \strong{Overall Accuracy Parity}: Difference in overall accuracy across groups.
+\item \strong{Treatment Equality}: Ratio of false negatives to false positives across groups.
+}
+}
 }
 \examples{
 \donttest{
@@ -81,7 +100,7 @@ get_fairness_metrics(
  group2 = "service_unit",
  condition = "MICU",
  probs = "pred",
- cutoff = 0.6
+ cutoff = 0.5
 )
 }
 
