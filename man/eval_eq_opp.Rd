@@ -17,46 +17,44 @@ eval_eq_opp(
 )
 }
 \arguments{
-\item{data}{A dataframe containing the actual outcomes, predicted probabilities,
-and sensitive attributes necessary for evaluating model fairness.}
+\item{data}{A data frame containing the true binary outcomes, predicted probabilities,
+and sensitive group membership.}
 
-\item{outcome}{The name of the outcome variable in the data; it must be binary.}
+\item{outcome}{A string specifying the name of the binary outcome variable in \code{data}.}
 
-\item{group}{The name of the sensitive attribute variable used to define groups
-for comparison in the fairness evaluation.}
+\item{group}{A string specifying the name of the sensitive attribute variable (e.g., race, gender).}
 
-\item{probs}{The name of the variable containing predicted probabilities or scores.}
+\item{probs}{A string specifying the name of the variable containing predicted probabilities or risk scores.}
 
-\item{cutoff}{The threshold for converting predicted probabilities into binary
-predictions; defaults to 0.5.}
+\item{cutoff}{A numeric value used to threshold predicted probabilities into binary decisions; defaults to 0.5.}
 
-\item{bootstraps}{The number of bootstrap samples used for estimating the
-confidence interval; defaults to 2500.}
+\item{bootstraps}{An integer specifying the number of bootstrap resamples for constructing confidence intervals;
+defaults to 2500.}
 
-\item{alpha}{The 1 - significance level for the confidence interval; defaults to 0.05.}
+\item{alpha}{Significance level for constructing the (1 - \code{alpha}) confidence interval; defaults to 0.05.}
 
-\item{digits}{The number of decimal places to which numerical results are rounded;
-defaults to 2.}
+\item{digits}{Integer indicating the number of decimal places to round results to; defaults to 2.}
 
-\item{message}{Logical; whether to print summary results to the console; defaults to TRUE.}
+\item{message}{Logical; if TRUE (default), prints a textual summary of the fairness evaluation.}
 }
 \value{
-Returns a dataframe with the following columns:
+A data frame summarizing FNR-based group disparity metrics with the following columns:
 \itemize{
-\item Metric: Describes the metric being reported (FNR for each group, difference).
-\item Group1: False Negative Rate for the first group.
-\item Group2: False Negative Rate for the second group.
-\item Difference: The difference in False Negative Rates between the two groups.
-\item Difference CI: The 95\% confidence interval for the FNR difference.
-\item Ratio: The ratio in False Negative Rates between the two groups.
-\item Ratio CI: The 95\% confidence interval for the FNR ratio
+\item \code{Metric}: A label indicating the reported fairness criterion ("FNR").
+\item \code{GroupX}: Estimated FNR for group \code{X}, where \code{X} is the first level in sorted group labels.
+\item \code{GroupY}: Estimated FNR for group \code{Y}, the second level in sorted group labels.
+\item \code{Difference}: The difference in FNR between the two groups, computed as the FNR of GroupX minus the FNR of GroupY.
+\item \code{95\% Diff CI}: The (1 - \code{alpha}) confidence interval for the FNR difference.
+\item \code{Ratio}: The ratio of FNRs between GroupX and GroupY, computed as FNR for GroupX divided by FNR for GroupY.
+\item \code{95% Ratio CI}: The corresponding confidence interval for the FNR ratio.
 }
 }
 \description{
-This function evaluates the equal opportunity compliance of a predictive model
-by comparing the False Negative Rates (FNR) across different groups defined by
-a sensitive attribute. It is used to determine if a model exhibits bias
-towards any group for binary outcomes.
+This function evaluates the fairness of a predictive model with respect to the
+Equal Opportunity criterion, which requires that the False Negative Rate (FNR)
+be comparable across groups defined by a sensitive attribute. The function
+quantifies disparities in FNR between two groups and provides both the absolute
+difference and ratio, along with confidence intervals obtained via bootstrapping.
 }
 \examples{
 \donttest{
