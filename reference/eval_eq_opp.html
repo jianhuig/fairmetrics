@@ -58,58 +58,72 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A data frame containing the true binary outcomes, predicted probabilities,
-and sensitive group membership.</p></dd>
+<dd><p>A data frame containing the true binary outcomes, predicted
+probabilities, and sensitive group membership.</p></dd>
 
 
 <dt id="arg-outcome">outcome<a class="anchor" aria-label="anchor" href="#arg-outcome"></a></dt>
-<dd><p>A string specifying the name of the binary outcome variable in <code>data</code>.</p></dd>
+<dd><p>A string specifying the name of the binary outcome variable in
+<code>data</code>.</p></dd>
 
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>A string specifying the name of the sensitive attribute variable (e.g., race, gender).</p></dd>
+<dd><p>A string specifying the name of the sensitive attribute variable
+(e.g., race, gender).</p></dd>
 
 
 <dt id="arg-probs">probs<a class="anchor" aria-label="anchor" href="#arg-probs"></a></dt>
-<dd><p>A string specifying the name of the variable containing predicted probabilities or risk scores.</p></dd>
+<dd><p>A string specifying the name of the variable containing
+predicted probabilities or risk scores.</p></dd>
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
-<dd><p>A numeric value used to threshold predicted probabilities into binary decisions; defaults to 0.5.</p></dd>
+<dd><p>A numeric value used to threshold predicted probabilities into
+binary decisions; defaults to 0.5.</p></dd>
 
 
 <dt id="arg-bootstraps">bootstraps<a class="anchor" aria-label="anchor" href="#arg-bootstraps"></a></dt>
-<dd><p>An integer specifying the number of bootstrap resamples for constructing confidence intervals;
-defaults to 2500.</p></dd>
+<dd><p>An integer specifying the number of bootstrap resamples for
+constructing confidence intervals; defaults to 2500.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
-<dd><p>Significance level for constructing the (1 - <code>alpha</code>) confidence interval; defaults to 0.05.</p></dd>
+<dd><p>Significance level for constructing the (1 - <code>alpha</code>)
+confidence interval; defaults to 0.05.</p></dd>
 
 
 <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
-<dd><p>Integer indicating the number of decimal places to round results to; defaults to 2.</p></dd>
+<dd><p>Integer indicating the number of decimal places to round
+results to; defaults to 2.</p></dd>
 
 
 <dt id="arg-message">message<a class="anchor" aria-label="anchor" href="#arg-message"></a></dt>
-<dd><p>Logical; if TRUE (default), prints a textual summary of the fairness evaluation.</p></dd>
+<dd><p>Logical; if TRUE (default), prints a textual summary of the
+fairness evaluation.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame summarizing FNR-based group disparity metrics with the following columns:</p><ul><li><p><code>Metric</code>: A label indicating the reported fairness criterion ("FNR").</p></li>
-<li><p><code>GroupX</code>: Estimated FNR for group <code>X</code>, where <code>X</code> is the first level in sorted group labels.</p></li>
-<li><p><code>GroupY</code>: Estimated FNR for group <code>Y</code>, the second level in sorted group labels.</p></li>
-<li><p><code>Difference</code>: The difference in FNR between the two groups, computed as the FNR of GroupX minus the FNR of GroupY.</p></li>
-<li><p><code>95% Diff CI</code>: The (1 - <code>alpha</code>) confidence interval for the FNR difference.</p></li>
-<li><p><code>Ratio</code>: The ratio of FNRs between GroupX and GroupY, computed as FNR for GroupX divided by FNR for GroupY.</p></li>
-<li><p><code>95<!-- % Ratio CI}: The corresponding confidence interval for the FNR ratio. -->
+    <p>A data frame summarizing FNR-based group disparity metrics with the
+following columns:</p>
+<ul><li><p><code>Metric</code>: A label indicating the reported fairness criterion.</p></li>
+<li><p><code>Group1</code>: Estimated FNR and FPR for the first group.</p></li>
+<li><p><code>Group2</code>: Estimated FNR and FPR for the second group.</p></li>
+<li><p><code>Difference</code>: The difference in FNR between the two groups,
+computed as the FNR of Group1 minus the FNR of Group2.</p></li>
+<li><p><code>95% Diff CI</code>: The (1 - <code>alpha</code>) confidence interval for
+the FNR difference.</p></li>
+<li><p><code>Ratio</code>: The ratio of FNRs between Group1 and Group2, computed
+as FNR for Group1 divided by FNR for Group2.</p></li>
+<li><p><code>95<!-- % Ratio CI}: The corresponding confidence interval for the -->
+  FNR ratio.
 </code></p></li>
-</ul><p>This function evaluates the fairness of a predictive model with respect to the
-Equal Opportunity criterion, which requires that the False Negative Rate (FNR)
-be comparable across groups defined by a sensitive attribute. The function
-quantifies disparities in FNR between two groups and provides both the absolute
-difference and ratio, along with confidence intervals obtained via bootstrapping.</p>
+</ul><p>This function evaluates the fairness of a predictive model with respect to
+the Equal Opportunity criterion, which requires that the False Negative Rate
+(FNR) be comparable across groups defined by a sensitive attribute. The
+function quantifies disparities in FNR between two groups and provides both
+the absolute difference and ratio, along with confidence intervals obtained
+via bootstrapping.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
