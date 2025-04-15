@@ -29,9 +29,9 @@
 #' results to; defaults to 2.
 #' @param message Logical; if TRUE (default), prints a textual summary of the
 #' fairness evaluation.
-#'
 #' @return A data frame summarizing FNR-based group disparity metrics with the
 #' following columns:
+#'
 #' \itemize{
 #'   \item \code{Metric}: A label indicating the reported fairness criterion.
 #'   \item \code{Group1}: Estimated FNR and FPR for the first group.
@@ -193,10 +193,10 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #'   \item \code{Group2}: Estimated FNR and FPR for the second group.
 #'   \item \code{Difference}: Differences in FNR and FPR, computed as Group1 -
 #'   Group2.
-#'   \item \code{95% CR}: Bonferroni-adjusted confidence regions for the
+#'   \item \code{95\% CR}: Bonferroni-adjusted confidence regions for the
 #'   differences.
 #'   \item \code{Ratio}: Ratios in FNR and FPR, computed as Group1 / Group2.
-#'   \item \code{95% CR}: Bonferroni-adjusted confidence regions for the ratios.
+#'   \item \code{95\% CR}: Bonferroni-adjusted confidence regions for the ratios.
 #' }
 #'
 #' @importFrom stats qnorm sd

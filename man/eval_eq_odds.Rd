@@ -17,46 +17,55 @@ eval_eq_odds(
 )
 }
 \arguments{
-\item{data}{A dataframe containing the actual outcomes, predicted outcomes,
-and sensitive attributes necessary for evaluating model fairness.}
+\item{data}{A data frame containing the true binary outcomes, predicted
+probabilities, and sensitive group membership.}
 
-\item{outcome}{The name of the outcome variable in the data; it must be binary.}
+\item{outcome}{A string specifying the name of the binary outcome variable in
+\code{data}.}
 
-\item{group}{The name of the sensitive attribute variable used to define groups
-for comparison in the fairness evaluation.}
+\item{group}{A string specifying the name of the binary sensitive attribute
+variable (e.g., race, gender) used to define the comparison groups.}
 
-\item{probs}{The name of the variable containing predicted probabilities or scores.}
+\item{probs}{A string specifying the name of the variable containing
+predicted probabilities or risk scores.}
 
-\item{cutoff}{The threshold for converting predicted probabilities into binary
-predictions; defaults to 0.5.}
+\item{cutoff}{A numeric value used to threshold predicted probabilities into
+binary predictions; defaults to 0.5.}
 
-\item{bootstraps}{The number of bootstrap samples used for estimating the
-uncertainty in the fairness metrics; defaults to 1000.}
+\item{bootstraps}{An integer specifying the number of bootstrap resamples for
+constructing confidence intervals; vdefaults to 2500.}
 
-\item{alpha}{The 1 - significance level for the confidence interval; defaults to 0.05.}
+\item{alpha}{Significance level for the (1 - \code{alpha}) confidence
+interval; defaults to 0.05.}
 
-\item{digits}{The number of decimal places to which numerical results are rounded;
-defaults to 2.}
+\item{digits}{Number of decimal places to round numeric results; defaults to
+2.}
 
-\item{message}{Logical; whether to print summary results to the console; defaults to TRUE.}
+\item{message}{Logical; if TRUE (default), prints a textual summary of the
+fairness evaluation.}
 }
 \value{
-Returns a dataframe with the following columns:
+A data frame summarizing group disparities in both FNR and FPR with
+the following columns:
 \itemize{
-\item Metric: Describes the metric being reported (FNR and FPR for each group, difference).
-\item Group1: Rate for the first group.
-\item Group2: Rate for the second group.
-\item Difference: The difference in rates between the two groups.
-\item 95\% Difference CI: The 95\% confidence interval for the rate difference.
-\item Ratio: The ratio in False Negative Rates between the two groups.
-\item 95\% Ratio CI: The 95\% confidence interval for the FNR ratio
+\item \code{Metric}: The reported metrics ("FNR; FPR").
+\item \code{Group1}: Estimated FNR and FPR for the first group.
+\item \code{Group2}: Estimated FNR and FPR for the second group.
+\item \code{Difference}: Differences in FNR and FPR, computed as Group1 -
+Group2.
+\item \code{95\% CR}: Bonferroni-adjusted confidence regions for the
+differences.
+\item \code{Ratio}: Ratios in FNR and FPR, computed as Group1 / Group2.
+\item \code{95\% CR}: Bonferroni-adjusted confidence regions for the ratios.
 }
 }
 \description{
-This function examines the equalized odds of a predictive model by comparing
-both the False Negative Rates (FNR) and False Positive Rates (FPR) across different
-groups defined by a sensitive attribute. It assesses if a model performs unbiasedly
-for binary outcomes across these groups, adhering to the equalized odds fairness criterion.
+This function evaluates whether a predictive model satisfies the Equalized
+Odds criterion by comparing both False Negative Rates (FNR) and False
+Positive Rates (FPR) across two groups defined by a binary sensitive
+attribute. It reports the rate for each group, their differences, ratios, and
+bootstrap-based confidence regions. A Bonferroni-corrected union test is used
+to test whether the model violates the Equalized Odds criterion.
 }
 \examples{
 \donttest{
@@ -68,10 +77,12 @@ set.seed(123)
 train_data <- mimic_preprocessed |>
   dplyr::filter(dplyr::row_number() <= 700)
 # Fit a random forest model
-rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+rf_model <- randomForest::randomForest(factor(day_28_flg) ~ .,
+  data = train_data, ntree = 1000
+)
 # Test the model on the remaining data
 test_data <- mimic_preprocessed |>
-  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
   dplyr::filter(dplyr::row_number() > 700)
 
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]

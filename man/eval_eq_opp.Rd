@@ -17,44 +17,58 @@ eval_eq_opp(
 )
 }
 \arguments{
-\item{data}{A data frame containing the true binary outcomes, predicted probabilities,
-and sensitive group membership.}
+\item{data}{A data frame containing the true binary outcomes, predicted
+probabilities, and sensitive group membership.}
 
-\item{outcome}{A string specifying the name of the binary outcome variable in \code{data}.}
+\item{outcome}{A string specifying the name of the binary outcome variable in
+\code{data}.}
 
-\item{group}{A string specifying the name of the sensitive attribute variable (e.g., race, gender).}
+\item{group}{A string specifying the name of the sensitive attribute variable
+(e.g., race, gender).}
 
-\item{probs}{A string specifying the name of the variable containing predicted probabilities or risk scores.}
+\item{probs}{A string specifying the name of the variable containing
+predicted probabilities or risk scores.}
 
-\item{cutoff}{A numeric value used to threshold predicted probabilities into binary decisions; defaults to 0.5.}
+\item{cutoff}{A numeric value used to threshold predicted probabilities into
+binary decisions; defaults to 0.5.}
 
-\item{bootstraps}{An integer specifying the number of bootstrap resamples for constructing confidence intervals;
-defaults to 2500.}
+\item{bootstraps}{An integer specifying the number of bootstrap resamples for
+constructing confidence intervals; defaults to 2500.}
 
-\item{alpha}{Significance level for constructing the (1 - \code{alpha}) confidence interval; defaults to 0.05.}
+\item{alpha}{Significance level for constructing the (1 - \code{alpha})
+confidence interval; defaults to 0.05.}
 
-\item{digits}{Integer indicating the number of decimal places to round results to; defaults to 2.}
+\item{digits}{Integer indicating the number of decimal places to round
+results to; defaults to 2.}
 
-\item{message}{Logical; if TRUE (default), prints a textual summary of the fairness evaluation.}
+\item{message}{Logical; if TRUE (default), prints a textual summary of the
+fairness evaluation.}
 }
 \value{
-A data frame summarizing FNR-based group disparity metrics with the following columns:
+A data frame summarizing FNR-based group disparity metrics with the
+following columns:
+
 \itemize{
-\item \code{Metric}: A label indicating the reported fairness criterion ("FNR").
-\item \code{GroupX}: Estimated FNR for group \code{X}, where \code{X} is the first level in sorted group labels.
-\item \code{GroupY}: Estimated FNR for group \code{Y}, the second level in sorted group labels.
-\item \code{Difference}: The difference in FNR between the two groups, computed as the FNR of GroupX minus the FNR of GroupY.
-\item \code{95\% Diff CI}: The (1 - \code{alpha}) confidence interval for the FNR difference.
-\item \code{Ratio}: The ratio of FNRs between GroupX and GroupY, computed as FNR for GroupX divided by FNR for GroupY.
-\item \code{95% Ratio CI}: The corresponding confidence interval for the FNR ratio.
+\item \code{Metric}: A label indicating the reported fairness criterion.
+\item \code{Group1}: Estimated FNR and FPR for the first group.
+\item \code{Group2}: Estimated FNR and FPR for the second group.
+\item \code{Difference}: The difference in FNR between the two groups,
+computed as the FNR of Group1 minus the FNR of Group2.
+\item \code{95\% Diff CI}: The (1 - \code{alpha}) confidence interval for
+the FNR difference.
+\item \code{Ratio}: The ratio of FNRs between Group1 and Group2, computed
+as FNR for Group1 divided by FNR for Group2.
+\item \code{95% Ratio CI}: The corresponding confidence interval for the
+  FNR ratio.
 }
 }
 \description{
-This function evaluates the fairness of a predictive model with respect to the
-Equal Opportunity criterion, which requires that the False Negative Rate (FNR)
-be comparable across groups defined by a sensitive attribute. The function
-quantifies disparities in FNR between two groups and provides both the absolute
-difference and ratio, along with confidence intervals obtained via bootstrapping.
+This function evaluates the fairness of a predictive model with respect to
+the Equal Opportunity criterion, which requires that the False Negative Rate
+(FNR) be comparable across groups defined by a sensitive attribute. The
+function quantifies disparities in FNR between two groups and provides both
+the absolute difference and ratio, along with confidence intervals obtained
+via bootstrapping.
 }
 \examples{
 \donttest{
@@ -66,10 +80,13 @@ set.seed(123)
 train_data <- mimic_preprocessed |>
   dplyr::filter(dplyr::row_number() <= 700)
 # Fit a random forest model
-rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+rf_model <- randomForest::randomForest(factor(day_28_flg) ~ .,
+  data =
+    train_data, ntree = 1000
+)
 # Test the model on the remaining data
 test_data <- mimic_preprocessed |>
-  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))|>
+  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
   dplyr::filter(dplyr::row_number() > 700)
 
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
