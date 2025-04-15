@@ -10,14 +10,14 @@ Authors@R:
     )
 Description: A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criteron commonly used in fairness research, particularly in healthcare. It is based on the overview of fairness in machine learning written by Gao et al (2024) <https://arxiv.org/abs/2406.09307> 
 Imports:
-  dplyr,
-  magrittr,
   stats
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
+  dplyr,
+  magrittr,
   corrplot,
   randomForest,
   pROC,

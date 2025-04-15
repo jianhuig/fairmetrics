@@ -1,5 +1,9 @@
 # FairnessEval: Fairness evaluation metrics with confidence intervals  <a href='https://github.com/jianhuig/FairnessTutorial'><img src='utils/png/hex_sticker.png' align="right" height="300" /></a>
 
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FairnessEval)](https://www.r-pkg.org/badges/version/FairnessEval)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/)
+[![Downloads](https://cranlogs.r-pkg.org/badges/FairnessEval)](https://cran.rstudio.com/web/packages/FairnessEval/index.html)
+
 R package and reproducible real-world data examples for *A tutorial on fairness in machine learning in healthcare*.
 
 

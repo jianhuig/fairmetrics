@@ -49,17 +49,13 @@ A data frame summarizing FNR-based group disparity metrics with the
 following columns:
 
 \itemize{
-\item \code{Metric}: A label indicating the reported fairness criterion.
-\item \code{Group1}: Estimated FNR and FPR for the first group.
-\item \code{Group2}: Estimated FNR and FPR for the second group.
-\item \code{Difference}: The difference in FNR between the two groups,
-computed as the FNR of Group1 minus the FNR of Group2.
-\item \code{95\% Diff CI}: The (1 - \code{alpha}) confidence interval for
-the FNR difference.
-\item \code{Ratio}: The ratio of FNRs between Group1 and Group2, computed
-as FNR for Group1 divided by FNR for Group2.
-\item \code{95% Ratio CI}: The corresponding confidence interval for the
-  FNR ratio.
+\item \code{Metric} A label indicating the reported fairness criterion.
+\item \code{Group1} Estimated FNR and FPR for the first group.
+\item \code{Group2} Estimated FNR and FPR for the second group.
+\item \code{Difference} The difference in FNR between the two groups, computed as the FNR of Group1 minus the FNR of Group2.
+\item \code{95\% Diff CI} The (1 - \code{alpha}) confidence interval for the FNR difference.
+\item \code{Ratio} The ratio of FNRs between Group1 and Group2, computed as FNR for Group1 divided by FNR for Group2.
+\item \code{95\% Ratio CI} The corresponding confidence interval for the FNR ratio.
 }
 }
 \description{
