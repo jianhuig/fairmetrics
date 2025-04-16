@@ -55,7 +55,7 @@
           <code><a href="eval_bs_parity.html">eval_bs_parity()</a></code>
 
         </dt>
-        <dd>Examine Brier Score Parity of a Model</dd>
+        <dd>Examine Brier Score Parity of a Model This function evaluates <strong>Brier Score Parity</strong>, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.</dd>
       </dl><dl><dt>
 
           <code><a href="eval_cond_acc_equality.html">eval_cond_acc_equality()</a></code>
@@ -67,7 +67,7 @@
           <code><a href="eval_cond_stats_parity.html">eval_cond_stats_parity()</a></code>
 
         </dt>
-        <dd>Examine Conditional Statistical Parity of a Model</dd>
+        <dd>Examine Conditional Statistical Parity of a Model This function evaluates conditional statistical parity, which measures fairness by comparing positive prediction rates across sensitive groups within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison to a specified subset of the population, defined by a conditioning variable.</dd>
       </dl><dl><dt>
 
           <code><a href="eval_eq_odds.html">eval_eq_odds()</a></code>
@@ -85,7 +85,7 @@
           <code><a href="eval_neg_class_bal.html">eval_neg_class_bal()</a></code>
 
         </dt>
-        <dd>Examine Balance for Negative Class of a Model</dd>
+        <dd>Examine Balance for Negative Class of a Model This function evaluates Balance for the Positive Class, a fairness metric that checks whether the predicted probabilities for the negative class (i.e., outcome = 0) are balanced across groups defined by a sensitive attribute (e.g., gender, race).</dd>
       </dl><dl><dt>
 
           <code><a href="eval_pos_class_bal.html">eval_pos_class_bal()</a></code>
