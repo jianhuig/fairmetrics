@@ -56,7 +56,7 @@ Rate
 }
 }
 \description{
-Examine Statistical Parity of a Model
+This function assesses \emph{statistical parity} - also known as \emph{demographic parity} - in the predictions of a binary classifier across two groups defined by a sensitive attribute. Statistical parity compares the rate at which different groups receive a positive prediction, irrespective of the true outcome. It reports the Positive Prediction Rate (PPR) for each group, their differences, ratios, and bootstrap-based confidence regions.
 }
 \examples{
 \donttest{
@@ -89,4 +89,7 @@ eval_stats_parity(
   cutoff = 0.41
 )
 }
+}
+\seealso{
+\code{\link{eval_cond_stats_parity}}
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_bs_parity}
 \alias{eval_bs_parity}
-\title{Examine Brier Score Parity of a Model}
+\title{Examine Brier Score Parity of a Model
+This function evaluates \strong{Brier Score Parity}, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.}
 \usage{
 eval_bs_parity(
   data,
@@ -52,6 +53,7 @@ confidence interval for the ratio in Brier Score
 }
 \description{
 Examine Brier Score Parity of a Model
+This function evaluates \strong{Brier Score Parity}, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.
 }
 \examples{
 \donttest{
@@ -82,4 +84,8 @@ eval_bs_parity(
   probs = "pred"
 )
 }
+
+}
+\seealso{
+\code{\link{eval_acc_parity}}, \code{\link{eval_cond_acc_equality}}, \code{\link{eval_pred_parity}}
 }

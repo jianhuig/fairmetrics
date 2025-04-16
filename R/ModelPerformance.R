@@ -220,6 +220,13 @@ get_avg_prob <- function(data, outcome, group, probs, digits = 2) {
 }
 
 #' Calculate the all metrics at once
+#'
+#' This function computes a comprehensive set of fairness-related performance metrics across the
+#' levels of a sensitive attribute. It includes standard classification metrics (e.g., TPR, FPR, PPV, NPV)
+#' as well as fairness-specific indicators like predicted positive rates and error ratios.
+#'
+#' This is useful for quickly assessing multiple fairness dimensions of a binary classifier in one step.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome the name of the outcome variable, it must be binary

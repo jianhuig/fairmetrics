@@ -54,7 +54,7 @@ of the 95\% confidence interval for the ratio in False Positive Rate
 }
 }
 \description{
-Examine Predictive Equality of a Model
+This function evaluates predictive equality, a fairness metric that compares the False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses whether individuals from different groups are equally likely to be incorrectly flagged as positive when they are, in fact, negative.
 }
 \examples{
 \donttest{
@@ -87,4 +87,7 @@ eval_pred_equality(
   cutoff = 0.41
 )
 }
+}
+\seealso{
+\code{\link{eval_pred_parity}}, \code{\link{eval_stats_parity}}
 }

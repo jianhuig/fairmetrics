@@ -24,7 +24,12 @@ sensitive attribute}
 a Data frame of all metrics
 }
 \description{
-Calculate the all metrics at once
+This function computes a comprehensive set of fairness-related performance metrics across the
+levels of a sensitive attribute. It includes standard classification metrics (e.g., TPR, FPR, PPV, NPV)
+as well as fairness-specific indicators like predicted positive rates and error ratios.
+}
+\details{
+This is useful for quickly assessing multiple fairness dimensions of a binary classifier in one step.
 }
 \examples{
 \donttest{

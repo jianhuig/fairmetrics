@@ -51,7 +51,9 @@ confidence interval for the ratio in average predicted probability
 }
 }
 \description{
-Examine Balance for Positive Class of a Model
+This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
+predicted probabilities for the positive class (i.e., outcome = 1) are balanced across groups defined
+by a sensitive attribute (e.g., gender, race).
 }
 \examples{
 \donttest{
@@ -82,4 +84,7 @@ eval_pos_class_bal(
   probs = "pred"
 )
 }
+}
+\seealso{
+\code{\link{eval_neg_class_bal}}
 }

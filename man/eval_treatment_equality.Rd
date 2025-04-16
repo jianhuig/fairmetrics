@@ -54,7 +54,7 @@ confidence interval for the ratio in False Negative / False Positive ratio
 }
 }
 \description{
-Examine Treatment Equality of a Model
+This function evaluates \strong{Treatment Equality}, a fairness measure that checks whether the model treats different groups (e.g., based on gender or race) equally in terms of the False Negative to False Positive ratio. Treatment equality ensures that the model does not unfairly treat one group more harshly than another by assessing whether the ratio of false negatives to false positives is balanced across groups.
 }
 \examples{
 \donttest{
@@ -92,4 +92,7 @@ eval_treatment_equality(
   message = FALSE
 )
 }
+}
+\seealso{
+\code{\link{eval_acc_parity}}, \code{\link{eval_bs_parity}}, \code{\link{eval_pred_parity}}
 }

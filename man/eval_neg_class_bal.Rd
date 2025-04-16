@@ -2,7 +2,10 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_neg_class_bal}
 \alias{eval_neg_class_bal}
-\title{Examine Balance for Negative Class of a Model}
+\title{Examine Balance for Negative Class of a Model
+This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
+predicted probabilities for the negative class (i.e., outcome = 0) are balanced across groups defined
+by a sensitive attribute (e.g., gender, race).}
 \usage{
 eval_neg_class_bal(
   data,
@@ -52,6 +55,9 @@ confidence interval for the ratio in average predicted probability
 }
 \description{
 Examine Balance for Negative Class of a Model
+This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
+predicted probabilities for the negative class (i.e., outcome = 0) are balanced across groups defined
+by a sensitive attribute (e.g., gender, race).
 }
 \examples{
 \donttest{
@@ -82,4 +88,7 @@ eval_neg_class_bal(
   probs = "pred"
 )
 }
+}
+\seealso{
+\code{\link{eval_neg_class_bal}}
 }

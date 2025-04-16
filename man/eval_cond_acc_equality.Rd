@@ -58,7 +58,9 @@ Value
 }
 }
 \description{
-Examine Conditional Use Accuracy Equality of a Model
+This function evaluates Conditional Use Accuracy Equality, a fairness criterion
+that requires predictive performance to be similar across groups when a model
+makes positive or negative predictions.
 }
 \examples{
 \donttest{
@@ -91,4 +93,7 @@ eval_cond_acc_equality(
   cutoff = 0.41
 )
 }
+}
+\seealso{
+\code{\link{eval_acc_parity}}
 }

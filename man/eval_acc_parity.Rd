@@ -54,7 +54,8 @@ confidence interval for the ratio in accurac
 }
 }
 \description{
-Examine Accuracy Parity of a Model
+This function assesses Accuracy Parity, a fairness criterion that evaluates whether
+the overall accuracy of a predictive model is consistent across different groups.
 }
 \examples{
 \donttest{
@@ -88,4 +89,7 @@ eval_acc_parity(
 )
 }
 
+}
+\seealso{
+\code{\link{eval_cond_acc_equality}}
 }

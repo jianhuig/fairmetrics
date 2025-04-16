@@ -330,6 +330,9 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 
 
 #' Examine Statistical Parity of a Model
+#'
+#' This function assesses *statistical parity* - also known as *demographic parity* - in the predictions of a binary classifier across two groups defined by a sensitive attribute. Statistical parity compares the rate at which different groups receive a positive prediction, irrespective of the true outcome. It reports the Positive Prediction Rate (PPR) for each group, their differences, ratios, and bootstrap-based confidence regions.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -385,6 +388,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #'   cutoff = 0.41
 #' )
 #' }
+#' @seealso \code{\link{eval_cond_stats_parity}}
 #' @export
 eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                               bootstraps = 2500, alpha = 0.05, digits = 2,
@@ -455,6 +459,11 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 }
 
 #' Examine Conditional Statistical Parity of a Model
+#' This function evaluates conditional statistical parity, which measures fairness by comparing positive prediction rates across sensitive groups within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
+#' to a specified subset of the population, defined by a conditioning variable.
+#'
+#' The function supports both categorical and continuous conditioning variables. For continuous variables, you can supply a threshold expression like `"<50"` or `">=75"` to the \code{condition} parameter.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -519,6 +528,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #'   cutoff = 0.41
 #' )
 #' }
+#' @seealso \code{\link{eval_stats_parity}}
 #' @export
 
 eval_cond_stats_parity <- function(data, outcome, group,
@@ -570,6 +580,12 @@ eval_cond_stats_parity <- function(data, outcome, group,
 }
 
 #' Examine Predictive Parity of a Model
+#'
+#' This function evaluates predictive parity (PP), a key fairness criterion that
+#' compares the Positive Predictive Value (PPV) between groups defined by a sensitive attribute.
+#' In other words, it assesses whether predicted positives are equally likely to be correct
+#' (i.e., true positives) across different subgroups.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -695,6 +711,9 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 }
 
 #' Examine Predictive Equality of a Model
+#'
+#' This function evaluates predictive equality, a fairness metric that compares the False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses whether individuals from different groups are equally likely to be incorrectly flagged as positive when they are, in fact, negative.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -748,6 +767,7 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 #'   cutoff = 0.41
 #' )
 #' }
+#' @seealso \code{\link{eval_pred_parity}}, \code{\link{eval_stats_parity}}
 #' @export
 
 eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -820,6 +840,11 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 }
 
 #' Examine Conditional Use Accuracy Equality of a Model
+#'
+#' This function evaluates Conditional Use Accuracy Equality, a fairness criterion
+#' that requires predictive performance to be similar across groups when a model
+#' makes positive or negative predictions.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable, it must be binary
@@ -877,6 +902,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #'   cutoff = 0.41
 #' )
 #' }
+#' @seealso \code{\link{eval_acc_parity}}
 #' @export
 
 eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -965,6 +991,10 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 }
 
 #' Examine Accuracy Parity of a Model
+#'
+#' This function assesses Accuracy Parity, a fairness criterion that evaluates whether
+#' the overall accuracy of a predictive model is consistent across different groups.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1019,6 +1049,7 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #' )
 #' }
 #'
+#' @seealso \code{\link{eval_cond_acc_equality}}
 #' @export
 
 eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -1091,6 +1122,8 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 }
 
 #' Examine Brier Score Parity of a Model
+#' This function evaluates **Brier Score Parity**, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1141,6 +1174,8 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #'   probs = "pred"
 #' )
 #' }
+#'
+#' @seealso \code{\link{eval_acc_parity}}, \code{\link{eval_cond_acc_equality}}, \code{\link{eval_pred_parity}}
 #' @export
 
 eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
@@ -1214,6 +1249,9 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 }
 
 #' Examine Treatment Equality of a Model
+#'
+#' This function evaluates **Treatment Equality**, a fairness measure that checks whether the model treats different groups (e.g., based on gender or race) equally in terms of the False Negative to False Positive ratio. Treatment equality ensures that the model does not unfairly treat one group more harshly than another by assessing whether the ratio of false negatives to false positives is balanced across groups.
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1272,6 +1310,7 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #'   message = FALSE
 #' )
 #' }
+#' @seealso \code{\link{eval_acc_parity}}, \code{\link{eval_bs_parity}}, \code{\link{eval_pred_parity}}
 #' @export
 
 eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -1348,6 +1387,11 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 }
 
 #' Examine Balance for Positive Class of a Model
+#'
+#' This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
+#' predicted probabilities for the positive class (i.e., outcome = 1) are balanced across groups defined
+#' by a sensitive attribute (e.g., gender, race).
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1398,6 +1442,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #'   probs = "pred"
 #' )
 #' }
+#' @seealso \code{\link{eval_neg_class_bal}}
 #' @export
 
 eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
@@ -1474,6 +1519,10 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 }
 
 #' Examine Balance for Negative Class of a Model
+#' This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
+#' predicted probabilities for the negative class (i.e., outcome = 0) are balanced across groups defined
+#' by a sensitive attribute (e.g., gender, race).
+#'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
 #' @param outcome Name of the outcome variable
@@ -1524,6 +1573,7 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #'   probs = "pred"
 #' )
 #' }
+#' @seealso \code{\link{eval_neg_class_bal}}
 #' @export
 
 eval_neg_class_bal <- function(data, outcome, group, probs, confint = TRUE,
