@@ -7,7 +7,7 @@
 R package and reproducible real-world data examples for *A tutorial on fairness in machine learning in healthcare*.
 
 
-- [Link](https://jianhuig.github.io/FairnessTutorial/) to online tutorial.
+- [Link](https://jianhuig.github.io/FairnessEval/) to online tutorial.
 - [Link](https://arxiv.org/abs/2406.09307) to preprint.
 
 ## Installation
@@ -20,7 +20,7 @@ devtools::install_github(repo = "https://github.com/jianhuig/FairnessTutorial")
 
 To cite package ‘FairnessEval’ in publications use:
 
-> Gao J, Chou B, Gronsbell J, Smith B (2025). _FairnessEval: Fairness evaluation metrics with confidence intervals_. R package version 1.0.0, <https://jianhuig.github.io/FairnessTutorial/>.
+> Gao J, Chou B, Gronsbell J, Smith B (2025). _FairnessEval: Fairness evaluation metrics with confidence intervals_. R package version 1.0.0, <https://jianhuig.github.io/FairnessEval/>.
 
 
 A BibTeX entry for LaTeX users is
