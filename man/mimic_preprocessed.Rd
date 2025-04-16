@@ -5,7 +5,7 @@
 \alias{mimic_preprocessed}
 \title{Preprocessed Clinical Data from the MIMIC-II Database}
 \format{
-A data frame with fewer rows and variables than the original due to preprocessing. Number of rows: 1776.
+A data frame with fewer variables than the original due to preprocessing. Number of rows: 1776.
 }
 \source{
 \url{https://physionet.org/content/mimic2-iaccd/1.0/}
