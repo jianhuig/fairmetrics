@@ -2,9 +2,7 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_cond_stats_parity}
 \alias{eval_cond_stats_parity}
-\title{Examine Conditional Statistical Parity of a Model
-This function evaluates conditional statistical parity, which measures fairness by comparing positive prediction rates across sensitive groups within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
-to a specified subset of the population, defined by a conditioning variable.}
+\title{Examine Conditional Statistical Parity of a Model}
 \usage{
 eval_cond_stats_parity(
   data,
@@ -66,6 +64,10 @@ Rate
 }
 }
 \description{
+This function evaluates \emph{conditional statistical parity}, which measures fairness by comparing positive prediction rates across sensitive groups within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
+to a specified subset of the population, defined by a conditioning variable.
+}
+\details{
 The function supports both categorical and continuous conditioning variables. For continuous variables, you can supply a threshold expression like \code{"<50"} or \code{">=75"} to the \code{condition} parameter.
 }
 \examples{

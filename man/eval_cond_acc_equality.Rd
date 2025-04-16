@@ -58,7 +58,7 @@ Value
 }
 }
 \description{
-This function evaluates Conditional Use Accuracy Equality, a fairness criterion
+This function evaluates \emph{Conditional Use Accuracy Equality}, a fairness criterion
 that requires predictive performance to be similar across groups when a model
 makes positive or negative predictions.
 }

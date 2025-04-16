@@ -54,7 +54,7 @@ confidence interval for the ratio in accurac
 }
 }
 \description{
-This function assesses Accuracy Parity, a fairness criterion that evaluates whether
+This function assesses \emph{Accuracy Parity}, a fairness criterion that evaluates whether
 the overall accuracy of a predictive model is consistent across different groups.
 }
 \examples{

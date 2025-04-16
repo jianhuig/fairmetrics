@@ -54,7 +54,7 @@ confidence interval for the ratio in False Negative / False Positive ratio
 }
 }
 \description{
-This function evaluates \strong{Treatment Equality}, a fairness measure that checks whether the model treats different groups (e.g., based on gender or race) equally in terms of the False Negative to False Positive ratio. Treatment equality ensures that the model does not unfairly treat one group more harshly than another by assessing whether the ratio of false negatives to false positives is balanced across groups.
+This function evaluates \emph{Treatment Equality}, a fairness measure that checks whether the model treats different groups (e.g., based on gender or race) equally in terms of the False Negative to False Positive ratio. Treatment equality ensures that the model does not unfairly treat one group more harshly than another by assessing whether the ratio of false negatives to false positives is balanced across groups.
 }
 \examples{
 \donttest{

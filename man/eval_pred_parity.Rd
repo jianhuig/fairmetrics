@@ -56,8 +56,8 @@ Value
 }
 }
 \description{
-This function evaluates predictive parity (PP), a key fairness criterion that
-compares the Positive Predictive Value (PPV) between groups defined by a sensitive attribute.
+This function evaluates \emph{predictive parity (PP)}, a key fairness criterion that
+compares the \emph{Positive Predictive Value (PPV)} between groups defined by a sensitive attribute.
 In other words, it assesses whether predicted positives are equally likely to be correct
 (i.e., true positives) across different subgroups.
 }
