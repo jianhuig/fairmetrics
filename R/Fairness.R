@@ -1123,7 +1123,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 }
 
 #' Examine Brier Score Parity of a Model
-
+#'
 #' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
