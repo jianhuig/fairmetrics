@@ -58,8 +58,8 @@ Value
 \description{
 This function evaluates \emph{predictive parity (PP)}, a key fairness criterion that
 compares the \emph{Positive Predictive Value (PPV)} between groups defined by a sensitive attribute.
-In other words, it assesses whether predicted positives are equally likely to be correct
-(i.e., true positives) across different subgroups.
+In other words, it assesses whether, among individuals predicted to be positive,
+the probability of being truly positive is equal across subgroups.
 }
 \examples{
 \donttest{

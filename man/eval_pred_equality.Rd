@@ -54,7 +54,10 @@ of the 95\% confidence interval for the ratio in False Positive Rate
 }
 }
 \description{
-This function evaluates predictive equality, a fairness metric that compares the False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses whether individuals from different groups are equally likely to be incorrectly flagged as positive when they are, in fact, negative.
+This function evaluates predictive equality, a fairness metric that compares the
+False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses
+whether individuals from different groups are equally likely to be incorrectly flagged as
+positive when they are, in fact, negative.
 }
 \examples{
 \donttest{

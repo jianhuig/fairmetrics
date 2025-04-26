@@ -21,13 +21,18 @@ library(corrplot)
 library(randomForest)
 library(pROC)
 library(SpecsVerification)
-
+library(kableExtra)
 data("mimic")
 ```
 
 # Data Preprocessing
 
-## Missing Data
+The dataset used in this analysis has been previously studied to investigate the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure regarding mortality outcomes. It includes 46 variables, covering demographics, clinical characteristics (e.g., white blood cell count, heart rate during ICU stays), and a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data are publicly available at [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/).
+
+
+## Handling Missing Data
+
+We first assessed the extent of missingness in the dataset. For each variable, we calculated both the total number and the percentage of missing values:
 
 ```{r}
 # Calculate the number of missing values per column
@@ -42,21 +47,29 @@ missing_data_summary <- data.frame(Number_of_Missing_Values = missing_values,
 
 # Print the summary
 print(missing_data_summary)
+```
 
-# remove columns with more than 10% missing data and impute the rest with median
-# Identify columns with more than 10% missing values
+To ensure data quality, we applied the following missing data handling procedure:
+
+- We removed three variables that had more than 10% missing values: body mass index (26.2%), first partial pressure of oxygen (10.5%), and first partial pressure of carbon dioxide (10.5%). 
+- Remaining missing values were imputed using the median of each variable.
+
+```{r}
+# Remove columns with more than 10% missing values
 columns_to_remove <- names(missing_values_percentage[missing_values_percentage > 10])
-
-# Remove these columns
 mimic <- select(mimic, -one_of(columns_to_remove))
 
 # Impute remaining missing values with median
-mimic<- mimic %>% mutate(across(where(~any(is.na(.))), ~ifelse(is.na(.), median(., na.rm = TRUE), .)))
+mimic <- mimic %>% mutate(across(where(~any(is.na(.))), ~ifelse(is.na(.), median(., na.rm = TRUE), .)))
 
-# Check if there are any missing values left
+# Verify that no missing values remain
 remaining_missing_values <- sum(sapply(mimic, function(x) sum(is.na(x))))
 remaining_missing_values
+```
 
+To further clean the data, we identified and removed variables `sepsis_flg` that contained only a single unique value across all samples. Such variables are non-informative for model training.
+
+```{r}
 # Identify columns that have only one unique value
 cols_with_one_value <- sapply(mimic, function(x) length(unique(x)) == 1)
 
@@ -66,12 +79,23 @@ mimic <- mimic[, !cols_with_one_value]
 
 ## Model Building
 
+Before model training, we removed variables that are directly correlated with the outcome to prevent data leakage. Specifically, we inspected the correlation matrix of numeric features and excluded variables such as hospital expiration flag, ICU expiration flag, mortality censoring day, and censoring flag, which are strongly associated with patient outcomes.
+
 ```{r}
 # Remove columns that are highly correlated with the outcome variable
 corrplot(cor(select_if(mimic, is.numeric)), method = "color", tl.cex = 0.5)
 mimic <- mimic %>% 
   select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
+```
 
+We split the dataset into a training set and a testing set:
+
+- The first 700 patients were used as the training set.
+- The remaining patients were used as the fairness evaluation set.
+
+The hyperparameters for the random forest (RF) model were set to use 1000 trees and a random sampling of 6 variables at each split, determined by the square root of the number of predictors. The overall area under the receiver operating characteristic curve (AUC) for our model on the test set is 0.90. Additionally, the overall accuracy of the model on the test set is 0.88.
+
+```{r}
 # Use 700 labels to train the mimic
 train_data <- mimic %>% filter(row_number() <= 700)
 # Fit a random forest model
@@ -81,18 +105,23 @@ rf_model <- randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000
 # Test the model on the remaining data
 test_data <- mimic %>% filter(row_number() > 700)
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[,2]
+
+# Check the AUC
+roc_obj <- roc(test_data$day_28_flg, test_data$pred)
+roc_auc <- auc(roc_obj)
+roc_auc
 ```
 
 # Fairness Evaluation
 
-We will use sex as the sensitive attribute and day_28_flg as the outcome.
+For fairness evaluation, we focus on sex as the sensitive attribute and 28-day mortality (\texttt{day_28_flg}) as the outcome. We recoded the gender variable for better readability:
 
 ```{r}
 test_data <- test_data %>%
   mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
 ```
 
-We choose threshold = 0.41 so that the overall FPR is around 5%.
+Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We selected a threshold of 0.41 to approximately control the overall false positive rate (FPR) at 5%.
 
 ```{r}
 cut_off <- 0.41
@@ -103,173 +132,42 @@ test_data %>%
   summarise(fpr = mean(pred))
 ```
 
-## Independence
-### Statistical Parity
-
 ```{r}
-eval_stats_parity(
-  dat = test_data,
+fairness_result <- get_fairness_metrics(
+  data = test_data,
   outcome = "day_28_flg",
   group = "gender",
-  probs = "pred",
-  cutoff = cut_off
-)
-```
-
-### Conditional Statistical Parity
-
-We conditional on age >= 60.
-
-```{r}
-eval_cond_stats_parity(dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = cut_off,
   group2 = "age",
-  condition = ">= 60")
-```
-
-We can also condition on a categorical variable. For example, we can condition on the service unit = MICU.
-
-
-```{r}
-eval_cond_stats_parity(dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
+  condition = ">=60",
   probs = "pred",
-  cutoff = cut_off,
-  group2 = "service_unit",
-  condition = "MICU")
-```
+  cutoff = 0.41
+ )
 
-## Separation
-
-
-### Equal Opportunity
-
-```{r}
-eval_eq_opp(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = cut_off
-)
-```
-
-<!-- ## Equalized Odds -->
-
-<!-- ```{r} -->
-<!-- eval_eq_odds( -->
-<!--   dat = test_data, -->
-<!--   outcome = "day_28_flg", -->
-<!--   group = "gender", -->
-<!--   probs = "pred", -->
-<!--   cutoff = cut_off -->
-<!-- ) -->
-<!-- ``` -->
-
-
-### Predictive Equality
-
-```{r}
-eval_pred_equality(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = cut_off
-)
-```
-
-<!-- ## Conditional Accuracy Equality -->
-
-<!-- ```{r} -->
-<!-- eval_cond_acc_equality( -->
-<!--   dat = test_data, -->
-<!--   outcome = "day_28_flg", -->
-<!--   group = "gender", -->
-<!--   probs = "pred", -->
-<!--   cutoff = cut_off -->
-<!-- ) -->
-<!-- ``` -->
-
-
-### Balance for Positive Class
-
-```{r}
-eval_pos_class_bal(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred"
-)
-```
-
-### Balance for Negative Class
-
-```{r}
-eval_neg_class_bal(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred"
-)
-```
-
-## Sufficiency
-
-### Predictive Parity
-
-```{r}
-eval_pred_parity(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = cut_off
-)
+kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
+  kable_styling(full_width = FALSE) %>%
+  pack_rows("Independence-based criteria", 1, 2) %>%
+  pack_rows("Separation-based criteria", 3, 6) %>%
+  pack_rows("Sufficiency-based criteria", 7, 7) %>%
+  pack_rows("Other criteria", 8, 10) %>%
+  kable_styling(
+    full_width = FALSE, 
+    font_size = 10,         # control font size manually
+    latex_options = "hold_position"
+  ) 
 ```
 
 
+Independence is likely violated, as evidenced by the statistical parity metric showing a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
 
+With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
 
-## Other Fairness Metrics
+On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
 
+Lastly, among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
 
+# Practical Considerations
 
-### Brier Score Parity
+In our example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures that immediate intervention is based sorely on predicted medical needs rather than other protected attributes. 
 
-```{r}
-eval_bs_parity(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred"
-)
-```
-
-### Accuracy Parity
-```{r}
-eval_acc_parity(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = cut_off
-)
-```
-
-
-### Treatment Equality
-
-```{r}
-eval_treatment_equality(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred"
-)
-```
-
+However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. Our model violates separation criteria, which could result in higher rates of
+undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics.

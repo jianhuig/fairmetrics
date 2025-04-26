@@ -51,7 +51,9 @@ confidence interval for the ratio in Brier Score
 }
 }
 \description{
-This function evaluates \emph{Brier Score Parity}, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.
+This function evaluates \emph{Brier Score Parity}, a fairness measure that checks whether the Brier score
+(a measure of the calibration of probabilistic predictions) is similar across different groups. Brier score
+parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
 }
 \examples{
 \donttest{

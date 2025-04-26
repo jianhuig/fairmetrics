@@ -2,7 +2,7 @@
 % Please edit documentation in R/Fairness.R
 \name{eval_pos_class_bal}
 \alias{eval_pos_class_bal}
-\title{Examine Balance for Positive Class of a Model}
+\title{Examine Balance for the Positive Class of a Model}
 \usage{
 eval_pos_class_bal(
   data,
@@ -51,9 +51,9 @@ confidence interval for the ratio in average predicted probability
 }
 }
 \description{
-This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
-predicted probabilities for the positive class (i.e., outcome = 1) are balanced across groups defined
-by a sensitive attribute (e.g., gender, race).
+This function evaluates \emph{Balance for the Positive Class}, a fairness criterion
+that checks whether the model assigns similar predicted probabilities across groups
+among individuals whose true outcome is positive (i.e., \(Y = 1\)).
 }
 \examples{
 \donttest{
