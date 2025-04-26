@@ -584,8 +584,8 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #'
 #' This function evaluates *predictive parity (PP)*, a key fairness criterion that
 #' compares the *Positive Predictive Value (PPV)* between groups defined by a sensitive attribute.
-#' In other words, it assesses whether predicted positives are equally likely to be correct
-#' (i.e., true positives) across different subgroups.
+#' In other words, it assesses whether, among individuals predicted to be positive,
+#' the probability of being truly positive is equal across subgroups.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
@@ -713,7 +713,10 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 
 #' Examine Predictive Equality of a Model
 #'
-#' This function evaluates predictive equality, a fairness metric that compares the False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses whether individuals from different groups are equally likely to be incorrectly flagged as positive when they are, in fact, negative.
+#' This function evaluates predictive equality, a fairness metric that compares the 
+#' False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses 
+#' whether individuals from different groups are equally likely to be incorrectly flagged as 
+#' positive when they are, in fact, negative.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
@@ -1124,7 +1127,9 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 
 #' Examine Brier Score Parity of a Model
 #'
-#' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score (a metric that quantifies the accuracy of probabilistic predictions) is balanced across different groups. Brier score parity ensures that the model's predicted probabilities have similar accuracy for different groups,such as different genders or ethnicities.
+#' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score 
+#' (a measure of the calibration of probabilistic predictions) is similar across different groups. Brier score 
+#' parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
@@ -1252,7 +1257,10 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 
 #' Examine Treatment Equality of a Model
 #'
-#' This function evaluates *Treatment Equality*, a fairness measure that checks whether the model treats different groups (e.g., based on gender or race) equally in terms of the False Negative to False Positive ratio. Treatment equality ensures that the model does not unfairly treat one group more harshly than another by assessing whether the ratio of false negatives to false positives is balanced across groups.
+#' This function evaluates *Treatment Equality*, a fairness criterion that assesses whether the
+#' ratio of false negatives to false positives is similar across groups (e.g., based on gender or race).
+#' Treatment Equality ensures that the model does not disproportionately favor or disadvantage any group
+#' in terms of the relative frequency of missed detections (false negatives) versus false alarms (false positives).
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
@@ -1388,11 +1396,11 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
   return(result_df)
 }
 
-#' Examine Balance for Positive Class of a Model
+#' Examine Balance for the Positive Class of a Model
 #'
-#' This function evaluates Balance for the Positive Class, a fairness metric that checks whether the
-#' predicted probabilities for the positive class (i.e., outcome = 1) are balanced across groups defined
-#' by a sensitive attribute (e.g., gender, race).
+#' This function evaluates *Balance for the Positive Class*, a fairness criterion
+#' that checks whether the model assigns similar predicted probabilities across groups
+#' among individuals whose true outcome is positive (i.e., \(Y = 1\)).
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
@@ -1522,9 +1530,9 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 
 #' Examine Balance for Negative Class of a Model
 #'
-#' This function evaluates Balance for the Negative Class, a fairness metric that checks whether the
-#' predicted probabilities for the negative class (i.e., outcome = 0) are balanced across groups defined
-#' by a sensitive attribute (e.g., gender, race).
+#' This function evaluates *Balance for the Negative Class*, a fairness criterion
+#' that checks whether the model assigns similar predicted probabilities across groups
+#' among individuals whose true outcome is negative (i.e., \(Y = 0\)).
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
