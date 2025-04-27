@@ -6,7 +6,7 @@
 
 A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criteron commonly used in fairness research, particularly in healthcare. It is based on the overview of fairness in machine learning written by Gao et al (2024) (https://arxiv.org/abs/2406.09307).
 
-- [Link](https://jianhuig.github.io/FairnessEval/articles/TwoGroup.html) to online tutorial.
+- [Link](https://jianhuig.github.io/FairnessEval/articles/FairnessEval.html) to online tutorial.
 - [Link](https://arxiv.org/abs/2406.09307) to preprint.
 
 ## Installation
