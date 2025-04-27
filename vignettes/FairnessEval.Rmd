@@ -32,8 +32,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The following is a example analysis for evaluating fairness criterion for models which use binary [protected attributes](https://ocw.mit.edu/courses/res-ec-001-exploring-fairness-in-machine-learning-for-international-development-spring-2020/pages/module-three-framework/protected-attributes/) as part of their inputs. The following packages are used for the analysis along with the `FairnessEval` package.
-
+The following is a example analysis for evaluating Fairness criterion for models which use 
 ```{r setup, message=FALSE, warning=FALSE}
 # Packages we are using for the analysis
 library(dplyr)
@@ -43,15 +42,14 @@ library(pROC)
 library(SpecsVerification)
 library(kableExtra)
 library(naniar)
-# Our package
+# The featured package
 library(FairnessEval)
+data("mimic") # Available in FairnessEval
 ```
-
-The "Data Preprocessing" section discusses the dataset, our handling of missing data along with model construction and traditional verification through train-test splitting of the data for a binary classification problem. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `FairnessEval` package.
 
 # Data Preprocessing
 
-The dataset used in this analysis is the MIMIC II clinical database, which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) and is available in the `FairnessEval` package as the `mimic` dataset. 
+The dataset used in this analysis has been previously studied to investigate the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure regarding mortality outcomes. It includes 46 variables, covering demographics, clinical characteristics (including white blood cell count, heart rate during ICU stays and others), and a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data is made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/).
 
 
 ## Handling Missing Data
@@ -59,21 +57,17 @@ The dataset used in this analysis is the MIMIC II clinical database, which has b
 We first assess the extent of missingness in the dataset. For each variable, we calculate both the total number and the percentage of missing values with `naniar::miss_var_summary()`.
 
 ```{r}
-# Loading mimic dataset 
-# (available in FairnessEval)
-data("mimic") 
-
 missing_data_summary<- naniar::miss_var_summary(mimic)
 
 kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE)
 
 ```
 
-To ensure data quality, the following procedure is applied to handle missing data:
+To ensure data quality, we apply the following procedure for handling missing data:
 
-- Removal of that variables which had more than 10% missing values. Three variables had more than 10% of missing values: body mass index (`bmi`; 26.2%), first partial pressure of oxygen (`po2_first`; 10.5%), and first partial pressure of carbon dioxide (`pco2_first`; 10.5%). 
+- Removal of that have more than 10% missing values. This consisted of three variables in total: body mass index (26.2%), first partial pressure of oxygen (10.5%), and first partial pressure of carbon dioxide (10.5%). 
 
-- Remaining missing values are imputed using the median value of the variable which they belong to.
+- Remaining missing values are imputed using the median value of the column which they belong to.
 
 ```{r}
 # Remove columns with more than 10% missing values
@@ -95,7 +89,7 @@ mimic <- mimic %>%
     )
 ```
 
-We additionally remove `sepsis_flg` column from the dataset as it contains a single unique value across all observations. Since this does not provide any useful information for model training, it is excluded.
+We additionally remove the column `sepsis_flg` from the dataset as it contains a single unique value across all observations. Since it does not provide any useful information for model training, we exclude it.
 
 ```{r}
 # Identify columns that have only one unique value
@@ -106,7 +100,7 @@ mimic <- mimic[, !cols_with_one_value]
 
 ## Model Building
 
-Before training the model, we further remove variables that are directly correlated with patient outcomes to prevent [data leakage](https://en.wikipedia.org/wiki/Leakage_%28machine_learning%29). In particular, we inspect the correlation matrix of the numeric features and exclude variables such as the hospital expiration flag (`hosp_exp_flg`), the ICU expiration flag (`icu_exp_flg`), the mortality censoring day (`mort_day_censored`), and the censoring flag (`censor_flg`), which are strongly associated patient outcomes.
+Before training the model, we remove variables that are directly correlated with the outcome to prevent [data leakage](https://en.wikipedia.org/wiki/Leakage_%28machine_learning%29). In particular, we inspect the correlation matrix of numeric features and exclude variables such as hospital expiration flag, ICU expiration flag, mortality censoring day, and censoring flag, which are strongly associated with patient outcomes.
 
 ```{r}
 # Remove columns that are highly correlated with the outcome variable
@@ -116,7 +110,7 @@ mimic <- mimic %>%
   dplyr::select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
 ```
 
-We split the dataset into a training and testing sets. The first 700 patients are used as the training set and the remaining patients are used as the testing set. The hyperparameters for the random forest (RF) model are set to use 1000 trees and a random sampling of 6 variables at each split, determined by the square root of the number of predictors. After training, the overall area under the receiver operating characteristic curve (AUC) for the model on the test set is 0.90 and the overall accuracy of the model on the test set is 0.88.
+We split the dataset into a training set and a testing set. The first 700 patients were used as the training set and the remaining patients were used as the fairness evaluation set. The hyperparameters for the random forest (RF) model are set to use 1000 trees and a random sampling of 6 variables at each split, determined by the square root of the number of predictors. The overall area under the receiver operating characteristic curve (AUC) for the model on the test set is 0.90 and the overall accuracy of the model on the test set is 0.88.
 
 ```{r}
 # Use 700 labels to train the mimic
@@ -145,20 +139,16 @@ roc_auc
 
 # Fairness Evaluation
 
-For fairness evaluation, use the results of the testing set and focus on patient gender as the binary protected attribute and its relationship with 28-day mortality (`day_28_flg`) as the outcome.
+For fairness evaluation, we focus on sex as the sensitive attribute and 28-day mortality (\texttt{day_28_flg}) as the outcome. We recode the gender variable explicitly for readability:
 
 ```{r}
-# Recode gender variable explicitly for readability: 
-
 test_data <- test_data %>%
   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
 ```
 
-Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We set a threshold of 0.41 to maintain the overall false positive rate (FPR) at approximately 5%
+Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We selected a threshold of 0.41 to approximately control the overall false positive rate (FPR) at 5%. In order to 
 
 ```{r}
-# control the overall false positive rate (FPR) at 5% by setting a threshold.
-
 cut_off <- 0.41
 
 test_data %>%
@@ -166,8 +156,6 @@ test_data %>%
   dplyr::filter(day_28_flg == 0) %>%
   dplyr::summarise(fpr = mean(pred))
 ```
-
-To calculate various fairness metrics for the model, we pass our test data with its predicted results into the `get_fairness_metrics` function.
 
 ```{r}
 fairness_result <- FairnessEval::get_fairness_metrics(
@@ -177,7 +165,7 @@ fairness_result <- FairnessEval::get_fairness_metrics(
   group2 = "age",
   condition = ">=60",
   probs = "pred",
-  cutoff = cut_off
+  cutoff = 0.41
  )
 
 kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
@@ -194,9 +182,9 @@ kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
 ```
 
 
-From the outputted fairness metrics we note: 
+From the fairness metrics we note: 
 
-- Independence is likely violated, as evidenced by the statistical parity metric which shows a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
+- Independence is likely violated, as evidenced by the statistical parity metric showing a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
 
 - With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
 
@@ -206,7 +194,7 @@ From the outputted fairness metrics we note:
 
 # Practical Considerations
 
-In the above example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures immediate intervention is based solely on predicted medical needs rather than other protected attributes. 
+In the example outlined above, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures that immediate intervention is based sorely on predicted medical needs rather than other protected attributes. 
 
-However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. The model used in this example violates separation criteria, which could result in higher rates of
+However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. Our model violates separation criteria, which could result in higher rates of
 undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics.
