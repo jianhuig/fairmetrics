@@ -32,7 +32,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The following is a example analysis for evaluating fairness criterion for models which use binary [protected attributes](https://ocw.mit.edu/courses/res-ec-001-exploring-fairness-in-machine-learning-for-international-development-spring-2020/pages/module-three-framework/protected-attributes/) as part of their inputs. The following packages are used for the analysis along with the `FairnessEval` package.
+We illustrate the usage of the `FairnessEval` package through a case study using a publicly available dataset of 1,776 ICU patients from the MIMIC-II clinical database, focusing on predicting 28-day mortality and evaluating disparities in model performance across sex.
+
+The following packages are used for the analysis along with the `FairnessEval` package:
 
 ```{r setup, message=FALSE, warning=FALSE}
 # Packages we are using for the analysis
@@ -47,12 +49,11 @@ library(naniar)
 library(FairnessEval)
 ```
 
-The "Data Preprocessing" section discusses the dataset, our handling of missing data along with model construction and traditional verification through train-test splitting of the data for a binary classification problem. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `FairnessEval` package.
+The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `FairnessEval` package. Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
 
 # Data Preprocessing
 
-The dataset used in this analysis is the MIMIC II clinical database, which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) and is available in the `FairnessEval` package as the `mimic` dataset. 
-
+The dataset used in this analysis is the MIMIC II clinical database, which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) and is available in the `FairnessEval` package as the `mimic` dataset.
 
 ## Handling Missing Data
 
@@ -65,9 +66,8 @@ data("mimic")
 
 missing_data_summary<- naniar::miss_var_summary(mimic)
 
-kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE) %>%  kableExtra::kable_styling(
-    full_width = FALSE,
-    font_size = 10,         # control font size manually
+kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE) %>%
+  kableExtra::kable_styling(
     latex_options = "hold_position"
   )
 
@@ -75,9 +75,9 @@ kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE) %>%  ka
 
 To ensure data quality, the following procedure is applied to handle missing data:
 
-- Removal of that variables which had more than 10% missing values. Three variables had more than 10% of missing values: body mass index (`bmi`; 26.2%), first partial pressure of oxygen (`po2_first`; 10.5%), and first partial pressure of carbon dioxide (`pco2_first`; 10.5%). 
+-   Removal of that variables which had more than 10% missing values. Three variables had more than 10% of missing values: body mass index (`bmi`; 26.2%), first partial pressure of oxygen (`po2_first`; 10.5%), and first partial pressure of carbon dioxide (`pco2_first`; 10.5%).
 
-- Remaining missing values are imputed using the median value of the variable which they belong to.
+-   Remaining missing values are imputed using the median value of the variable which they belong to.
 
 ```{r}
 # Remove columns with more than 10% missing values
@@ -197,20 +197,35 @@ kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
   )
 ```
 
+From the outputted fairness metrics we note:
 
-From the outputted fairness metrics we note: 
+-   Independence is likely violated, as evidenced by the statistical parity metric which shows a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
 
-- Independence is likely violated, as evidenced by the statistical parity metric which shows a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
+-   With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
 
-- With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
+-   On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
 
-- On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
-
-- Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
+-   Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
 
 # Practical Considerations
 
-In the above example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures immediate intervention is based solely on predicted medical needs rather than other protected attributes. 
+In the above example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures immediate intervention is based solely on predicted medical needs rather than other protected attributes.
 
-However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. The model used in this example violates separation criteria, which could result in higher rates of
-undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics.
+However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. The model used in this example violates separation criteria, which could result in higher rates of undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics.
+
+# Appendix
+
+We illustrate the procedure for constructing confidence intervals (CIs) using the false positive rate (FPR) as an example. Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ represent the estimated and true FPRs in group $A = a$. We construct Wald-type CIs using the following result: $\sqrt{n} \left(\widehat{\textrm{FPR}}_a - \textrm{FPR}_a \right)$ is asymptotic normal with mean 0 in each $A = a$ (e.g., [Gronsbell et al., 2018](https://academic.oup.com/jrsssb/article/80/3/579/7048446)). Let $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ represent the estimated difference between group $a_1$ and $a_0$. It follows that $\sqrt{n}\left(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}\right)$ is asymptotic normal with mean 0. To estimate the standard error of $\widehat{\Delta}_{\textrm{FPR}}$, we utilize the non-parametric bootstrap ([Efron and Tibshirani, 1986](https://projecteuclid.org/journals/statistical-science/volume-1/issue-1/Bootstrap-Methods-for-Standard-Errors-Confidence-Intervals-and-Other-Measures/10.1214/ss/1177013815.full)) . For each bootstrap iteration $b$ in {1,..., B}, we sample the data with replacement within each group and then calculate $\widehat{\Delta}_{\textrm{FPR}}^{(b)}$. Note that resampling within groups assumes that the group sizes are fixed. The estimated standard error is the empirical standard error of the difference:
+
+$$
+\widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left(\widehat{\Delta}_{\textrm{FPR}}^{(b)} - \frac{1}{B} \sum_{b=1}^B \widehat{\Delta}_{\textrm{FPR}}^{(b)}\right)^2}.
+$$
+The corresponding Wald-based $100(1-\alpha)\%$ CI is given by $\widehat{\Delta}_{\textrm{FPR}} \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right]$, where $z_{1-\alpha/2}$ is the $100(1-\alpha/2)$ percentile of the standard normal distribution.
+
+To construct a $100(1-\alpha)\%$ Wald-type CI for the ratio $\widehat{\rho}_{\textrm{FPR}} = \frac{\widehat{\textrm{FPR}}_{a_1}}{\widehat{\textrm{FPR}}_{a_0}}$, we note that $\sqrt{n}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)- \log\left(\rho_{\textrm{FPR}}\right)\right]$ is asymptotic normal with mean 0. For each bootstrap iteration $b$ in {1,..., B}, we sample the data with replacement within each group and then calculate $\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]$. The estimated standard error of the log ratio is:
+
+$$
+\widehat{\textrm{se}}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left\{\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right] - \frac{1}{B} \sum_{b=1}^B \log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]\right\}^2}.
+$$
+
+The corresponding $100(1-\alpha)\%$ CI is given by $\exp \left\{\log\left[\widehat{\rho}_{\textrm{FPR}}\right] \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)\right]\right\}$, where $z_{1-\alpha/2}$ is the $100(1-\alpha/2)$ percentile of the standard normal distribution.
