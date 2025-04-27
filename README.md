@@ -19,7 +19,7 @@ devtools::install_github(repo = "https://github.com/jianhuig/FairnessTutorial")
 
 To cite package ‘FairnessEval’ in publications use:
 
-> Gao J, Chou B, Gronsbell J, Smith B (2025). _FairnessEval: Fairness evaluation metrics with confidence intervals_. R package version 1.0.0, <https://jianhuig.github.io/FairnessEval/>.
+> Gao J,  Smith B, Chou B, Gronsbell J (2025). _FairnessEval: Fairness evaluation metrics with confidence intervals_. R package version 1.0.0, <https://jianhuig.github.io/FairnessEval/>.
 
 
 A BibTeX entry for LaTeX users is
@@ -27,7 +27,7 @@ A BibTeX entry for LaTeX users is
 ```
 @Manual{,
     title = {FairnessEval: Fairness evaluation metrics with confidence intervals},
-    author = {Jianhui Gao and Benson Chou and Jessica Gronsbell and Benjamin Smith},
+    author = {Jianhui Gao and Benjamin Smith and Benson Chou and Jessica Gronsbell},
     year = {2025},
     note = {R package version 1.0.0},
     url = {https://jianhuig.github.io/FairnessTutorial/},

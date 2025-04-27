@@ -1,5 +1,21 @@
 ---
 title: "Binary Protected Attributes"
+authors:
+  - name: "Jianhui Gao"
+    orcid: "0000-0003-0915-1473"
+    affiliation: 1
+  - name: "Benjamin Smith"
+    orcid: "0009-0007-2206-0177"
+    affiliation: 1
+  - name: "Benson Chou"
+    orcid: "0009-0007-0265-033X"
+    affiliation: 1
+  - name: "Jessica Gronsbell"
+    orcid: "0000-0002-5360-5869"
+    affiliation: 1
+affiliations:
+  - name: "University of Toronto"
+    index: 1
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Binary Protected Attributes}
@@ -14,6 +30,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Introduction
+
 ```{r setup, message=FALSE, warning=FALSE}
 library(FairnessEval)
 library(dplyr)
@@ -22,31 +40,23 @@ library(randomForest)
 library(pROC)
 library(SpecsVerification)
 library(kableExtra)
+library(naniar)
 data("mimic")
 ```
 
 # Data Preprocessing
 
-The dataset used in this analysis has been previously studied to investigate the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure regarding mortality outcomes. It includes 46 variables, covering demographics, clinical characteristics (e.g., white blood cell count, heart rate during ICU stays), and a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data are publicly available at [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/).
+The dataset used in this analysis has been previously studied to investigate the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure regarding mortality outcomes. It includes 46 variables, covering demographics, clinical characteristics (including white blood cell count, heart rate during ICU stays and others), and a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data is made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/).
 
 
 ## Handling Missing Data
 
-We first assessed the extent of missingness in the dataset. For each variable, we calculated both the total number and the percentage of missing values:
+We first assessed the extent of missingness in the dataset. For each variable, we calculated both the total number and the percentage of missing values with `naniar::miss_var_summary()`.
 
 ```{r}
-# Calculate the number of missing values per column
-missing_values <- sapply(mimic, function(x) sum(is.na(x)))
+missing_data_summary<- naniar::miss_var_summary(mimic)
 
-# Calculate the percentage of missing values per column
-missing_values_percentage <- sapply(mimic, function(x) sum(is.na(x)) / length(x) * 100)
-
-# Combine the results into a data frame for easy viewing
-missing_data_summary <- data.frame(Number_of_Missing_Values = missing_values, 
-                                   Percentage = missing_values_percentage)
-
-# Print the summary
-print(missing_data_summary)
+missing_data_summary
 ```
 
 To ensure data quality, we applied the following missing data handling procedure:
@@ -56,11 +66,22 @@ To ensure data quality, we applied the following missing data handling procedure
 
 ```{r}
 # Remove columns with more than 10% missing values
-columns_to_remove <- names(missing_values_percentage[missing_values_percentage > 10])
-mimic <- select(mimic, -one_of(columns_to_remove))
+columns_to_remove <- missing_data_summary %>%
+  dplyr::filter(pct_miss > 10) %>%
+  dplyr::pull(variable)
+  
+mimic <- dplyr::select(mimic, 
+                       -dplyr::one_of(columns_to_remove)
+                       )
 
 # Impute remaining missing values with median
-mimic <- mimic %>% mutate(across(where(~any(is.na(.))), ~ifelse(is.na(.), median(., na.rm = TRUE), .)))
+mimic <- mimic %>% 
+  dplyr::mutate(
+    dplyr::across(
+      dplyr::where(~any(is.na(.))), 
+                  ~ifelse(is.na(.), median(., na.rm = TRUE), .)
+                  )
+    )
 
 # Verify that no missing values remain
 remaining_missing_values <- sum(sapply(mimic, function(x) sum(is.na(x))))
@@ -83,9 +104,10 @@ Before model training, we removed variables that are directly correlated with th
 
 ```{r}
 # Remove columns that are highly correlated with the outcome variable
-corrplot(cor(select_if(mimic, is.numeric)), method = "color", tl.cex = 0.5)
+corrplot::corrplot(cor(select_if(mimic, is.numeric)), method = "color", tl.cex = 0.5)
+
 mimic <- mimic %>% 
-  select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
+  dplyr::select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
 ```
 
 We split the dataset into a training set and a testing set:
@@ -97,18 +119,26 @@ The hyperparameters for the random forest (RF) model were set to use 1000 trees 
 
 ```{r}
 # Use 700 labels to train the mimic
-train_data <- mimic %>% filter(row_number() <= 700)
+train_data <- mimic %>% 
+  dplyr::filter(
+    dplyr::row_number() <= 700
+    )
+
 # Fit a random forest model
 set.seed(123)
-rf_model <- randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 
 # Test the model on the remaining data
-test_data <- mimic %>% filter(row_number() > 700)
+test_data <- mimic %>% 
+  dplyr::filter(
+    dplyr::row_number() > 700
+    )
+
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[,2]
 
 # Check the AUC
-roc_obj <- roc(test_data$day_28_flg, test_data$pred)
-roc_auc <- auc(roc_obj)
+roc_obj <- pROC::roc(test_data$day_28_flg, test_data$pred)
+roc_auc <- pROC::auc(roc_obj)
 roc_auc
 ```
 
@@ -118,7 +148,7 @@ For fairness evaluation, we focus on sex as the sensitive attribute and 28-day m
 
 ```{r}
 test_data <- test_data %>%
-  mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
+  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
 ```
 
 Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We selected a threshold of 0.41 to approximately control the overall false positive rate (FPR) at 5%.
@@ -127,13 +157,13 @@ Since many fairness metrics require binary predictions, we threshold the predict
 cut_off <- 0.41
 
 test_data %>%
-  mutate(pred = ifelse(pred > cut_off, 1, 0)) %>%
-  filter(day_28_flg == 0) %>%
-  summarise(fpr = mean(pred))
+  dplyr::mutate(pred = ifelse(pred > cut_off, 1, 0)) %>%
+  dplyr::filter(day_28_flg == 0) %>%
+  dplyr::summarise(fpr = mean(pred))
 ```
 
 ```{r}
-fairness_result <- get_fairness_metrics(
+fairness_result <- FairnessEval::get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",
