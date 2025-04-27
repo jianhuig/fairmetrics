@@ -31,12 +31,6 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/FairnessEval.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/TwoGroup.html">Binary Protected Attributes</a></li>
-  </ul>
-</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -67,10 +61,13 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The following is a example analysis for evaluating fairness criterion
-for models which use binary <a href="https://ocw.mit.edu/courses/res-ec-001-exploring-fairness-in-machine-learning-for-international-development-spring-2020/pages/module-three-framework/protected-attributes/" class="external-link">protected
-attributes</a> as part of their inputs. The following packages are used
-for the analysis along with the <code>FairnessEval</code> package.</p>
+<p>We illustrate the usage of the <code>FairnessEval</code> package
+through a case study using a publicly available dataset of 1,776 ICU
+patients from the MIMIC-II clinical database, focusing on predicting
+28-day mortality and evaluating disparities in model performance across
+sex.</p>
+<p>The following packages are used for the analysis along with the
+<code>FairnessEval</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Packages we are using for the analysis</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -82,12 +79,17 @@ for the analysis along with the <code>FairnessEval</code> package.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/njtierney/naniar" class="external-link">naniar</a></span><span class="op">)</span></span>
 <span><span class="co"># Our package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jianhuig.github.io/FairnessTutorial/" class="external-link">FairnessEval</a></span><span class="op">)</span></span></code></pre></div>
-<p>The “Data Preprocessing” section discusses the dataset, our handling
-of missing data along with model construction and traditional
-verification through train-test splitting of the data for a binary
-classification problem. The “Fairness Evaluation” section shows how to
-evaluate the model’s fairness toward binary protected attributes with
-the <code>FairnessEval</code> package.</p>
+<p>The “Data Preprocessing” section discusses the dataset, the handling
+of missing data, model construction and standard predictive model
+evaluation through train-test splitting for binary classification. The
+“Fairness Evaluation” section shows how to evaluate the model’s fairness
+toward binary protected attributes with the <code>FairnessEval</code>
+package. Finally, the “Practical Considerations” section discusses the
+inherent trade-offs between different fairness definitions in clinical
+settings and highlights the challenges of enforcing fairness when
+outcome prevalence differs across groups. Details regarding the
+construction of 95% confidence intervals are provided in the
+appendix.</p>
 </div>
 <div class="section level2">
 <h2 id="data-preprocessing">Data Preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a>
@@ -116,12 +118,11 @@ missing values with <code><a href="https://naniar.njtierney.com/reference/miss_v
 <span></span>
 <span><span class="va">missing_data_summary</span><span class="op">&lt;-</span> <span class="fu">naniar</span><span class="fu">::</span><span class="fu"><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">miss_var_summary</a></span><span class="op">(</span><span class="va">mimic</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">missing_data_summary</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
-<span>    full_width <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># control font size manually</span></span>
+<span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">missing_data_summary</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
 <span>    latex_options <span class="op">=</span> <span class="st">"hold_position"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<table class="table table" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
 variable
@@ -1119,6 +1120,76 @@ risk among male patients and potential delays in interventions to their
 care. In the main text, we refer user to a recent <a href="https://arxiv.org/abs/2207.07068" class="external-link">survey</a> for bias mitigation
 strategies that can potentially help reduce the observed disparities in
 separation-based metrics.</p>
+</div>
+<div class="section level2">
+<h2 id="appendix">Appendix<a class="anchor" aria-label="anchor" href="#appendix"></a>
+</h2>
+<p>We illustrate the procedure for constructing confidence intervals
+(CIs) using the false positive rate (FPR) as an example. Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><mi>a</mi></msub><annotation encoding="application/x-tex">\widehat{\textrm{FPR}}_a</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">FPR</mtext><mi>a</mi></msub><annotation encoding="application/x-tex">\textrm{FPR}_a</annotation></semantics></math>
+represent the estimated and true FPRs in group
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">A = a</annotation></semantics></math>.
+We construct Wald-type CIs using the following result:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>n</mi></msqrt><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><mi>a</mi></msub><mo>−</mo><msub><mtext mathvariant="normal">FPR</mtext><mi>a</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\sqrt{n} \left(\widehat{\textrm{FPR}}_a - \textrm{FPR}_a \right)</annotation></semantics></math>
+is asymptotic normal with mean 0 in each
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">A = a</annotation></semantics></math>
+(e.g., <a href="https://academic.oup.com/jrsssb/article/80/3/579/7048446" class="external-link">Gronsbell
+et al., 2018</a>). Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo>=</mo><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><msub><mi>a</mi><mn>1</mn></msub></msub><mo>−</mo><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><msub><mi>a</mi><mn>0</mn></msub></msub></mrow><annotation encoding="application/x-tex">\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}</annotation></semantics></math>
+represent the estimated difference between group
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mn>1</mn></msub><annotation encoding="application/x-tex">a_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>a</mi><mn>0</mn></msub><annotation encoding="application/x-tex">a_0</annotation></semantics></math>.
+It follows that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>n</mi></msqrt><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo>−</mo><msub><mi>Δ</mi><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\sqrt{n}\left(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}\right)</annotation></semantics></math>
+is asymptotic normal with mean 0. To estimate the standard error of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><annotation encoding="application/x-tex">\widehat{\Delta}_{\textrm{FPR}}</annotation></semantics></math>,
+we utilize the non-parametric bootstrap (<a href="https://projecteuclid.org/journals/statistical-science/volume-1/issue-1/Bootstrap-Methods-for-Standard-Errors-Confidence-Intervals-and-Other-Measures/10.1214/ss/1177013815.full" class="external-link">Efron
+and Tibshirani, 1986</a>) . For each bootstrap iteration
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+in {1,…, B}, we sample the data with replacement within each group and
+then calculate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><annotation encoding="application/x-tex">\widehat{\Delta}_{\textrm{FPR}}^{(b)}</annotation></semantics></math>.
+Note that resampling within groups assumes that the group sizes are
+fixed. The estimated standard error is the empirical standard error of
+the difference:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msqrt><mrow><mfrac><mn>1</mn><mrow><mi>B</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>−</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><msubsup><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mrow></msqrt><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left(\widehat{\Delta}_{\textrm{FPR}}^{(b)} - \frac{1}{B} \sum_{b=1}^B \widehat{\Delta}_{\textrm{FPR}}^{(b)}\right)^2}.
+</annotation></semantics></math> The corresponding Wald-based
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>%</mi></mrow><annotation encoding="application/x-tex">100(1-\alpha)\%</annotation></semantics></math>
+CI is given by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo>±</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><mo>*</mo><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\widehat{\Delta}_{\textrm{FPR}} \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right]</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">z_{1-\alpha/2}</annotation></semantics></math>
+is the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">100(1-\alpha/2)</annotation></semantics></math>
+percentile of the standard normal distribution.</p>
+<p>To construct a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>%</mi></mrow><annotation encoding="application/x-tex">100(1-\alpha)\%</annotation></semantics></math>
+Wald-type CI for the ratio
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo>=</mo><mfrac><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><msub><mi>a</mi><mn>1</mn></msub></msub><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><msub><mi>a</mi><mn>0</mn></msub></msub></mfrac></mrow><annotation encoding="application/x-tex">\widehat{\rho}_{\textrm{FPR}} = \frac{\widehat{\textrm{FPR}}_{a_1}}{\widehat{\textrm{FPR}}_{a_0}}</annotation></semantics></math>,
+we note that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>n</mi></msqrt><mrow><mo stretchy="true" form="prefix">[</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>ρ</mi><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\sqrt{n}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)- \log\left(\rho_{\textrm{FPR}}\right)\right]</annotation></semantics></math>
+is asymptotic normal with mean 0. For each bootstrap iteration
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>
+in {1,…, B}, we sample the data with replacement within each group and
+then calculate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">[</mo><msubsup><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]</annotation></semantics></math>.
+The estimated standard error of the log ratio is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msqrt><mrow><mfrac><mn>1</mn><mrow><mi>B</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">{</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">[</mo><msubsup><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><mo>log</mo><mrow><mo stretchy="true" form="prefix">[</mo><msubsup><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow><mn>2</mn></msup></mrow></msqrt><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\widehat{\textrm{se}}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left\{\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right] - \frac{1}{B} \sum_{b=1}^B \log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]\right\}^2}.
+</annotation></semantics></math></p>
+<p>The corresponding
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>%</mi></mrow><annotation encoding="application/x-tex">100(1-\alpha)\%</annotation></semantics></math>
+CI is given by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>exp</mo><mrow><mo stretchy="true" form="prefix">{</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>±</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><mo>*</mo><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow></mrow><annotation encoding="application/x-tex">\exp \left\{\log\left[\widehat{\rho}_{\textrm{FPR}}\right] \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)\right]\right\}</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">z_{1-\alpha/2}</annotation></semantics></math>
+is the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">100(1-\alpha/2)</annotation></semantics></math>
+percentile of the standard normal distribution.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
