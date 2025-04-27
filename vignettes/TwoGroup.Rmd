@@ -87,19 +87,18 @@ mimic <- mimic %>%
     )
 ```
 
-To further clean the data, we identified and removed variables `sepsis_flg` that contained only a single unique value across all samples. Such variables are non-informative for model training.
+We additionally remove the column `sepsis_flg` from the dataset as it contains a single unique value across all observations. Since it does not provide any useful information for model training, we exclude it.
 
 ```{r}
 # Identify columns that have only one unique value
 cols_with_one_value <- sapply(mimic, function(x) length(unique(x)) == 1)
-
 # Subset the dataframe to remove these columns
 mimic <- mimic[, !cols_with_one_value]
 ```
 
 ## Model Building
 
-Before model training, we removed variables that are directly correlated with the outcome to prevent data leakage. Specifically, we inspected the correlation matrix of numeric features and excluded variables such as hospital expiration flag, ICU expiration flag, mortality censoring day, and censoring flag, which are strongly associated with patient outcomes.
+Before training the model, we remove variables that are directly correlated with the outcome to prevent [data leakage](https://en.wikipedia.org/wiki/Leakage_%28machine_learning%29). In particular, we inspect the correlation matrix of numeric features and exclude variables such as hospital expiration flag, ICU expiration flag, mortality censoring day, and censoring flag, which are strongly associated with patient outcomes.
 
 ```{r}
 # Remove columns that are highly correlated with the outcome variable
@@ -109,12 +108,7 @@ mimic <- mimic %>%
   dplyr::select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
 ```
 
-We split the dataset into a training set and a testing set:
-
-- The first 700 patients were used as the training set.
-- The remaining patients were used as the fairness evaluation set.
-
-The hyperparameters for the random forest (RF) model were set to use 1000 trees and a random sampling of 6 variables at each split, determined by the square root of the number of predictors. The overall area under the receiver operating characteristic curve (AUC) for our model on the test set is 0.90. Additionally, the overall accuracy of the model on the test set is 0.88.
+We split the dataset into a training set and a testing set. The first 700 patients were used as the training set and the remaining patients were used as the fairness evaluation set. The hyperparameters for the random forest (RF) model are set to use 1000 trees and a random sampling of 6 variables at each split, determined by the square root of the number of predictors. The overall area under the receiver operating characteristic curve (AUC) for the model on the test set is 0.90 and the overall accuracy of the model on the test set is 0.88.
 
 ```{r}
 # Use 700 labels to train the mimic
