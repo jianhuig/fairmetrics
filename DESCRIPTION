@@ -25,7 +25,8 @@ Suggests:
   knitr,
   rmarkdown,
   testthat,
-  kableExtra
+  kableExtra,
+  naniar
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5.0)

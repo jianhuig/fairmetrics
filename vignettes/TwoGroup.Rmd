@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 # Introduction
 
 ```{r setup, message=FALSE, warning=FALSE}
-library(FairnessEval)
+# Packages we are using for the analysis
 library(dplyr)
 library(corrplot)
 library(randomForest)
@@ -41,7 +41,9 @@ library(pROC)
 library(SpecsVerification)
 library(kableExtra)
 library(naniar)
-data("mimic")
+# The featured package
+library(FairnessEval)
+data("mimic") # Available in FairnessEval
 ```
 
 # Data Preprocessing
