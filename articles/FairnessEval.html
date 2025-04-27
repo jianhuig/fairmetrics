@@ -31,6 +31,12 @@
       <ul class="navbar-nav me-auto">
 <li class="active nav-item"><a class="nav-link" href="../articles/FairnessEval.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/TwoGroup.html">Binary Protected Attributes</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -110,243 +116,529 @@ missing values with <code><a href="https://naniar.njtierney.com/reference/miss_v
 <span></span>
 <span><span class="va">missing_data_summary</span><span class="op">&lt;-</span> <span class="fu">naniar</span><span class="fu">::</span><span class="fu"><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">miss_var_summary</a></span><span class="op">(</span><span class="va">mimic</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">missing_data_summary</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left">variable</th>
-<th align="right">n_miss</th>
-<th align="right">pct_miss</th>
+<span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">missing_data_summary</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
+<span>    full_width <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># control font size manually</span></span>
+<span>    latex_options <span class="op">=</span> <span class="st">"hold_position"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<table class="table table" style="font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+variable
+</th>
+<th style="text-align:right;">
+n_miss
+</th>
+<th style="text-align:right;">
+pct_miss
+</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">bmi</td>
-<td align="right">466</td>
-<td align="right">26.2</td>
+<tr>
+<td style="text-align:left;">
+bmi
+</td>
+<td style="text-align:right;">
+466
+</td>
+<td style="text-align:right;">
+26.2
+</td>
 </tr>
-<tr class="even">
-<td align="left">po2_first</td>
-<td align="right">186</td>
-<td align="right">10.5</td>
+<tr>
+<td style="text-align:left;">
+po2_first
+</td>
+<td style="text-align:right;">
+186
+</td>
+<td style="text-align:right;">
+10.5
+</td>
 </tr>
-<tr class="odd">
-<td align="left">pco2_first</td>
-<td align="right">186</td>
-<td align="right">10.5</td>
+<tr>
+<td style="text-align:left;">
+pco2_first
+</td>
+<td style="text-align:right;">
+186
+</td>
+<td style="text-align:right;">
+10.5
+</td>
 </tr>
-<tr class="even">
-<td align="left">iv_day_1</td>
-<td align="right">143</td>
-<td align="right">8.05</td>
+<tr>
+<td style="text-align:left;">
+iv_day_1
+</td>
+<td style="text-align:right;">
+143
+</td>
+<td style="text-align:right;">
+8.05
+</td>
 </tr>
-<tr class="odd">
-<td align="left">weight_first</td>
-<td align="right">110</td>
-<td align="right">6.19</td>
+<tr>
+<td style="text-align:left;">
+weight_first
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+6.19
+</td>
 </tr>
-<tr class="even">
-<td align="left">sapsi_first</td>
-<td align="right">85</td>
-<td align="right">4.79</td>
+<tr>
+<td style="text-align:left;">
+sapsi_first
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:right;">
+4.79
+</td>
 </tr>
-<tr class="odd">
-<td align="left">wbc_first</td>
-<td align="right">8</td>
-<td align="right">0.450</td>
+<tr>
+<td style="text-align:left;">
+wbc_first
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.450
+</td>
 </tr>
-<tr class="even">
-<td align="left">hgb_first</td>
-<td align="right">8</td>
-<td align="right">0.450</td>
+<tr>
+<td style="text-align:left;">
+hgb_first
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.450
+</td>
 </tr>
-<tr class="odd">
-<td align="left">platelet_first</td>
-<td align="right">8</td>
-<td align="right">0.450</td>
+<tr>
+<td style="text-align:left;">
+platelet_first
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.450
+</td>
 </tr>
-<tr class="even">
-<td align="left">sofa_first</td>
-<td align="right">6</td>
-<td align="right">0.338</td>
+<tr>
+<td style="text-align:left;">
+sofa_first
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.338
+</td>
 </tr>
-<tr class="odd">
-<td align="left">creatinine_first</td>
-<td align="right">6</td>
-<td align="right">0.338</td>
+<tr>
+<td style="text-align:left;">
+creatinine_first
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.338
+</td>
 </tr>
-<tr class="even">
-<td align="left">sodium_first</td>
-<td align="right">5</td>
-<td align="right">0.282</td>
+<tr>
+<td style="text-align:left;">
+sodium_first
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.282
+</td>
 </tr>
-<tr class="odd">
-<td align="left">potassium_first</td>
-<td align="right">5</td>
-<td align="right">0.282</td>
+<tr>
+<td style="text-align:left;">
+potassium_first
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.282
+</td>
 </tr>
-<tr class="even">
-<td align="left">tco2_first</td>
-<td align="right">5</td>
-<td align="right">0.282</td>
+<tr>
+<td style="text-align:left;">
+tco2_first
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.282
+</td>
 </tr>
-<tr class="odd">
-<td align="left">chloride_first</td>
-<td align="right">5</td>
-<td align="right">0.282</td>
+<tr>
+<td style="text-align:left;">
+chloride_first
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.282
+</td>
 </tr>
-<tr class="even">
-<td align="left">bun_first</td>
-<td align="right">5</td>
-<td align="right">0.282</td>
+<tr>
+<td style="text-align:left;">
+bun_first
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.282
+</td>
 </tr>
-<tr class="odd">
-<td align="left">temp_1st</td>
-<td align="right">3</td>
-<td align="right">0.169</td>
+<tr>
+<td style="text-align:left;">
+temp_1st
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.169
+</td>
 </tr>
-<tr class="even">
-<td align="left">gender_num</td>
-<td align="right">1</td>
-<td align="right">0.056 [4m3 [24m</td>
+<tr>
+<td style="text-align:left;">
+gender_num
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.056[4m3[2
+</td>
 </tr>
-<tr class="odd">
-<td align="left">aline_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+aline_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">icu_los_day</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+icu_los_day
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">hospital_los_day</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+hospital_los_day
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">age</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">service_unit</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+service_unit
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">service_num</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+service_num
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">day_icu_intime</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+day_icu_intime
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">day_icu_intime_num</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+day_icu_intime_num
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">hour_icu_intime</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+hour_icu_intime
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">hosp_exp_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+hosp_exp_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">icu_exp_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+icu_exp_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">day_28_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+day_28_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">mort_day_censored</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+mort_day_censored
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">censor_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+censor_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">sepsis_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+sepsis_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">chf_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+chf_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">afib_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+afib_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">renal_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+renal_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">liver_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+liver_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">copd_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+copd_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">cad_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+cad_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">stroke_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+stroke_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">mal_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+mal_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">resp_flg</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+resp_flg
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">map_1st</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+map_1st
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">hr_1st</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+hr_1st
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td align="left">spo2_1st</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+spo2_1st
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
-<tr class="even">
-<td align="left">abg_count</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<tr>
+<td style="text-align:left;">
+abg_count
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
 </tr>
 </tbody>
 </table>
