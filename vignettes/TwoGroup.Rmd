@@ -53,7 +53,7 @@ The dataset used in this analysis has been previously studied to investigate the
 
 ## Handling Missing Data
 
-We first assessed the extent of missingness in the dataset. For each variable, we calculated both the total number and the percentage of missing values with `naniar::miss_var_summary()`.
+We first assess the extent of missingness in the dataset. For each variable, we calculate both the total number and the percentage of missing values with `naniar::miss_var_summary()`.
 
 ```{r}
 missing_data_summary<- naniar::miss_var_summary(mimic)
@@ -61,10 +61,11 @@ missing_data_summary<- naniar::miss_var_summary(mimic)
 missing_data_summary
 ```
 
-To ensure data quality, we applied the following missing data handling procedure:
+To ensure data quality, we apply the following procedure for handling missing data:
 
-- We removed three variables that had more than 10% missing values: body mass index (26.2%), first partial pressure of oxygen (10.5%), and first partial pressure of carbon dioxide (10.5%). 
-- Remaining missing values were imputed using the median of each variable.
+- Removal of that have more than 10% missing values. This consisted of three variables in total: body mass index (26.2%), first partial pressure of oxygen (10.5%), and first partial pressure of carbon dioxide (10.5%). 
+
+- Remaining missing values are imputed using the median value of the column which they belong to.
 
 ```{r}
 # Remove columns with more than 10% missing values
@@ -84,10 +85,6 @@ mimic <- mimic %>%
                   ~ifelse(is.na(.), median(., na.rm = TRUE), .)
                   )
     )
-
-# Verify that no missing values remain
-remaining_missing_values <- sum(sapply(mimic, function(x) sum(is.na(x))))
-remaining_missing_values
 ```
 
 To further clean the data, we identified and removed variables `sepsis_flg` that contained only a single unique value across all samples. Such variables are non-informative for model training.
