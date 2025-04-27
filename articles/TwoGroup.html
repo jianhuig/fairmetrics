@@ -93,8 +93,8 @@ available by <a href="https://physionet.org/content/mimic2-iaccd/1.0/" class="ex
 <div class="section level3">
 <h3 id="handling-missing-data">Handling Missing Data<a class="anchor" aria-label="anchor" href="#handling-missing-data"></a>
 </h3>
-<p>We first assessed the extent of missingness in the dataset. For each
-variable, we calculated both the total number and the percentage of
+<p>We first assess the extent of missingness in the dataset. For each
+variable, we calculate both the total number and the percentage of
 missing values with <code><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">naniar::miss_var_summary()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">missing_data_summary</span><span class="op">&lt;-</span> <span class="fu">naniar</span><span class="fu">::</span><span class="fu"><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">miss_var_summary</a></span><span class="op">(</span><span class="va">mimic</span><span class="op">)</span></span>
@@ -114,14 +114,15 @@ missing values with <code><a href="https://naniar.njtierney.com/reference/miss_v
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> platelet_first      8    0.450</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> sofa_first          6    0.338</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 36 more rows</span></span></span></code></pre></div>
-<p>To ensure data quality, we applied the following missing data
-handling procedure:</p>
+<p>To ensure data quality, we apply the following procedure for handling
+missing data:</p>
 <ul>
-<li>We removed three variables that had more than 10% missing values:
-body mass index (26.2%), first partial pressure of oxygen (10.5%), and
-first partial pressure of carbon dioxide (10.5%).</li>
-<li>Remaining missing values were imputed using the median of each
-variable.</li>
+<li><p>Removal of that have more than 10% missing values. This consisted
+of three variables in total: body mass index (26.2%), first partial
+pressure of oxygen (10.5%), and first partial pressure of carbon dioxide
+(10.5%).</p></li>
+<li><p>Remaining missing values are imputed using the median value of
+the column which they belong to.</p></li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove columns with more than 10% missing values</span></span>
@@ -140,12 +141,7 @@ variable.</li>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>                  <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">.</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">.</span><span class="op">)</span></span>
 <span>                  <span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Verify that no missing values remain</span></span>
-<span><span class="va">remaining_missing_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">mimic</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">remaining_missing_values</span></span>
-<span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
+<span>    <span class="op">)</span></span></code></pre></div>
 <p>To further clean the data, we identified and removed variables
 <code>sepsis_flg</code> that contained only a single unique value across
 all samples. Such variables are non-informative for model training.</p>
