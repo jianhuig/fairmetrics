@@ -50,7 +50,7 @@
 
 
 
-
+<script src="TwoGroup_files/kePrint-0.0.1/kePrint.js"></script><link href="TwoGroup_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
@@ -70,14 +70,25 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://xrobin.github.io/pROC/" class="external-link">pROC</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">SpecsVerification</span><span class="op">)</span></span>
-<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mimic"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="data-preprocessing">Data Preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a>
 </h2>
+<p>The dataset used in this analysis has been previously studied to
+investigate the relationship between indwelling arterial catheters in
+hemodynamically stable patients and respiratory failure regarding
+mortality outcomes. It includes 46 variables, covering demographics,
+clinical characteristics (e.g., white blood cell count, heart rate
+during ICU stays), and a 28-day mortality indicator
+(<code>day_28_flg</code>) for 1,776 patients. The data are publicly
+available at <a href="https://physionet.org/content/mimic2-iaccd/1.0/" class="external-link">PhysioNet</a>.</p>
 <div class="section level3">
-<h3 id="missing-data">Missing Data<a class="anchor" aria-label="anchor" href="#missing-data"></a>
+<h3 id="handling-missing-data">Handling Missing Data<a class="anchor" aria-label="anchor" href="#handling-missing-data"></a>
 </h3>
+<p>We first assessed the extent of missingness in the dataset. For each
+variable, we calculated both the total number and the percentage of
+missing values:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate the number of missing values per column</span></span>
 <span><span class="va">missing_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">mimic</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -137,24 +148,33 @@
 <span><span class="co">#&gt; creatinine_first                          6  0.33783784</span></span>
 <span><span class="co">#&gt; po2_first                               186 10.47297297</span></span>
 <span><span class="co">#&gt; pco2_first                              186 10.47297297</span></span>
-<span><span class="co">#&gt; iv_day_1                                143  8.05180180</span></span>
-<span></span>
-<span><span class="co"># remove columns with more than 10% missing data and impute the rest with median</span></span>
-<span><span class="co"># Identify columns with more than 10% missing values</span></span>
+<span><span class="co">#&gt; iv_day_1                                143  8.05180180</span></span></code></pre></div>
+<p>To ensure data quality, we applied the following missing data
+handling procedure:</p>
+<ul>
+<li>We removed three variables that had more than 10% missing values:
+body mass index (26.2%), first partial pressure of oxygen (10.5%), and
+first partial pressure of carbon dioxide (10.5%).</li>
+<li>Remaining missing values were imputed using the median of each
+variable.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Remove columns with more than 10% missing values</span></span>
 <span><span class="va">columns_to_remove</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">missing_values_percentage</span><span class="op">[</span><span class="va">missing_values_percentage</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">]</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Remove these columns</span></span>
 <span><span class="va">mimic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mimic</span>, <span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/one_of.html" class="external-link">one_of</a></span><span class="op">(</span><span class="va">columns_to_remove</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Impute remaining missing values with median</span></span>
-<span><span class="va">mimic</span><span class="op">&lt;-</span> <span class="va">mimic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">.</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mimic</span> <span class="op">&lt;-</span> <span class="va">mimic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">.</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Check if there are any missing values left</span></span>
+<span><span class="co"># Verify that no missing values remain</span></span>
 <span><span class="va">remaining_missing_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">mimic</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">remaining_missing_values</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
-<span></span>
-<span><span class="co"># Identify columns that have only one unique value</span></span>
+<span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
+<p>To further clean the data, we identified and removed variables
+<code>sepsis_flg</code> that contained only a single unique value across
+all samples. Such variables are non-informative for model training.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Identify columns that have only one unique value</span></span>
 <span><span class="va">cols_with_one_value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">mimic</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Subset the dataframe to remove these columns</span></span>
@@ -163,15 +183,33 @@
 <div class="section level3">
 <h3 id="model-building">Model Building<a class="anchor" aria-label="anchor" href="#model-building"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Before model training, we removed variables that are directly
+correlated with the outcome to prevent data leakage. Specifically, we
+inspected the correlation matrix of numeric features and excluded
+variables such as hospital expiration flag, ICU expiration flag,
+mortality censoring day, and censoring flag, which are strongly
+associated with patient outcomes.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove columns that are highly correlated with the outcome variable</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/corrplot/man/corrplot.html" class="external-link">corrplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">select_if</a></span><span class="op">(</span><span class="va">mimic</span>, <span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"color"</span>, tl.cex <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="TwoGroup_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p><img src="TwoGroup_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mimic</span> <span class="op">&lt;-</span> <span class="va">mimic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hosp_exp_flg"</span>, <span class="st">"icu_exp_flg"</span>, <span class="st">"mort_day_censored"</span>, <span class="st">"censor_flg"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Use 700 labels to train the mimic</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hosp_exp_flg"</span>, <span class="st">"icu_exp_flg"</span>, <span class="st">"mort_day_censored"</span>, <span class="st">"censor_flg"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>We split the dataset into a training set and a testing set:</p>
+<ul>
+<li>The first 700 patients were used as the training set.</li>
+<li>The remaining patients were used as the fairness evaluation
+set.</li>
+</ul>
+<p>The hyperparameters for the random forest (RF) model were set to use
+1000 trees and a random sampling of 6 variables at each split,
+determined by the square root of the number of predictors. The overall
+area under the receiver operating characteristic curve (AUC) for our
+model on the test set is 0.90. Additionally, the overall accuracy of the
+model on the test set is 0.88.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Use 700 labels to train the mimic</span></span>
 <span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">mimic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">700</span><span class="op">)</span></span>
 <span><span class="co"># Fit a random forest model</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -179,19 +217,31 @@
 <span></span>
 <span><span class="co"># Test the model on the remaining data</span></span>
 <span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">mimic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">700</span><span class="op">)</span></span>
-<span><span class="va">test_data</span><span class="op">$</span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf_model</span>, newdata <span class="op">=</span> <span class="va">test_data</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span></code></pre></div>
+<span><span class="va">test_data</span><span class="op">$</span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf_model</span>, newdata <span class="op">=</span> <span class="va">test_data</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Check the AUC</span></span>
+<span><span class="va">roc_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/pROC/man/roc.html" class="external-link">roc</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">day_28_flg</span>, <span class="va">test_data</span><span class="op">$</span><span class="va">pred</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Setting levels: control = 0, case = 1</span></span>
+<span><span class="co">#&gt; Setting direction: controls &lt; cases</span></span>
+<span><span class="va">roc_auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/pROC/man/auc.html" class="external-link">auc</a></span><span class="op">(</span><span class="va">roc_obj</span><span class="op">)</span></span>
+<span><span class="va">roc_auc</span></span>
+<span><span class="co">#&gt; Area under the curve: 0.8971</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="fairness-evaluation">Fairness Evaluation<a class="anchor" aria-label="anchor" href="#fairness-evaluation"></a>
 </h2>
-<p>We will use sex as the sensitive attribute and day_28_flg as the
-outcome.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>For fairness evaluation, we focus on sex as the sensitive attribute
+and 28-day mortality () as the outcome. We recoded the gender variable
+for better readability:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>gender <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">gender_num</span> <span class="op">==</span> <span class="fl">1</span>, <span class="st">"Male"</span>, <span class="st">"Female"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We choose threshold = 0.41 so that the overall FPR is around 5%.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Since many fairness metrics require binary predictions, we threshold
+the predicted probabilities using a fixed cutoff. We selected a
+threshold of 0.41 to approximately control the overall false positive
+rate (FPR) at 5%.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cut_off</span> <span class="op">&lt;-</span> <span class="fl">0.41</span></span>
 <span></span>
 <span><span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -200,216 +250,356 @@ outcome.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>fpr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          fpr</span></span>
 <span><span class="co">#&gt; 1 0.05054945</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="independence">Independence<a class="anchor" aria-label="anchor" href="#independence"></a>
-</h3>
-<div class="section level4">
-<h4 id="statistical-parity">Statistical Parity<a class="anchor" aria-label="anchor" href="#statistical-parity"></a>
-</h4>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_stats_parity.html">eval_stats_parity</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is evidence that model does not satisfy statistical parity.</span></span>
-<span><span class="co">#&gt;   Metric GroupFemale GroupMale Difference  95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1    PPR        0.17      0.08       0.09 [0.05, 0.13]  2.12 [1.48, 3.05]</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="conditional-statistical-parity">Conditional Statistical Parity<a class="anchor" aria-label="anchor" href="#conditional-statistical-parity"></a>
-</h4>
-<p>We conditional on age &gt;= 60.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_cond_stats_parity.html">eval_cond_stats_parity</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span>,</span>
-<span>  group2 <span class="op">=</span> <span class="st">"age"</span>,</span>
-<span>  condition <span class="op">=</span> <span class="st">"&gt;= 60"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is evidence that model does not satisfy statistical parity.</span></span>
-<span><span class="co">#&gt;   Metric GroupFemale GroupMale Difference  95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1    PPR        0.34      0.21       0.13 [0.05, 0.21]  1.62 [1.18, 2.22]</span></span></code></pre></div>
-<p>We can also condition on a categorical variable. For example, we can
-condition on the service unit = MICU.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_cond_stats_parity.html">eval_cond_stats_parity</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span>,</span>
-<span>  group2 <span class="op">=</span> <span class="st">"service_unit"</span>,</span>
-<span>  condition <span class="op">=</span> <span class="st">"MICU"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             statistical parity.</span></span>
-<span><span class="co">#&gt;   Metric GroupFemale GroupMale Difference   95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1    PPR        0.15       0.1       0.05 [-0.01, 0.11]   1.5 [0.86, 2.61]</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="separation">Separation<a class="anchor" aria-label="anchor" href="#separation"></a>
-</h3>
-<div class="section level4">
-<h4 id="equal-opportunity">Equal Opportunity<a class="anchor" aria-label="anchor" href="#equal-opportunity"></a>
-</h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_eq_opp.html">eval_eq_opp</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
+<code class="sourceCode R"><span><span class="va">fairness_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_fairness_metrics.html">get_fairness_metrics</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
 <span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
+<span>  group2 <span class="op">=</span> <span class="st">"age"</span>,</span>
+<span>  condition <span class="op">=</span> <span class="st">"&gt;=60"</span>,</span>
 <span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is evidence that model does not satisfy equal opportunity.</span></span>
-<span><span class="co">#&gt;   Metric GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1    FNR        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.85]</span></span></code></pre></div>
-<!-- ## Equalized Odds -->
-<!-- ```{r} -->
-<!-- eval_eq_odds( -->
-<!--   dat = test_data, -->
-<!--   outcome = "day_28_flg", -->
-<!--   group = "gender", -->
-<!--   probs = "pred", -->
-<!--   cutoff = cut_off -->
-<!-- ) -->
-<!-- ``` -->
+<span>  cutoff <span class="op">=</span> <span class="fl">0.41</span></span>
+<span> <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">fairness_result</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Independence-based criteria"</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Separation-based criteria"</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Sufficiency-based criteria"</span>, <span class="fl">7</span>, <span class="fl">7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Other criteria"</span>, <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
+<span>    full_width <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># control font size manually</span></span>
+<span>    latex_options <span class="op">=</span> <span class="st">"hold_position"</span></span>
+<span>  <span class="op">)</span> </span></code></pre></div>
+<table class="table table table" style="width: auto !important; margin-left: auto; margin-right: auto; font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Metric
+</th>
+<th style="text-align:right;">
+GroupFemale
+</th>
+<th style="text-align:right;">
+GroupMale
+</th>
+<th style="text-align:right;">
+Difference
+</th>
+<th style="text-align:left;">
+95% Diff CI
+</th>
+<th style="text-align:right;">
+Ratio
+</th>
+<th style="text-align:left;">
+95% Ratio CI
+</th>
+</tr></thead>
+<tbody>
+<tr grouplength="2">
+<td colspan="7" style="border-bottom: 1px solid;">
+<strong>Independence-based criteria</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Statistical Parity
+</td>
+<td style="text-align:right;">
+0.17
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:left;">
+[0.05, 0.13]
+</td>
+<td style="text-align:right;">
+2.12
+</td>
+<td style="text-align:left;">
+[1.48, 3.05]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Conditional Statistical Parity (age &gt;=60)
+</td>
+<td style="text-align:right;">
+0.34
+</td>
+<td style="text-align:right;">
+0.21
+</td>
+<td style="text-align:right;">
+0.13
+</td>
+<td style="text-align:left;">
+[0.05, 0.21]
+</td>
+<td style="text-align:right;">
+1.62
+</td>
+<td style="text-align:left;">
+[1.18, 2.22]
+</td>
+</tr>
+<tr grouplength="4">
+<td colspan="7" style="border-bottom: 1px solid;">
+<strong>Separation-based criteria</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Equal Opportunity
+</td>
+<td style="text-align:right;">
+0.38
+</td>
+<td style="text-align:right;">
+0.62
+</td>
+<td style="text-align:right;">
+-0.24
+</td>
+<td style="text-align:left;">
+[-0.39, -0.09]
+</td>
+<td style="text-align:right;">
+0.61
+</td>
+<td style="text-align:left;">
+[0.44, 0.86]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Predictive Equality
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.03
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:left;">
+[0.02, 0.08]
+</td>
+<td style="text-align:right;">
+2.67
+</td>
+<td style="text-align:left;">
+[1.39, 5.1]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Balance for Positive Class
+</td>
+<td style="text-align:right;">
+0.46
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:left;">
+[0.04, 0.14]
+</td>
+<td style="text-align:right;">
+1.24
+</td>
+<td style="text-align:left;">
+[1.09, 1.41]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Balance for Negative Class
+</td>
+<td style="text-align:right;">
+0.15
+</td>
+<td style="text-align:right;">
+0.10
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:left;">
+[0.03, 0.07]
+</td>
+<td style="text-align:right;">
+1.50
+</td>
+<td style="text-align:left;">
+[1.29, 1.74]
+</td>
+</tr>
+<tr grouplength="1">
+<td colspan="7" style="border-bottom: 1px solid;">
+<strong>Sufficiency-based criteria</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Predictive Parity
+</td>
+<td style="text-align:right;">
+0.62
+</td>
+<td style="text-align:right;">
+0.66
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:left;">
+[-0.21, 0.13]
+</td>
+<td style="text-align:right;">
+0.94
+</td>
+<td style="text-align:left;">
+[0.72, 1.23]
+</td>
+</tr>
+<tr grouplength="3">
+<td colspan="7" style="border-bottom: 1px solid;">
+<strong>Other criteria</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Brier Score Parity
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+0.08
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:left;">
+[-0.01, 0.03]
+</td>
+<td style="text-align:right;">
+1.12
+</td>
+<td style="text-align:left;">
+[0.89, 1.43]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Overall Accuracy Parity
+</td>
+<td style="text-align:right;">
+0.87
+</td>
+<td style="text-align:right;">
+0.88
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:left;">
+[-0.05, 0.03]
+</td>
+<td style="text-align:right;">
+0.99
+</td>
+<td style="text-align:left;">
+[0.94, 1.04]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Treatment Equality
+</td>
+<td style="text-align:right;">
+1.03
+</td>
+<td style="text-align:right;">
+3.24
+</td>
+<td style="text-align:right;">
+-2.21
+</td>
+<td style="text-align:left;">
+[-4.35, -0.07]
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+<td style="text-align:left;">
+[0.15, 0.68]
+</td>
+</tr>
+</tbody>
+</table>
+<p>Independence is likely violated, as evidenced by the statistical
+parity metric showing a 9% difference (95% CI: [5%, 13%]) or a ratio of
+2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in
+the independence category indicate that the model predicts a
+significantly higher mortality rate for females, even after conditioning
+on age.</p>
+<p>With respect to separation, we observe that all metrics show
+significant disparities. For instance, equal opportunity shows a -24%
+difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between
+females and males. This indicates our model is less likely to detect
+males at risk of mortality compared to females.</p>
+<p>On the other hand, the sufficiency criterion is satisfied as
+predictive parity shows no significant difference between males and
+females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI:
+[0.72, 1.23]). This suggests that given the same prediction, the actual
+mortality rates are similar for both males and females.</p>
+<p>Lastly, among the additional metrics that assess calibration and
+discrimination, Brier Score Parity and Overall Accuracy Equality do not
+show significant disparities. However, Treatment Equality shows a
+statistically significant difference (difference: –2.21, 95% CI: [–4.35,
+–0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a
+substantially higher false negative to false positive ratio compared to
+females. This suggests that male patients are more likely to be missed
+by the model relative to being incorrectly flagged.</p>
 </div>
-<div class="section level4">
-<h4 id="predictive-equality">Predictive Equality<a class="anchor" aria-label="anchor" href="#predictive-equality"></a>
-</h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_pred_equality.html">eval_pred_equality</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is evidence that model does not satisfy predictive</span></span>
-<span><span class="co">#&gt;             equality.</span></span>
-<span><span class="co">#&gt;   Metric GroupFemale GroupMale Difference  95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1    FPR        0.08      0.03       0.05 [0.02, 0.08]  2.67 [1.38, 5.14]</span></span></code></pre></div>
-<!-- ## Conditional Accuracy Equality -->
-<!-- ```{r} -->
-<!-- eval_cond_acc_equality( -->
-<!--   dat = test_data, -->
-<!--   outcome = "day_28_flg", -->
-<!--   group = "gender", -->
-<!--   probs = "pred", -->
-<!--   cutoff = cut_off -->
-<!-- ) -->
-<!-- ``` -->
-</div>
-<div class="section level4">
-<h4 id="balance-for-positive-class">Balance for Positive Class<a class="anchor" aria-label="anchor" href="#balance-for-positive-class"></a>
-</h4>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_pos_class_bal.html">eval_pos_class_bal</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             balance for positive class.</span></span>
-<span><span class="co">#&gt;                 Metric GroupFemale GroupMale Difference  95% Diff CI Ratio</span></span>
-<span><span class="co">#&gt; 1 Avg. Predicted Prob.        0.46      0.37       0.09 [0.04, 0.14]  1.24</span></span>
-<span><span class="co">#&gt;   95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1 [1.09, 1.41]</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="balance-for-negative-class">Balance for Negative Class<a class="anchor" aria-label="anchor" href="#balance-for-negative-class"></a>
-</h4>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_neg_class_bal.html">eval_neg_class_bal</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             balance for negative class.</span></span>
-<span><span class="co">#&gt;                 Metric GroupFemale GroupMale Difference  95% Diff CI Ratio</span></span>
-<span><span class="co">#&gt; 1 Avg. Predicted Prob.        0.15       0.1       0.05 [0.03, 0.07]   1.5</span></span>
-<span><span class="co">#&gt;   95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1 [1.29, 1.74]</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="sufficiency">Sufficiency<a class="anchor" aria-label="anchor" href="#sufficiency"></a>
-</h3>
-<div class="section level4">
-<h4 id="predictive-parity">Predictive Parity<a class="anchor" aria-label="anchor" href="#predictive-parity"></a>
-</h4>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_pred_parity.html">eval_pred_parity</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             predictive parity.</span></span>
-<span><span class="co">#&gt;   Metric GroupFemale GroupMale Difference   95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1    PPV        0.62      0.66      -0.04 [-0.21, 0.13]  0.94 [0.72, 1.23]</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="other-fairness-metrics">Other Fairness Metrics<a class="anchor" aria-label="anchor" href="#other-fairness-metrics"></a>
-</h3>
-<div class="section level4">
-<h4 id="brier-score-parity">Brier Score Parity<a class="anchor" aria-label="anchor" href="#brier-score-parity"></a>
-</h4>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_bs_parity.html">eval_bs_parity</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             Brier Score parity.</span></span>
-<span><span class="co">#&gt;        Metric GroupFemale GroupMale Difference   95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1 Brier Score        0.09      0.08       0.01 [-0.01, 0.03]  1.12 [0.89, 1.43]</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="accuracy-parity">Accuracy Parity<a class="anchor" aria-label="anchor" href="#accuracy-parity"></a>
-</h4>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_acc_parity.html">eval_acc_parity</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
-<span>  cutoff <span class="op">=</span> <span class="va">cut_off</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             accuracy parity.</span></span>
-<span><span class="co">#&gt;     Metric GroupFemale GroupMale Difference   95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1 Accuracy        0.87      0.88      -0.01 [-0.05, 0.03]  0.99 [0.94, 1.04]</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="treatment-equality">Treatment Equality<a class="anchor" aria-label="anchor" href="#treatment-equality"></a>
-</h4>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_treatment_equality.html">eval_treatment_equality</a></span><span class="op">(</span></span>
-<span>  dat <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
-<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
-<span>  probs <span class="op">=</span> <span class="st">"pred"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             treatment equality.</span></span>
-<span><span class="co">#&gt;        Metric GroupFemale GroupMale Difference     95% Diff CI Ratio</span></span>
-<span><span class="co">#&gt; 1 FN/FP Ratio        5.11      13.6      -8.49 [-33.33, 16.35]  0.38</span></span>
-<span><span class="co">#&gt;   95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1  [0.1, 1.36]</span></span></code></pre></div>
-</div>
-</div>
+<div class="section level2">
+<h2 id="practical-considerations">Practical Considerations<a class="anchor" aria-label="anchor" href="#practical-considerations"></a>
+</h2>
+<p>In our example, both separation and sufficiency-based metrics are
+important. Separation ensures that patients at a true risk of mortality
+are accurately identified across protected groups. This reduces the risk
+of systematically under-detecting individuals who may require immediate
+intervention in a particular subpopulation. On the other hand,
+sufficiency is also valuable, as it ensures that immediate intervention
+is based sorely on predicted medical needs rather than other protected
+attributes.</p>
+<p>However, 28-day-mortality is unlikely to be marginally independent of
+sex as the estimated mortality rates differ between females (19%) and
+males (14%). As a consequence, it is not possible for the model to
+simultaneously satisfy more than one fairness category due to the
+previously discussed incompatibilities. This points to the complexity of
+fairness considerations in clinical settings, where one must prioritize
+which criteria are most relevant. Given the different mortality rates
+between males and females, enforcing independence is likely not
+advisable, as it could blind the model to true mortality rate
+differences. Our model violates separation criteria, which could result
+in higher rates of undetected mortality risk among male patients and
+potential delays in interventions to their care. In the main text, we
+refer user to a recent <a href="https://arxiv.org/abs/2207.07068" class="external-link">survey</a> for bias mitigation
+strategies that can potentially help reduce the observed disparities in
+separation-based metrics.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
