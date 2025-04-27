@@ -219,8 +219,7 @@ We illustrate the procedure for constructing confidence intervals (CIs) using th
 
 $$
 \widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left(\widehat{\Delta}_{\textrm{FPR}}^{(b)} - \frac{1}{B} \sum_{b=1}^B \widehat{\Delta}_{\textrm{FPR}}^{(b)}\right)^2}.
-$$
-The corresponding Wald-based $100(1-\alpha)\%$ CI is given by $\widehat{\Delta}_{\textrm{FPR}} \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right]$, where $z_{1-\alpha/2}$ is the $100(1-\alpha/2)$ percentile of the standard normal distribution.
+$$ The corresponding Wald-based $100(1-\alpha)\%$ CI is given by $\widehat{\Delta}_{\textrm{FPR}} \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right]$, where $z_{1-\alpha/2}$ is the $100(1-\alpha/2)$ percentile of the standard normal distribution.
 
 To construct a $100(1-\alpha)\%$ Wald-type CI for the ratio $\widehat{\rho}_{\textrm{FPR}} = \frac{\widehat{\textrm{FPR}}_{a_1}}{\widehat{\textrm{FPR}}_{a_0}}$, we note that $\sqrt{n}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)- \log\left(\rho_{\textrm{FPR}}\right)\right]$ is asymptotic normal with mean 0. For each bootstrap iteration $b$ in {1,..., B}, we sample the data with replacement within each group and then calculate $\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]$. The estimated standard error of the log ratio is:
 
