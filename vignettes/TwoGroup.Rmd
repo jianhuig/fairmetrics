@@ -32,6 +32,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
+The following is a example analysis for evaluating Fairness criterion for models which use 
 ```{r setup, message=FALSE, warning=FALSE}
 # Packages we are using for the analysis
 library(dplyr)
@@ -58,7 +59,8 @@ We first assess the extent of missingness in the dataset. For each variable, we 
 ```{r}
 missing_data_summary<- naniar::miss_var_summary(mimic)
 
-missing_data_summary
+kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE)
+
 ```
 
 To ensure data quality, we apply the following procedure for handling missing data:
@@ -137,14 +139,14 @@ roc_auc
 
 # Fairness Evaluation
 
-For fairness evaluation, we focus on sex as the sensitive attribute and 28-day mortality (\texttt{day_28_flg}) as the outcome. We recoded the gender variable for better readability:
+For fairness evaluation, we focus on sex as the sensitive attribute and 28-day mortality (\texttt{day_28_flg}) as the outcome. We recode the gender variable explicitly for readability:
 
 ```{r}
 test_data <- test_data %>%
   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
 ```
 
-Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We selected a threshold of 0.41 to approximately control the overall false positive rate (FPR) at 5%.
+Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We selected a threshold of 0.41 to approximately control the overall false positive rate (FPR) at 5%. In order to 
 
 ```{r}
 cut_off <- 0.41
@@ -166,31 +168,33 @@ fairness_result <- FairnessEval::get_fairness_metrics(
   cutoff = 0.41
  )
 
-kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
-  kable_styling(full_width = FALSE) %>%
-  pack_rows("Independence-based criteria", 1, 2) %>%
-  pack_rows("Separation-based criteria", 3, 6) %>%
-  pack_rows("Sufficiency-based criteria", 7, 7) %>%
-  pack_rows("Other criteria", 8, 10) %>%
-  kable_styling(
-    full_width = FALSE, 
+kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
+  kableExtra::kable_styling(full_width = FALSE) %>%
+  kableExtra::pack_rows("Independence-based criteria", 1, 2) %>%
+  kableExtra::pack_rows("Separation-based criteria", 3, 6) %>%
+  kableExtra::pack_rows("Sufficiency-based criteria", 7, 7) %>%
+  kableExtra::pack_rows("Other criteria", 8, 10) %>%
+  kableExtra::kable_styling(
+    full_width = FALSE,
     font_size = 10,         # control font size manually
     latex_options = "hold_position"
-  ) 
+  )
 ```
 
 
-Independence is likely violated, as evidenced by the statistical parity metric showing a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
+From the fairness metrics we note: 
 
-With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
+- Independence is likely violated, as evidenced by the statistical parity metric showing a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
 
-On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
+- With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
 
-Lastly, among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
+- On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
+
+- Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
 
 # Practical Considerations
 
-In our example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures that immediate intervention is based sorely on predicted medical needs rather than other protected attributes. 
+In the example outlined above, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures that immediate intervention is based sorely on predicted medical needs rather than other protected attributes. 
 
 However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. Our model violates separation criteria, which could result in higher rates of
 undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics.
