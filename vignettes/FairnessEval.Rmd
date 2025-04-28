@@ -64,7 +64,7 @@ We first assess the extent of missingness in the dataset. For each variable, we 
 # (available in FairnessEval)
 data("mimic") 
 
-missing_data_summary<- naniar::miss_var_summary(mimic)
+missing_data_summary<- naniar::miss_var_summary(mimic, digits= 3)
 
 kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE) %>%
   kableExtra::kable_styling(
