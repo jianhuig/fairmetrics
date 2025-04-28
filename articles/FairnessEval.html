@@ -116,7 +116,7 @@ missing values with <code><a href="https://naniar.njtierney.com/reference/miss_v
 <span><span class="co"># (available in FairnessEval)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mimic"</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">missing_data_summary</span><span class="op">&lt;-</span> <span class="fu">naniar</span><span class="fu">::</span><span class="fu"><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">miss_var_summary</a></span><span class="op">(</span><span class="va">mimic</span><span class="op">)</span></span>
+<span><span class="va">missing_data_summary</span><span class="op">&lt;-</span> <span class="fu">naniar</span><span class="fu">::</span><span class="fu"><a href="https://naniar.njtierney.com/reference/miss_var_summary.html" class="external-link">miss_var_summary</a></span><span class="op">(</span><span class="va">mimic</span>, digits<span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">missing_data_summary</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
@@ -143,7 +143,7 @@ bmi
 466
 </td>
 <td style="text-align:right;">
-26.2
+26.239
 </td>
 </tr>
 <tr>
@@ -154,7 +154,7 @@ po2_first
 186
 </td>
 <td style="text-align:right;">
-10.5
+10.473
 </td>
 </tr>
 <tr>
@@ -165,7 +165,7 @@ pco2_first
 186
 </td>
 <td style="text-align:right;">
-10.5
+10.473
 </td>
 </tr>
 <tr>
@@ -176,7 +176,7 @@ iv_day_1
 143
 </td>
 <td style="text-align:right;">
-8.05
+8.052
 </td>
 </tr>
 <tr>
@@ -187,7 +187,7 @@ weight_first
 110
 </td>
 <td style="text-align:right;">
-6.19
+6.194
 </td>
 </tr>
 <tr>
@@ -198,7 +198,7 @@ sapsi_first
 85
 </td>
 <td style="text-align:right;">
-4.79
+4.786
 </td>
 </tr>
 <tr>
@@ -330,7 +330,7 @@ gender_num
 1
 </td>
 <td style="text-align:right;">
-0.056[4m3[2
+0.056
 </td>
 </tr>
 <tr>
@@ -341,7 +341,7 @@ aline_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -352,7 +352,7 @@ icu_los_day
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -363,7 +363,7 @@ hospital_los_day
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -374,7 +374,7 @@ age
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -385,7 +385,7 @@ service_unit
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -396,7 +396,7 @@ service_num
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -407,7 +407,7 @@ day_icu_intime
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -418,7 +418,7 @@ day_icu_intime_num
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -429,7 +429,7 @@ hour_icu_intime
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -440,7 +440,7 @@ hosp_exp_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -451,7 +451,7 @@ icu_exp_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -462,7 +462,7 @@ day_28_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -473,7 +473,7 @@ mort_day_censored
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -484,7 +484,7 @@ censor_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -495,7 +495,7 @@ sepsis_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -506,7 +506,7 @@ chf_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -517,7 +517,7 @@ afib_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -528,7 +528,7 @@ renal_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -539,7 +539,7 @@ liver_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -550,7 +550,7 @@ copd_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -561,7 +561,7 @@ cad_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -572,7 +572,7 @@ stroke_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -583,7 +583,7 @@ mal_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -594,7 +594,7 @@ resp_flg
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -605,7 +605,7 @@ map_1st
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -616,7 +616,7 @@ hr_1st
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -627,7 +627,7 @@ spo2_1st
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 <tr>
@@ -638,7 +638,7 @@ abg_count
 0
 </td>
 <td style="text-align:right;">
-0
+0.000
 </td>
 </tr>
 </tbody>
