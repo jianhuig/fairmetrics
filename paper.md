@@ -6,11 +6,11 @@ tags:
   - Machine Learning
   - Software
 authors:
-  - name: Jianhui Gao
-    orcid: 0000-0003-0915-1473
-    affiliation: 1
   - name: Benjamin Smith
     orcid: 0009-0007-2206-0177
+    affiliation: 1
+  - name: Jianhui Gao
+    orcid: 0000-0003-0915-1473
     affiliation: 1
   - name: Benson Chou
     orcid: 0009-0007-0265-033X
@@ -43,10 +43,10 @@ Fairness of a ML model can be assessed primarily through three criteron: group f
 
 Group fairness critera can be broadly classified into three categories: _independence_, _separation_, and _sufficiency_ [@The_MIT_Press_2024; @Berk_Heidari_Jabbari_Kearns_Roth_2018]. In the indepence category of group fairness criteria, metrics such as statistical (demographic) parity and its conditional variant requires that a model classifies individuals into the positive class at the same rate for each group in question [24; 83; 84; 85]. In the seperation category, a ML model’s decisions are required to not depend on the protected attribute within the positive and negative classifications. This implies that the rate of making a positive (or negative) decision is consistent across groups among individuals in a positive (or negative) class. Common separation-based metrics therefore aim to equalize error rates across the groups, including the false negative rate (FNR, known as equal opportunity), false positive rate (FPR, known as predictive equality), or both (known as equalized odds) [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. In the sufficiency category, error rates of a ML models among individuals with similar decisions are diagnosed for possible inequaities accross a given protected attribute used as an input. Common sufficiency-based metrics focus on equalizing the positive predictive value (PPV, known as _predictive parity_), both the PPV and negative predictive value (NPV, known as _conditional use accuracy equality_), and calibration (known as _well-calibration_)[45; 81; 87; 88].
 
-# Licensing and Availability
+# Usage
 
 # Related Work
 
-
+# Licensing and Availability
 
 # References
