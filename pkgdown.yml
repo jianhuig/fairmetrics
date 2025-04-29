@@ -1,6 +1,6 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   FairnessEval: FairnessEval.html
-last_built: 2025-04-28T19:22Z
+last_built: 2025-04-29T19:05Z
