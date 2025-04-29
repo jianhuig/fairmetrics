@@ -12,7 +12,7 @@ A collection of functions for computing fairness metrics for machine learning an
 ## Installation
 
 ```r
-devtools::install_github(repo = "https://github.com/jianhuig/FairnessTutorial")
+devtools::install_github("jianhuig/FairnessEval")
 ```
 
 ## Citation 
@@ -30,7 +30,7 @@ A BibTeX entry for LaTeX users is
     author = {Jianhui Gao and Benjamin Smith and Benson Chou and Jessica Gronsbell},
     year = {2025},
     note = {R package version 1.0.0},
-    url = {https://jianhuig.github.io/FairnessTutorial/},
+    url = {https://jianhuig.github.io/FairnessEval/},
   }
 ```
 
