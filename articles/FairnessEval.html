@@ -84,26 +84,24 @@ of missing data, model construction and standard predictive model
 evaluation through train-test splitting for binary classification. The
 “Fairness Evaluation” section shows how to evaluate the model’s fairness
 toward binary protected attributes with the <code>FairnessEval</code>
-package. Finally, the “Practical Considerations” section discusses the
-inherent trade-offs between different fairness definitions in clinical
-settings and highlights the challenges of enforcing fairness when
-outcome prevalence differs across groups. Details regarding the
-construction of 95% confidence intervals are provided in the
-appendix.</p>
+package.</p>
+<!--
+Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
+--->
 </div>
 <div class="section level2">
 <h2 id="data-preprocessing">Data Preprocessing<a class="anchor" aria-label="anchor" href="#data-preprocessing"></a>
 </h2>
-<p>The dataset used in this analysis is the MIMIC II clinical database,
-which has been previously studied to explore the relationship between
-indwelling arterial catheters in hemodynamically stable patients and
-respiratory failure in relation to mortality outcomes. It includes 46
-variables which cover demographics and clinical characteristics
-(including white blood cell count, heart rate during ICU stays and
-others) along with a 28-day mortality indicator
+<p>The dataset used in this analysis is the MIMIC II clinical database
+[2], which has been previously studied to explore the relationship
+between indwelling arterial catheters in hemodynamically stable patients
+and respiratory failure in relation to mortality outcomes [3]. It
+includes 46 variables which cover demographics and clinical
+characteristics (including white blood cell count, heart rate during ICU
+stays and others) along with a 28-day mortality indicator
 (<code>day_28_flg</code>) for 1,776 patients. The data has been made
-publicly available by <a href="https://physionet.org/content/mimic2-iaccd/1.0/" class="external-link">PhysioNet</a> and
-is available in the <code>FairnessEval</code> package as the
+publicly available by <a href="https://physionet.org/content/mimic2-iaccd/1.0/" class="external-link">PhysioNet</a> [4]
+and is available in the <code>FairnessEval</code> package as the
 <code>mimic</code> dataset.</p>
 <div class="section level3">
 <h3 id="handling-missing-data">Handling Missing Data<a class="anchor" aria-label="anchor" href="#handling-missing-data"></a>
@@ -741,9 +739,9 @@ overall accuracy of the model on the test set is 0.88.</p>
 <div class="section level2">
 <h2 id="fairness-evaluation">Fairness Evaluation<a class="anchor" aria-label="anchor" href="#fairness-evaluation"></a>
 </h2>
-<p>For fairness evaluation, use the results of the testing set and focus
-on patient gender as the binary protected attribute and its relationship
-with 28-day mortality (<code>day_28_flg</code>) as the outcome.</p>
+<p>To evaluate fairness, we use the testing set results to examine
+patient gender as a binary protected attribute and 28-day mortality
+(<code>day_28_flg</code>) as the outcome of interest.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Recode gender variable explicitly for readability: </span></span>
 <span></span>
@@ -752,9 +750,9 @@ with 28-day mortality (<code>day_28_flg</code>) as the outcome.</p>
 <p>Since many fairness metrics require binary predictions, we threshold
 the predicted probabilities using a fixed cutoff. We set a threshold of
 0.41 to maintain the overall false positive rate (FPR) at approximately
-5%</p>
+5%.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># control the overall false positive rate (FPR) at 5% by setting a threshold.</span></span>
+<code class="sourceCode R"><span><span class="co"># Control the overall false positive rate (FPR) at 5% by setting a threshold.</span></span>
 <span></span>
 <span><span class="va">cut_off</span> <span class="op">&lt;-</span> <span class="fl">0.41</span></span>
 <span></span>
@@ -786,7 +784,7 @@ data with its predicted results into the
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Other criteria"</span>, <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
 <span>    full_width <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># control font size manually</span></span>
+<span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># Controls font size manually</span></span>
 <span>    latex_options <span class="op">=</span> <span class="st">"hold_position"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <table class="table table table" style="width: auto !important; margin-left: auto; margin-right: auto; font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1119,7 +1117,7 @@ criteria, which could result in higher rates of undetected mortality
 risk among male patients and potential delays in interventions to their
 care. In the main text, we refer user to a recent <a href="https://arxiv.org/abs/2207.07068" class="external-link">survey</a> for bias mitigation
 strategies that can potentially help reduce the observed disparities in
-separation-based metrics.</p>
+separation-based metrics [6].</p>
 </div>
 <div class="section level2">
 <h2 id="appendix">Appendix<a class="anchor" aria-label="anchor" href="#appendix"></a>
@@ -1210,9 +1208,19 @@ percentile of the standard normal distribution.</p>
 <ol style="list-style-type: decimal">
 <li><p>Gao, J. et al. What is Fair? Defining Fairness in Machine
 Learning for Health. arXiv.org <a href="https://arxiv.org/abs/2406.09307" class="external-link uri">https://arxiv.org/abs/2406.09307</a> (2024).</p></li>
-<li><p>Clinical data from the MIMIC-II database for a case study on
-indwelling arterial catheters v1.0. <a href="https://physionet.org/content/mimic2-iaccd/1.0/" class="external-link uri">https://physionet.org/content/mimic2-iaccd/1.0/</a>
-(2016).</p></li>
+<li><p>Raffa, J. (2016). Clinical data from the MIMIC-II database for a
+case study on indwelling arterial catheters (version 1.0). PhysioNet. <a href="https://doi.org/10.13026/C2NC7F" class="external-link uri">https://doi.org/10.13026/C2NC7F</a>.</p></li>
+<li><p>Raffa J.D., Ghassemi M., Naumann T., Feng M., Hsu D. (2016) Data
+Analysis. In: Secondary Analysis of Electronic Health Records. Springer,
+Cham</p></li>
+<li><p>Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P.
+C., Mark, R., … &amp; Stanley, H. E. (2000). PhysioBank, PhysioToolkit,
+and PhysioNet: Components of a new research resource for complex
+physiologic signals. Circulation [Online]. 101 (23),
+pp. e215–e220.</p></li>
+<li><p>Hsu, D. J. et al. The association between indwelling arterial
+catheters and mortality in hemodynamically stable patients with
+respiratory failure. CHEST Journal 148, 1470–1476 (2015).</p></li>
 <li><p>Gronsbell, J. L. &amp; Cai, T. Semi-Supervised approaches to
 efficient evaluation of model prediction performance. Journal of the
 Royal Statistical Society Series B (Statistical Methodology) 80, 579–594
@@ -1220,6 +1228,9 @@ Royal Statistical Society Series B (Statistical Methodology) 80, 579–594
 <li><p>Efron, B. &amp; Tibshirani, R. Bootstrap methods for standard
 errors, confidence intervals, and other measures of statistical
 accuracy. Statistical Science 1, (1986).</p></li>
+<li><p>Hort, M., Chen, Z., Zhang, J. M., Harman, M. &amp; Sarro, F. Bias
+Mitigation for Machine Learning Classifiers: A Comprehensive survey.
+arXiv.org <a href="https://arxiv.org/abs/2207.07068" class="external-link uri">https://arxiv.org/abs/2207.07068</a> (2022).</p></li>
 </ol>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
