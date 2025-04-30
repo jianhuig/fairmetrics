@@ -35,13 +35,15 @@ journal: JOSS
 
 Machine learning (ML) offers significant potential for predictive modelling in biomedical research. In health-related contexts, predictive modelling is often used to  understand the roles of prognostic factors rather than simply to classify new cases [@elements_of_statistical_learning]. Despite its promise, there is substantial evidence that, without appropriate forethought and planning, ML models can introduce or exacerbate health inequities by making less accurate decisions for certain groups or individuals [@Yfantidou_Constantinides_Spathis_Vakali_Quercia_Kawsar_2023]. As ML becomes increasingly embedded in healthcare systems, ensuring equitable model performance across diverse populations is essential. 
 
-The {FairnessEval} R package allows ML researchers and practitioners to evaluate group fairness of ML models via a suite of popular fairness metrics and provides estimated confidence intervals (CIs) for them with bootstrap estimation.
+The {FairnessEval} R package allows ML researchers and practitioners to evaluate group fairness of ML models via a suite of popular fairness metrics and provides estimated confidence intervals (CIs) for them through bootstrap estimation.
 
 # Fairness Criterion
 
 Fairness of a ML model can be assessed primarily through three criteron: group fairness, individual fairness, and causal fairness. Group fairness criteria are commonly used in health and deem a model as fair if its predictions are similarly accurate or calibrated across a predefined set of groups. The groups in question are most often defined by a protected attribute(s) such as age or race [@Fazelpour_Danks_2021]. 
 
-The {FairnessEval} package allows for the calulation of the following group fairness metrics and their confidence intervals via bootstrap, organized below by the three major fairness frameworks: 
+Group fairness criteria are commonly categorized into three main types: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018].Independence requires that an ML model's predictions be statistically independent of the protected attribute [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. Separation demands that the model’s predictions be independent of the protected attribute conditional on the true outcome class (i.e., within the positive and negative classes) [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. Sufficiency requires that, given a model's prediction, the likelihood of the true outcome is independent of the protected attribute—aiming to equalize error rates across groups for similar prediction scores [@Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022].
+
+The {FairnessEval} package computes a range of group fairness metrics along with bootstrap-based confidence intervals. These metrics are grouped below according to the three core fairness frameworks described above.
 
 
 ## Independence
@@ -76,11 +78,11 @@ The {FairnessEval} package allows for the calulation of the following group fair
 
 # Additional Features
 
-Beyond individual metric computation, FairnessEval includes convenience functions to retrieve multiple fairness metrics (and their confidence intervals) in a single call. It also bundles example clinical datasets from the MIMIC-II database—both raw and preprocessed—to facilitate teaching examples and model validation.
+Beyond individual metric computation, the {FairnessEval} package includes convenience functions to retrieve multiple fairness metrics (and their confidence intervals) in a single call. It also bundles example datasets based on the the MIMIC-II clinical database [@raffa2016clinical; @raffa2016data; @goldberger2000physiobank] to facilitate simple example usage of the fairness metrics with ML models.
 
 # Related Work
 
-A similar package to the {FairnessEval} package is the {fairness} R package [ADD REF]. The difference {FairnessEval} and {fairness} is threefold. The primary difference between the {FairnessEval} and {fairness} is that {FairnessEval} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool which can be used on modest hardware. 
+A similar package to the {FairnessEval} package is the {fairness} R package [@fairness_package]. The difference {FairnessEval} and {fairness} is threefold. The primary difference between the {FairnessEval} and {fairness} is that {FairnessEval} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool which can be used on modest hardware. 
 
 
 # Licensing and Availability
