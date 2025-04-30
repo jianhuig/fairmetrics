@@ -49,11 +49,15 @@ library(naniar)
 library(FairnessEval)
 ```
 
-The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `FairnessEval` package. Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
+The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `FairnessEval` package. 
+
+<!--
+Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
+--->
 
 # Data Preprocessing
 
-The dataset used in this analysis is the MIMIC II clinical database, which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) and is available in the `FairnessEval` package as the `mimic` dataset.
+The dataset used in this analysis is the MIMIC II clinical database [2], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [3]. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [4] and is available in the `FairnessEval` package as the `mimic` dataset.
 
 ## Handling Missing Data
 
@@ -149,7 +153,7 @@ roc_auc
 
 # Fairness Evaluation
 
-For fairness evaluation, use the results of the testing set and focus on patient gender as the binary protected attribute and its relationship with 28-day mortality (`day_28_flg`) as the outcome.
+To evaluate fairness, we use the testing set results to examine patient gender as a binary protected attribute and 28-day mortality (`day_28_flg`) as the outcome of interest.
 
 ```{r}
 # Recode gender variable explicitly for readability: 
@@ -158,10 +162,10 @@ test_data <- test_data %>%
   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
 ```
 
-Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We set a threshold of 0.41 to maintain the overall false positive rate (FPR) at approximately 5%
+Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We set a threshold of 0.41 to maintain the overall false positive rate (FPR) at approximately 5%.
 
 ```{r}
-# control the overall false positive rate (FPR) at 5% by setting a threshold.
+# Control the overall false positive rate (FPR) at 5% by setting a threshold.
 
 cut_off <- 0.41
 
@@ -192,7 +196,7 @@ kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
   kableExtra::pack_rows("Other criteria", 8, 10) %>%
   kableExtra::kable_styling(
     full_width = FALSE,
-    font_size = 10,         # control font size manually
+    font_size = 10,         # Controls font size manually
     latex_options = "hold_position"
   )
 ```
@@ -211,7 +215,7 @@ From the outputted fairness metrics we note:
 
 In the above example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures immediate intervention is based solely on predicted medical needs rather than other protected attributes.
 
-However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. The model used in this example violates separation criteria, which could result in higher rates of undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics.
+However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. The model used in this example violates separation criteria, which could result in higher rates of undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics [6].
 
 # Appendix
 
@@ -241,8 +245,16 @@ The corresponding $100(1-\alpha)\%$ CI is given by $\exp \left\{\log\left[\wideh
 
 1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org https://arxiv.org/abs/2406.09307 (2024).
 
-2. Clinical data from the MIMIC-II database for a case study on indwelling arterial catheters v1.0. https://physionet.org/content/mimic2-iaccd/1.0/ (2016).
+2. Raffa, J. (2016). Clinical data from the MIMIC-II database for a case study on indwelling arterial catheters (version 1.0). PhysioNet. https://doi.org/10.13026/C2NC7F.
 
-3. Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
+3. Raffa J.D., Ghassemi M., Naumann T., Feng M., Hsu D. (2016) Data Analysis. In: Secondary Analysis of Electronic Health Records. Springer, Cham
 
-4. Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
+4. Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.
+
+3. Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
+
+4. Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
+
+5. Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
+
+6. Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org https://arxiv.org/abs/2207.07068 (2022).
