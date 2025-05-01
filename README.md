@@ -1,15 +1,15 @@
 # fairness_joss_paper
 
-FairnessEval package JOSS article draft and edits.
+fairmetrics package JOSS article draft and edits.
 
 ## Some notes: 
 
 Consider the following: 
 
-1. Show the comparison between memory usage for FairnessEval and its comparison to the fairness package: 
+1. Show the comparison between memory usage for fairmetrics and its comparison to the fairness package: 
 
 ```r
-> library(FairnessEval)
+> library(fairmetrics)
 > pryr::mem_used()
 80.3 MB
 > library(fairness)
@@ -18,10 +18,10 @@ Consider the following:
 
 ```
 
-2. Show compariso in package comparisons between FairnessEval an fairness:
+2. Show compariso in package comparisons between fairmetrics an fairness:
 
 ```r
- packrat:::recursivePackageDependencies("FairnessEval", ignore = "", lib.loc = .libPaths()[1])
+ packrat:::recursivePackageDependencies("fairmetrics", ignore = "", lib.loc = .libPaths()[1])
  [1] "R6"         "cli"        "dplyr"      "fansi"     
  [5] "generics"   "glue"       "lifecycle"  "magrittr"  
  [9] "pillar"     "pkgconfig"  "rlang"      "tibble"    
