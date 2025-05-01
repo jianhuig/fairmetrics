@@ -64,7 +64,7 @@ makes positive or negative predictions.
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

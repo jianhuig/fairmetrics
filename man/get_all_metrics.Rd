@@ -33,7 +33,7 @@ This is useful for quickly assessing multiple fairness dimensions of a binary cl
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

@@ -60,7 +60,7 @@ This function assesses \emph{statistical parity} - also known as \emph{demograph
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

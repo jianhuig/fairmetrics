@@ -61,7 +61,7 @@ in terms of the relative frequency of missed detections (false negatives) versus
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 # Data for tests

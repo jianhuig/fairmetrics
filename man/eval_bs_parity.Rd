@@ -57,7 +57,7 @@ parity ensures that the model's predicted probabilities are equally well calibra
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

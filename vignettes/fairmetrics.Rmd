@@ -32,9 +32,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-We illustrate the usage of the `FairnessEval` package through a case study using a publicly available dataset of 1,776 ICU patients from the MIMIC-II clinical database, focusing on predicting 28-day mortality and evaluating disparities in model performance across sex.
+We illustrate the usage of the `fairmetrics` package through a case study using a publicly available dataset of 1,776 ICU patients from the MIMIC-II clinical database, focusing on predicting 28-day mortality and evaluating disparities in model performance across sex.
 
-The following packages are used for the analysis along with the `FairnessEval` package:
+The following packages are used for the analysis along with the `fairmetrics` package:
 
 ```{r setup, message=FALSE, warning=FALSE}
 # Packages we are using for the analysis
@@ -46,10 +46,10 @@ library(SpecsVerification)
 library(kableExtra)
 library(naniar)
 # Our package
-library(FairnessEval)
+library(fairmetrics)
 ```
 
-The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `FairnessEval` package. 
+The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `fairmetrics` package. 
 
 <!--
 Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
@@ -57,7 +57,7 @@ Finally, the “Practical Considerations” section discusses the inherent trade
 
 # Data Preprocessing
 
-The dataset used in this analysis is the MIMIC II clinical database [2], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [3]. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [4] and is available in the `FairnessEval` package as the `mimic` dataset.
+The dataset used in this analysis is the MIMIC II clinical database [2], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [3]. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [4] and is available in the `fairmetrics` package as the `mimic` dataset.
 
 ## Handling Missing Data
 
@@ -65,7 +65,7 @@ We first assess the extent of missingness in the dataset. For each variable, we 
 
 ```{r}
 # Loading mimic dataset 
-# (available in FairnessEval)
+# (available in fairmetrics)
 data("mimic") 
 
 missing_data_summary<- naniar::miss_var_summary(mimic, digits= 3)
@@ -178,7 +178,7 @@ test_data %>%
 To calculate various fairness metrics for the model, we pass our test data with its predicted results into the `get_fairness_metrics` function.
 
 ```{r}
-fairness_result <- FairnessEval::get_fairness_metrics(
+fairness_result <- fairmetrics::get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",

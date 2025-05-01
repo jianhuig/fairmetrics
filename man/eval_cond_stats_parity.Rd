@@ -72,7 +72,7 @@ The function supports both categorical and continuous conditioning variables. Fo
 }
 \examples{
 \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

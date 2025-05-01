@@ -69,7 +69,7 @@ to test whether the model violates the Equalized Odds criterion.
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

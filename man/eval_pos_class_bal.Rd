@@ -57,7 +57,7 @@ among individuals whose true outcome is positive (i.e., \(Y = 1\)).
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

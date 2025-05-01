@@ -59,7 +59,7 @@ the overall accuracy of a predictive model is consistent across different groups
 }
 \examples{
 \donttest{
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 data("mimic_preprocessed")

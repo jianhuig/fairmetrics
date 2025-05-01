@@ -42,7 +42,7 @@
 #'
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -195,7 +195,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #'
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -359,7 +359,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -497,7 +497,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' #' library(FairnessEval)
+#' #' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -613,7 +613,7 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -713,9 +713,9 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 
 #' Examine Predictive Equality of a Model
 #'
-#' This function evaluates predictive equality, a fairness metric that compares the 
-#' False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses 
-#' whether individuals from different groups are equally likely to be incorrectly flagged as 
+#' This function evaluates predictive equality, a fairness metric that compares the
+#' False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses
+#' whether individuals from different groups are equally likely to be incorrectly flagged as
 #' positive when they are, in fact, negative.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
@@ -742,7 +742,7 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -877,7 +877,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1023,7 +1023,7 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1127,8 +1127,8 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 
 #' Examine Brier Score Parity of a Model
 #'
-#' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score 
-#' (a measure of the calibration of probabilistic predictions) is similar across different groups. Brier score 
+#' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score
+#' (a measure of the calibration of probabilistic predictions) is similar across different groups. Brier score
 #' parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
@@ -1154,7 +1154,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1286,7 +1286,7 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' # Data for tests
@@ -1425,7 +1425,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
@@ -1557,7 +1557,7 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")

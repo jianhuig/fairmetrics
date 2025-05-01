@@ -237,7 +237,7 @@ get_avg_prob <- function(data, outcome, group, probs, digits = 2) {
 #' @return a Data frame of all metrics
 #' @examples
 #' \donttest{
-#' library(FairnessEval)
+#' library(fairmetrics)
 #' library(dplyr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
