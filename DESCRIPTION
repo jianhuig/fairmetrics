@@ -1,4 +1,4 @@
-Package: FairnessEval
+Package: fairmetrics
 Title: Fairness evaluation metrics with confidence intervals
 Version: 1.0.0
 Authors@R: 
@@ -31,5 +31,5 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 3.5.0)
 LazyData: true
-URL: https://jianhuig.github.io/FairnessTutorial/
+URL: https://jianhuig.github.io/fairmetrics/
 VignetteBuilder: knitr
