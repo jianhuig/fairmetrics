@@ -49,12 +49,13 @@ library(naniar)
 library(fairmetrics)
 ```
 
-The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `fairmetrics` package. 
+The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `fairmetrics` package.
 
+```{=html}
 <!--
 Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
 --->
-
+```
 # Data Preprocessing
 
 The dataset used in this analysis is the MIMIC II clinical database [2], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [3]. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [4] and is available in the `fairmetrics` package as the `mimic` dataset.
@@ -211,50 +212,65 @@ From the outputted fairness metrics we note:
 
 -   Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
 
-# Practical Considerations
 
-In the above example, both separation and sufficiency-based metrics are important. Separation ensures that patients at a true risk of mortality are accurately identified across protected groups. This reduces the risk of systematically under-detecting individuals who may require immediate intervention in a particular subpopulation. On the other hand, sufficiency is also valuable, as it ensures immediate intervention is based solely on predicted medical needs rather than other protected attributes.
+# Appendix A: Confidence Interval Construction
 
-However, 28-day-mortality is unlikely to be marginally independent of sex as the estimated mortality rates differ between females (19%) and males (14%). As a consequence, it is not possible for the model to simultaneously satisfy more than one fairness category due to the previously discussed incompatibilities. This points to the complexity of fairness considerations in clinical settings, where one must prioritize which criteria are most relevant. Given the different mortality rates between males and females, enforcing independence is likely not advisable, as it could blind the model to true mortality rate differences. The model used in this example violates separation criteria, which could result in higher rates of undetected mortality risk among male patients and potential delays in interventions to their care. In the main text, we refer user to a recent [survey](https://arxiv.org/abs/2207.07068) for bias mitigation strategies that can potentially help reduce the observed disparities in separation-based metrics [6].
+The function `get_fairness_metrics()` computes Wald-type confidence intervals for both group-specific and disparity metrics using nonparametric bootstrap. To illustrate the construction of confidence intervals (CIs), we use the following example involving the false positive rate ($FPR$).
 
-# Appendix
-
-To illustrate the construction of confidence intervals (CIs), we use the following example involving the false positive rate ($FPR$). 
-
-## Difference CI
-
-Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ represent the estimated and true FPRs in group $A = a$. We construct Wald-type CIs the fact that $\sqrt{n} \left(\widehat{\textrm{FPR}}_a - \textrm{FPR}_a \right)$ is asymptotic normal with mean 0 in each $A = a$ (see [Gronsbell et al., 2018](https://academic.oup.com/jrsssb/article/80/3/579/7048446)). Let $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ represent the estimated difference between group $a_1$ and $a_0$. It follows that $\sqrt{n}\left(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}\right)$ is asymptotic normal with mean 0. To estimate the standard error of $\widehat{\Delta}_{\textrm{FPR}}$, we utilize the non-parametric bootstrap ([Efron and Tibshirani, 1986](https://projecteuclid.org/journals/statistical-science/volume-1/issue-1/Bootstrap-Methods-for-Standard-Errors-Confidence-Intervals-and-Other-Measures/10.1214/ss/1177013815.full)). For each bootstrap iteration $b$ in $\left\{1,\dots, B\right\}$, we sample the data with replacement within each group and then calculate $\widehat{\Delta}_{\textrm{FPR}}^{(b)}$, assuming that the resampling within groups have fixed group sizes. The estimated standard error is the empirical standard error of the difference:
+Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ denote the estimated and FPR in group $A = a$. Then the difference $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ satisfies(e.g., [Gronsbell et al., 2018](https://academic.oup.com/jrsssb/article/80/3/579/7048446)):
 
 $$
-\widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left(\widehat{\Delta}_{\textrm{FPR}}^{(b)} - \frac{1}{B} \sum_{b=1}^B \widehat{\Delta}_{\textrm{FPR}}^{(b)}\right)^2}.
-$$ 
-
-The corresponding Wald-based $100(1-\alpha)\%$ CI is given by $\widehat{\Delta}_{\textrm{FPR}} \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\widehat{\Delta}_{\textrm{FPR}}\right]$, where $z_{1-\alpha/2}$ is the $100(1-\alpha/2)$ percentile of the standard normal distribution.
-
-## Ratio CI
-
-To construct a $100(1-\alpha)\%$ Wald-type CI for the ratio $\widehat{\rho}_{\textrm{FPR}} = \frac{\widehat{\textrm{FPR}}_{a_1}}{\widehat{\textrm{FPR}}_{a_0}}$, we note that $\sqrt{n}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)- \log\left(\rho_{\textrm{FPR}}\right)\right]$ is asymptotic normal with mean 0. For each bootstrap iteration $b$ in $\left\{1,\dots, B\right\}$, we sample the data with replacement within each group and then calculate $\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]$. The estimated standard error of the log ratio is:
-
-$$
-\widehat{\textrm{se}}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)\right] = \sqrt{\frac{1}{B-1}\sum_{b=1}^B \left\{\log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right] - \frac{1}{B} \sum_{b=1}^B \log\left[\widehat{\rho}_{\textrm{FPR}}^{(b)}\right]\right\}^2}.
+\sqrt{n}(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}) \overset{d}{\to} \mathcal{N}(0, \sigma^2)
 $$
 
-The corresponding $100(1-\alpha)\%$ CI is given by $\exp \left\{\log\left[\widehat{\rho}_{\textrm{FPR}}\right] \pm z_{1-\alpha/2} * \widehat{\textrm{se}}\left[\log\left(\widehat{\rho}_{\textrm{FPR}}\right)\right]\right\}$, where $z_{1-\alpha/2}$ is the $100(1-\alpha/2)$ percentile of the standard normal distribution.
+We estimate the standard error of $\widehat{\Delta}_{\textrm{FPR}}$ using bootstrap resampling within groups, and form a Wald-style confidence interval:
+
+$$
+\widehat{\Delta}_{\textrm{FPR}} \pm z_{1-\alpha/2} \cdot \widehat{\textrm{se}}(\widehat{\Delta}_{\textrm{FPR}})
+$$
+
+For **ratios**, such as $\widehat{\rho}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} / \widehat{\textrm{FPR}}_{a_0}$, we apply a log transformation and use the delta method:
+
+$$
+\log(\widehat{\rho}_{\textrm{FPR}}) \pm z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]
+$$
+
+Exponentiating the bounds yields a confidence interval for the ratio on the original scale:
+
+$$
+\left[ 
+\exp\left\{\log(\widehat{\rho}_{\textrm{FPR}}) - z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]\right\},\ 
+\exp\left\{\log(\widehat{\rho}_{\textrm{FPR}}) + z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]\right\}
+\right].
+$$
+
+# Appendix B: Practical Fairness Considerations
+
+In the above example, both **separation** and **sufficiency**-based fairness criteria are important:
+
+-   **Separation** ensures that patients at true risk are identified across groups, reducing under-detection in specific subpopulations.
+-   **Sufficiency** ensures interventions are based solely on predicted need, not protected attributes.
+
+However, 28-day mortality differs by sex (19% for females vs. 14% for males), making it impossible to satisfy multiple fairness criteria simultaneously.
+
+Given this, enforcing **independence** is likely not advisable, as it could blind the model to true mortality differences. The model **violates separation**, potentially leading to higher false negative rates among male patients and delayed interventions.
+
+See [Hort et al. (2022)](https://arxiv.org/abs/2207.07068) for strategies to reduce disparities in separation-based metrics.
 
 # References
 
-1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org https://arxiv.org/abs/2406.09307 (2024).
+1.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <https://arxiv.org/abs/2406.09307> (2024).
 
-2. Raffa, J. (2016). Clinical data from the MIMIC-II database for a case study on indwelling arterial catheters (version 1.0). PhysioNet. https://doi.org/10.13026/C2NC7F.
+2.  Raffa, J. (2016). Clinical data from the MIMIC-II database for a case study on indwelling arterial catheters (version 1.0). PhysioNet. <https://doi.org/10.13026/C2NC7F>.
 
-3. Raffa J.D., Ghassemi M., Naumann T., Feng M., Hsu D. (2016) Data Analysis. In: Secondary Analysis of Electronic Health Records. Springer, Cham
+3.  Raffa J.D., Ghassemi M., Naumann T., Feng M., Hsu D. (2016) Data Analysis. In: Secondary Analysis of Electronic Health Records. Springer, Cham
 
-4. Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.
+4.  Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.
 
-3. Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
+5.  Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
 
-4. Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
+6.  Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
 
-5. Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
+7.  Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
 
-6. Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org https://arxiv.org/abs/2207.07068 (2022).
+8.  Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
