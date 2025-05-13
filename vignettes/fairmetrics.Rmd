@@ -254,7 +254,7 @@ In the above example, both **separation** and **sufficiency**-based fairness cri
 
 However, 28-day mortality differs by sex (19% for females vs. 14% for males), making it impossible to satisfy multiple fairness criteria simultaneously.
 
-Given this, enforcing **independence** is likely not advisable, as it could blind the model to true mortality differences. The model **violates separation**, potentially leading to higher false negative rates among male patients and delayed interventions.
+Given this, enforcing **independence** is likely not advisable in this case, as it could blind the model to true mortality differences. However, the model **violates separation**, potentially leading to higher false negative rates among male patients and delayed interventions. 
 
 See [Hort et al. (2022)](https://arxiv.org/abs/2207.07068) for strategies to reduce disparities in separation-based metrics.
 
