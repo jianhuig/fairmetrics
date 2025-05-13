@@ -33,60 +33,58 @@ journal: JOSS
 
 # Statement of Need
 
-Machine learning (ML) offers significant potential for predictive modelling in biomedical research. In health-related contexts, predictive modelling is often used to  understand the roles of prognostic factors rather than simply to classify new cases [@elements_of_statistical_learning]. Despite its promise, there is substantial evidence that, without appropriate forethought and planning, ML models can introduce or exacerbate health inequities by making less accurate decisions for certain groups or individuals [@Yfantidou_Constantinides_Spathis_Vakali_Quercia_Kawsar_2023]. As ML becomes increasingly embedded in healthcare systems, ensuring equitable model performance across diverse populations is essential. 
+Machine learning (ML) offers significant potential for predictive modelling in biomedical research [@rajpurkarAIHealthMedicine2022]. In health-related contexts, predictive modelling is often used to understand the roles of prognostic factors rather than simply to classify new cases [@hastieElementsStatisticalLearning2009]. Despite its promise, there is substantial evidence that, without appropriate forethought and planning, ML models can introduce or exacerbate health inequities by making less accurate decisions for certain groups or individuals [@grote2022enabling]. As ML becomes increasingly embedded in healthcare systems, ensuring equitable model performance across diverse populations is essential[@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024].
 
 The {fairmetrics} R package allows ML researchers and practitioners to evaluate group fairness of ML models via a suite of popular fairness metrics and provides estimated confidence intervals (CIs) for them through bootstrap estimation.
 
 # Fairness Criteria
 
-Fairness of a ML model can be assessed primarily through three criteria: group fairness, individual fairness, and causal fairness. Group fairness criteria are commonly used in health and deem a model as fair if its predictions are similarly accurate or calibrated across a predefined set of groups. The groups in question are most often defined by protected attributes, such as age or race [@Fazelpour_Danks_2021]. 
+Fairness of a ML model can be assessed primarily through three criteria: group fairness, individual fairness, and causal fairness. Group fairness criteria are commonly used in health and deem a model as fair if its predictions are similarly accurate or calibrated across a predefined set of groups. The groups in question are most often defined by protected attributes, such as age or race [@mehrabiSurveyBiasFairness2021].
 
-Group fairness criteria are commonly categorized into three main types: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018]. Independence requires that an ML model's predictions be statistically independent of the protected attribute [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. Separation demands that the model’s predictions be independent of the protected attribute conditional on the true outcome class (i.e., within the positive and negative classes) [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. Sufficiency requires that, given a model's prediction, the likelihood of the true outcome is independent of the protected attribute—aiming to equalize error rates across groups for similar prediction scores [@Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022].
+Group fairness criteria are commonly categorized into three main types: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that an ML model’s predictions be statistically independent of the protected attribute. Separation demands that the model’s predictions be independent of the protected attribute conditional on the true outcome class (i.e., within the positive and negative classes). Sufficiency requires that, given a model’s prediction, the likelihood of the true outcome is independent of the protected attribute—aiming to equalize error rates across groups for similar prediction scores.
 
 The {fairmetrics} package computes a range of group fairness metrics along with bootstrap-based confidence intervals. These metrics are grouped below according to the three core fairness frameworks described above.
 
-
 ## Independence
 
-- __Statistical Parity:__ Compares the overall rate of positive predictions between groups, irrespective of the true outcome.
+-   **Statistical Parity:** Compares the overall rate of positive predictions between groups, irrespective of the true outcome.
 
-- __Conditional Statistical Parity:__ Restricts the comparison of positive prediction rates to a specific subgroup (e.g., within a hospital unit or age bracket), offering a more context-specific fairness assessment.
+-   **Conditional Statistical Parity:** Restricts the comparison of positive prediction rates to a specific subgroup (e.g., within a hospital unit or age bracket), offering a more context-specific fairness assessment.
 
-- __Predictive Equality:__ Compares false positive rates (FPR) between groups, ensuring that no group is disproportionately flagged as positive when the true outcome is negative.
-
-- __Treatment Equality:__ Compares the ratio of false negatives to false positives across groups, ensuring the balance of missed detections versus false alarms is consistent.
 
 ## Separation
 
-- __Accuracy Parity:__ Measures whether the overall accuracy of a predictive model is equivalent across different groups.
+-   **Equal Opportunity:** Focuses on disparities in false negative rates (FNR) between two groups, quantifying any difference in missed positive cases.
 
-- __Conditional Accuracy Equality:__ Evaluates if predictive performance (accuracy) remains consistent across groups, conditional on the model’s positive or negative decision.
+-   **Predictive Equality:** Compares false positive rates (FPR) between groups, ensuring that no group is disproportionately flagged as positive when the true outcome is negative.
 
-- __Equalized Odds:__ Simultaneously compares false negative rates (FNR) and false positive rates (FPR) between two groups defined by a binary sensitive attribute. A Bonferroni-corrected union test flags violations of equalized odds.
+-   **Positive Class Balance:** Checks whether, among individuals whose true outcome is positive, the distribution of predicted probabilities is comparable across groups.
 
-- __Equal Opportunity Compliance:__ Focuses on disparities in false negative rates (FNR) between two groups, quantifying any difference in missed positive cases.
+-   **Negative Class Balance:** Checks whether, among individuals whose true outcome is negative, the distribution of predicted probabilities is comparable across groups.
+
 
 ## Sufficiency
 
-- __Predictive Parity:__ Compares positive predictive values (PPV) across groups, assessing whether the precision of positive predictions is equivalent.
+-   **Predictive Parity:** Compares positive predictive values (PPV) across groups, assessing whether the precision of positive predictions is equivalent.
 
-- __Brier Score Parity:__ Assesses whether the Brier score—the mean squared error of probabilistic predictions—is similar across groups, indicating comparable calibration.
+## Other Criteria
 
-- __Positive Class Balance:__ Checks whether, among individuals whose true outcome is positive, the distribution of predicted probabilities is comparable across groups.
+-   **Brier Score Parity:** Assesses whether the Brier score—the mean squared error of probabilistic predictions—is similar across groups, indicating comparable calibration.
 
-- __Negative Class Balance:__ Checks whether, among individuals whose true outcome is negative, the distribution of predicted probabilities is comparable across groups.
+-   **Accuracy Parity:** Measures whether the overall accuracy of a predictive model is equivalent across different groups.
+
+-   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, ensuring the balance of missed detections versus false alarms is consistent.
 
 # Additional Features
 
-Beyond individual metric computation, the {fairmetrics} package includes convenience functions to retrieve multiple fairness metrics (and their confidence intervals) in a single call. It also bundles example datasets based on the the MIMIC-II clinical database [@raffa2016clinical; @raffa2016data; @goldberger2000physiobank] to facilitate simple example usage of the fairness metrics with ML models.
+Beyond individual metric computation, the {fairmetrics} package includes convenience functions to retrieve multiple fairness metrics (and their confidence intervals) in a single call. It also bundles example datasets based on the the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical] to facilitate simple example usage of the fairness metrics with ML models.
 
 # Related Work
 
-A similar package to the {fairmetrics} package is the {fairness} R package [@fairness_package]. The difference {fairmetrics} and {fairness} is threefold. The primary difference between the {fairmetrics} and {fairness} is that {fairmetrics} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool which can be used on modest hardware. 
-
+A similar package to the {fairmetrics} package is the {fairness} R package[@fairness_package]. The difference {fairmetrics} and {fairness} is threefold. The primary difference between the {fairmetrics} and {fairness} is that {fairmetrics} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool which can be used on modest hardware.
 
 # Licensing and Availability
 
-The {fairmetrics} package is under the MIT liscence [ADD REF] and is available on CRAN and Github. The CRAN release can be installed with `install.packages("fairmetrics")`. For installing from Github, the {devtools} package [ADD REFERENCE] or any other R package which allows for installation of packages hosted on Github can be used (i.e. `devtools::install_github("jianhuig/fairmetrics")`).
+The {fairmetrics} package is under the MIT liscence $$ADD REF$$ and is available on CRAN and Github. The CRAN release can be installed with `install.packages("fairmetrics")`. For installing from Github, the {devtools} package $$ADD REFERENCE$$ or any other R package which allows for installation of packages hosted on Github can be used (i.e.`devtools::install_github("jianhuig/fairmetrics")`).
 
 # References
