@@ -56,6 +56,7 @@ The "Data Preprocessing" section discusses the dataset, the handling of missing 
 Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
 --->
 ```
+
 # Data Preprocessing
 
 The dataset used in this analysis is the MIMIC II clinical database [2], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [3]. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [4] and is available in the `fairmetrics` package as the `mimic` dataset.
@@ -80,9 +81,9 @@ kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE) %>%
 
 To ensure data quality, the following procedure is applied to handle missing data:
 
--   Removal of that variables which had more than 10% missing values. Three variables had more than 10% of missing values: body mass index (`bmi`; 26.2%), first partial pressure of oxygen (`po2_first`; 10.5%), and first partial pressure of carbon dioxide (`pco2_first`; 10.5%).
+- Removal of that variables which had more than 10% missing values. Three variables had more than 10% of missing values: body mass index (`bmi`; 26.2%), first partial pressure of oxygen (`po2_first`; 10.5%), and first partial pressure of carbon dioxide (`pco2_first`; 10.5%).
 
--   Remaining missing values are imputed using the median value of the variable which they belong to.
+- Remaining missing values are imputed using the median value of the variable which they belong to.
 
 ```{r}
 # Remove columns with more than 10% missing values
@@ -204,20 +205,20 @@ kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
 
 From the outputted fairness metrics we note:
 
--   Independence is likely violated, as evidenced by the statistical parity metric which shows a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
+- Independence is likely violated, as evidenced by the statistical parity metric which shows a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
 
--   With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates our model is less likely to detect males at risk of mortality compared to females.
+- With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates the model is less likely to detect males at risk of mortality compared to females.
 
--   On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
+- On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
 
--   Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
+- Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
 
 
 # Appendix A: Confidence Interval Construction
 
 The function `get_fairness_metrics()` computes Wald-type confidence intervals for both group-specific and disparity metrics using nonparametric bootstrap. To illustrate the construction of confidence intervals (CIs), we use the following example involving the false positive rate ($FPR$).
 
-Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ denote the estimated and FPR in group $A = a$. Then the difference $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ satisfies(e.g., [Gronsbell et al., 2018](https://academic.oup.com/jrsssb/article/80/3/579/7048446)):
+Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ denote the estimated and true FPR in group $A = a$. Then the difference $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ satisfies (e.g., [Gronsbell et al., 2018](https://academic.oup.com/jrsssb/article/80/3/579/7048446)):
 
 $$
 \sqrt{n}(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}) \overset{d}{\to} \mathcal{N}(0, \sigma^2)
@@ -235,7 +236,7 @@ $$
 \log(\widehat{\rho}_{\textrm{FPR}}) \pm z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]
 $$
 
-Exponentiating the bounds yields a confidence interval for the ratio on the original scale:
+Exponentiation of the bounds yields a confidence interval for the ratio on the original scale:
 
 $$
 \left[ 
@@ -248,7 +249,7 @@ $$
 
 In the above example, both **separation** and **sufficiency**-based fairness criteria are important:
 
--   **Separation** ensures that patients at true risk are identified across groups, reducing under-detection in specific subpopulations.
+-   **Separation** ensures that patients at true risk are identified across groups, reducing under-detection in specific sub-populations.
 -   **Sufficiency** ensures interventions are based solely on predicted need, not protected attributes.
 
 However, 28-day mortality differs by sex (19% for females vs. 14% for males), making it impossible to satisfy multiple fairness criteria simultaneously.
