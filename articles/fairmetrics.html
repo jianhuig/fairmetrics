@@ -1075,7 +1075,7 @@ on age.</p></li>
 <li><p>With respect to separation, we observe that all metrics show
 significant disparities. For instance, equal opportunity shows a -24%
 difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between
-females and males. This indicates our model is less likely to detect
+females and males. This indicates the model is less likely to detect
 males at risk of mortality compared to females.</p></li>
 <li><p>On the other hand, the sufficiency criterion is satisfied as
 predictive parity shows no significant difference between males and
@@ -1105,11 +1105,11 @@ positive rate
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><mi>a</mi></msub><annotation encoding="application/x-tex">\widehat{\textrm{FPR}}_a</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">FPR</mtext><mi>a</mi></msub><annotation encoding="application/x-tex">\textrm{FPR}_a</annotation></semantics></math>
-denote the estimated and FPR in group
+denote the estimated and true FPR in group
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">A = a</annotation></semantics></math>.
 Then the difference
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo>=</mo><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><msub><mi>a</mi><mn>1</mn></msub></msub><mo>−</mo><msub><mover><mtext mathvariant="normal">FPR</mtext><mo accent="true">̂</mo></mover><msub><mi>a</mi><mn>0</mn></msub></msub></mrow><annotation encoding="application/x-tex">\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}</annotation></semantics></math>
-satisfies(e.g., <a href="https://academic.oup.com/jrsssb/article/80/3/579/7048446" class="external-link">Gronsbell
+satisfies (e.g., <a href="https://academic.oup.com/jrsssb/article/80/3/579/7048446" class="external-link">Gronsbell
 et al., 2018</a>):</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>n</mi></msqrt><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>Δ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo>−</mo><msub><mi>Δ</mi><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mover><mo>→</mo><mi>d</mi></mover><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \sqrt{n}(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}) \overset{d}{\to} \mathcal{N}(0, \sigma^2)
@@ -1127,8 +1127,8 @@ we apply a log transformation and use the delta method:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>±</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><mo>⋅</mo><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 \log(\widehat{\rho}_{\textrm{FPR}}) \pm z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]
 </annotation></semantics></math></p>
-<p>Exponentiating the bounds yields a confidence interval for the ratio
-on the original scale:</p>
+<p>Exponentiation of the bounds yields a confidence interval for the
+ratio on the original scale:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">[</mo><mo>exp</mo><mrow><mo stretchy="true" form="prefix">{</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><mo>⋅</mo><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow><mo>,</mo><mspace width="0.222em"></mspace><mo>exp</mo><mrow><mo stretchy="true" form="prefix">{</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mi>/</mi><mn>2</mn></mrow></msub><mo>⋅</mo><mover><mtext mathvariant="normal">se</mtext><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">[</mo><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>ρ</mi><mo accent="true">̂</mo></mover><mtext mathvariant="normal">FPR</mtext></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">}</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \left[ 
 \exp\left\{\log(\widehat{\rho}_{\textrm{FPR}}) - z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]\right\},\ 
@@ -1145,7 +1145,7 @@ on the original scale:</p>
 <li>
 <strong>Separation</strong> ensures that patients at true risk are
 identified across groups, reducing under-detection in specific
-subpopulations.</li>
+sub-populations.</li>
 <li>
 <strong>Sufficiency</strong> ensures interventions are based solely
 on predicted need, not protected attributes.</li>
