@@ -37,7 +37,9 @@ A BibTeX entry for LaTeX users is
 ## Similar Works
 
 - [`fairness` R package](https://github.com/kozodoi/fairness) 
-
+- [`fairmodels` R package](https://github.com/ModelOriented/fairmodels)
+- [`fairlearn` Python package](https://github.com/fairlearn/fairlearn)
+  
 ## References
 
 1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org https://arxiv.org/abs/2406.09307 (2024).
