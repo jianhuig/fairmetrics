@@ -84,7 +84,7 @@ Beyond individual metric computation, the {fairmetrics} package includes conveni
 Other R packages similar to {fairmetrics} include {fairness}[@fairness_package] and {fairmodels}[@wisniewski2022fairmodels]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool that can be used with modest hardware.
 
 <!--
-Jesse: Should I add the tables which I genereated in R here?
+Jesse: Should I add the table which I genereated in README here?
 --->
 
 # Licensing and Availability
