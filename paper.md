@@ -81,10 +81,14 @@ Beyond individual metric computation, the {fairmetrics} package includes conveni
 
 # Related Work
 
-A similar package to the {fairmetrics} package is the {fairness} R package[@fairness_package]. The difference {fairmetrics} and {fairness} is threefold. The primary difference between the {fairmetrics} and {fairness} is that {fairmetrics} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool which can be used on modest hardware.
+Other R packages similar to {fairmetrics} include {fairness}[@fairness_package] and {fairmodels}[@wisniewski2022fairmodels]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} allow for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool that can be used with modest hardware.
+
+<!--
+Jesse: Should I add the tables which I genereated in R here?
+--->
 
 # Licensing and Availability
 
-The {fairmetrics} package is under the MIT liscence $$ADD REF$$ and is available on CRAN and Github. The CRAN release can be installed with `install.packages("fairmetrics")`. For installing from Github, the {devtools} package $$ADD REFERENCE$$ or any other R package which allows for installation of packages hosted on Github can be used (i.e.`devtools::install_github("jianhuig/fairmetrics")`).
+The {fairmetrics} package is under the MIT liscence[@mit_license] and is available on CRAN and Github. The CRAN release can be installed with `install.packages("fairmetrics")`. For installing from Github, the {devtools} package[@devtools_package] or any other R package which allows for installation of packages hosted on Github can be used (i.e.`devtools::install_github("jianhuig/fairmetrics")`).
 
 # References
