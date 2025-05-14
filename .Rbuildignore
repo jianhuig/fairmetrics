@@ -7,3 +7,4 @@ utils
 tests
 vingettes
 ^_pkgdown.yml$
+^CRAN-SUBMISSION$
