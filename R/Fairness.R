@@ -44,10 +44,11 @@
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ .,
@@ -55,8 +56,8 @@
 #'     train_data, ntree = 1000
 #' )
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -197,18 +198,19 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ .,
 #'   data = train_data, ntree = 1000
 #' )
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -361,16 +363,17 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -497,18 +500,19 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #' @importFrom stats qnorm sd
 #' @examples
 #' \donttest{
-#' #' library(fairmetrics)
+#' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -615,16 +619,17 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -744,16 +749,17 @@ eval_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint 
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -879,16 +885,17 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -1025,16 +1032,17 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -1156,16 +1164,17 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -1288,17 +1297,18 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' # Data for tests
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -1427,16 +1437,17 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
@@ -1559,16 +1570,17 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #' \donttest{
 #' library(fairmetrics)
 #' library(dplyr)
+#' library(magrittr)
 #' library(randomForest)
 #' data("mimic_preprocessed")
 #' set.seed(123)
-#' train_data <- mimic_preprocessed |>
+#' train_data <- mimic_preprocessed %>%
 #'   dplyr::filter(dplyr::row_number() <= 700)
 #' # Fit a random forest model
 #' rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
 #' # Test the model on the remaining data
-#' test_data <- mimic_preprocessed |>
-#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) |>
+#' test_data <- mimic_preprocessed %>%
+#'   dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female")) %>%
 #'   dplyr::filter(dplyr::row_number() > 700)
 #'
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]

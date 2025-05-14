@@ -9,3 +9,4 @@ vingettes
 ^_pkgdown.yml$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+^README.md$
