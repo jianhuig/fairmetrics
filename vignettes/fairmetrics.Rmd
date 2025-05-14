@@ -218,7 +218,7 @@ From the outputted fairness metrics we note:
 
 The function `get_fairness_metrics()` computes Wald-type confidence intervals for both group-specific and disparity metrics using nonparametric bootstrap. To illustrate the construction of confidence intervals (CIs), we use the following example involving the false positive rate ($FPR$).
 
-Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ denote the estimated and true FPR in group $A = a$. Then the difference $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ satisfies (e.g., [Gronsbell et al., 2018](https://academic.oup.com/jrsssb/article/80/3/579/7048446)):
+Let $\widehat{\textrm{FPR}}_a$ and $\textrm{FPR}_a$ denote the estimated and true FPR in group $A = a$. Then the difference $\widehat{\Delta}_{\textrm{FPR}} = \widehat{\textrm{FPR}}_{a_1} - \widehat{\textrm{FPR}}_{a_0}$ satisfies (e.g., [Gronsbell et al., 2018](https://doi.org/10.1093/jrsssb/qkad107)):
 
 $$
 \sqrt{n}(\widehat{\Delta}_{\textrm{FPR}} - \Delta_{\textrm{FPR}}) \overset{d}{\to} \mathcal{N}(0, \sigma^2)
