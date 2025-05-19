@@ -11,7 +11,7 @@ A collection of functions for computing fairness metrics for machine learning an
 
 ## Installation
 
-To install the latest CRAN release use: 
+To install the latest CRAN release run: 
 
 ```r
 install.packages("fairmetrics")
