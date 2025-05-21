@@ -44,7 +44,7 @@ Machine learning (ML) offers significant potential for predictive modelling in b
 
 A ML can be evaluated as being "fair" through three major criteron: group fairness, individual fairness and causal fairness. Group fairness deems a model fair if its predictions are similarly accurate or callibrated across a predefined set of groups, individual fairness insists that similar individuals should receive similar outcomes, and causal fairness leverages causal models that groups do not have an unjust influence on model predictions [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. {fairmetrics} focuses on calculating group fairness metrics as they are commonly used in biomedical settings. The groups in question are most often defined by protected attributes, such as age or race [@mehrabiSurveyBiasFairness2021].
 
-Group fairness criteria are commonly categorized into three main types: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that an ML model’s predictions be statistically independent of the protected attribute. Separation demands that the model’s predictions be independent of the protected attribute conditional on the true outcome class (i.e., within the positive and negative classes). Sufficiency requires that, given a model’s prediction, the likelihood of the true outcome is independent of the protected attribute—aiming to equalize error rates across groups for similar prediction score. The {fairmetrics} package computes a range of group fairness metrics along with bootstrap-based confidence intervals. These metrics are grouped below according to the three core fairness frameworks described above.
+Group fairness criteria are commonly categorized into three main types: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that an ML model's predictions be statistically independent of the protected attribute. Separation demands that the model's predictions be independent of the protected attribute conditional on the true outcome class (i.e., within the positive and negative classes). Sufficiency requires that, given a model's prediction, the likelihood of the true outcome is independent of the protected attribute—aiming to equalize error rates across groups for similar prediction score. The {fairmetrics} package computes a range of group fairness metrics along with bootstrap-based confidence intervals. These metrics are grouped below according to the three core fairness frameworks described above.
 
 ## Independence
 
@@ -79,6 +79,7 @@ Group fairness criteria are commonly categorized into three main types: independ
 # Main Features
 
 This 
+
 # Additional Features
 
 Beyond individual metric computation, the {fairmetrics} package includes convenience functions to retrieve multiple fairness metrics (and their confidence intervals) in a single call. It also bundles example datasets based on the the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical] to facilitate simple example usage of the fairness metrics with ML models.
