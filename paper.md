@@ -33,7 +33,7 @@ journal: JOSS
 
 # Summary
 
-{fairmetrics} is an R package designed to evaluate the fairness of machine learning models through a range of specialized metrics for which a model can be classified as "fair". It supports fairness assessments of popular group-based criteron, such as independence, separation, sufficency and others. The package enables statistical inference on fairness metrics through calculation of bootstrap confidence intervals (CIs). In addition, {fairmetrics} offers convenient wrapper functions to compute multiple metrics simultaneously and includes datasets derived from the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical] for illustrating its use.
+{fairmetrics} is an R package designed to evaluate the fairness of machine learning models through a range of specialized metrics for which a model can be classified as "fair". It supports fairness assessments of popular group-based criterion, such as independence, separation, sufficency and others. The package enables statistical inference on fairness metrics through calculation of bootstrap confidence intervals (CIs). In addition, {fairmetrics} offers convenient wrapper functions to compute multiple metrics simultaneously and includes datasets derived from the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical] for illustrating its use.
  
 
 # Statement of Need
@@ -42,7 +42,7 @@ Machine learning (ML) offers significant potential for predictive modelling in b
 
 # Fairness Criteria
 
-An ML model can be evaluated as being "fair" through three major criteron: group fairness, individual fairness and causal fairness. Group fairness deems a model fair if its predictions are similarly accurate or callibrated across a predefined set of groups, individual fairness insists that similar individuals should receive similar outcomes, and causal fairness leverages causal models that groups do not have an unjust influence on model predictions  [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. {fairmetrics} focuses on calculating group fairness metrics as they are commonly used in biomedical settings. The groups in question are most often defined by protected attributes, such as age or race [@mehrabiSurveyBiasFairness2021].
+An ML model can be evaluated as being "fair" through three major criterion: group fairness, individual fairness and causal fairness. Group fairness deems a model fair if its predictions are similarly accurate or callibrated across a predefined set of groups, individual fairness insists that similar individuals should receive similar outcomes, and causal fairness leverages causal models that groups do not have an unjust influence on model predictions  [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. {fairmetrics} focuses on calculating group fairness metrics as they are commonly used in biomedical settings. The groups in question are most often defined by protected attributes, such as age or race [@mehrabiSurveyBiasFairness2021].
 
 Group fairness criteria are commonly categorized into three main types: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that an ML model's predictions be statistically independent of the protected attribute. Separation demands that the model's predictions be independent of the protected attribute conditional on the true outcome class (i.e., within the positive and negative classes). Sufficiency requires that, given a model's prediction, the likelihood of the true outcome is independent of the protected attribute—aiming to equalize error rates across groups for similar prediction score. The {fairmetrics} package computes a range of group fairness metrics along with bootstrap-based confidence intervals. These metrics are grouped below according to the three core fairness frameworks described above.
 
@@ -135,21 +135,21 @@ This case it can be seen from both the difference and ratio of the false positiv
 
 # Related Work
 
-Other R packages similar to {fairmetrics} include {fairness}[@fairness_package] and {fairmodels}[@wisniewski2022fairmodels]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} allows for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool that can be used with modest hardware. \hyperref[tab:memory_usage]{Table~\ref*{tab:memory_usage}} shows the memory comparison when loading each library. 
+Other R packages similar to {fairmetrics} include {fairness}[@fairness_package] and {fairmodels} [@wisniewski2022fairmodels]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} allows for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, in contrast to the {fairmodels} and {fairness} packages, the {fairmetrics} package has zero library dependencies and a lower memory footprint, resulting in an environment agnostic tool that can be used with modest hardware and older systems. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{l r}
+\begin{tabular}{l r r}
 \hline
-\textbf{Package} & \textbf{Memory (MB)} \\
+\textbf{Package} & \textbf{Memory (MB)} & \textbf{Dependencies} \\
 \hline
-fairmodels  & 17.02  \\
-fairness    & 117.61 \\
-fairmetrics & 0.05   \\
+fairmodels  & 17.02  & 29\\
+fairness    & 117.61 & 141\\
+fairmetrics & 0.05   & 0\\
 \hline
 \end{tabular}
-\caption{Memory usage of {fairmetrics} vs similar packages (MB)}
-\label{tab:memory_usage}
+\caption{Memory usage and dependencies of {fairmetrics} vs similar packages (MB)}
+\label{tab:memory_dep_usage}
 \end{table}
 
 For python users, the {fairlearn} library [@fairlearn_paper] provides a broader set of fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
