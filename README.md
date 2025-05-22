@@ -107,8 +107,5 @@ Memory usage (MB):
 [139] "xtable"       "yaml"         "zip"   
 >
 > packrat:::recursivePackageDependencies("fairmetrics", ignore = "", lib.loc = .libPaths()[1])
- [1] "R6"         "cli"        "dplyr"      "fansi"     
- [5] "generics"   "glue"       "lifecycle"  "magrittr"  
- [9] "pillar"     "pkgconfig"  "rlang"      "tibble"    
-[13] "tidyselect" "utf8"       "vctrs"      "withr"    
+NULL
 ```
