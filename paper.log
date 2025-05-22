@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.12.23)  21 MAY 2025 21:10
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.12.23)  22 MAY 2025 14:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1014,7 +1014,7 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 File: fairmetrics-workflow.png Graphic file (type bmp)
 <fairmetrics-workflow.png>
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 451.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 452.
 
 
 File: C:/Users/ben29/AppData/Local/R/win-library/4.4/rticles/rmarkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
@@ -1027,11 +1027,6 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
 [3]
-Overfull \hbox (55.86342pt too wide) in paragraph at lines 516--521
-[]\TU/lmr/m/n/10 For python users, the {fairlearn} library (\TU/lmr/bx/n/10 Weerts_Dudík_Edgar_Jalali_Lutz_Madaio_2023?\TU/lmr/m/n/10 )
- []
-
-
 
 File: C:/Users/ben29/AppData/Local/R/win-library/4.4/rticles/rmarkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
 <C:/Users/ben29/AppData/Local/R/win-library/4.4/rticles/rmarkdown/templates/joss/resources/JOSS-logo.png>
@@ -1053,24 +1048,35 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
-[5] (./paper.aux)
+[5]
+
+File: C:/Users/ben29/AppData/Local/R/win-library/4.4/rticles/rmarkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
+<C:/Users/ben29/AppData/Local/R/win-library/4.4/rticles/rmarkdown/templates/joss/resources/JOSS-logo.png>
+
+Package fancyhdr Warning: \headheight is too small (62.59596pt): 
+(fancyhdr)                Make it at least 63.55022pt, for example:
+(fancyhdr)                \setlength{\headheight}{63.55022pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+(fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
+
+[6] (./paper.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-11-02>
  ***********
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 1A827818FA7D5BCF69FB059E0068589E;1388.
+(rerunfilecheck)             Checksum: CE8477F8730D4D8FBCFAC7343DBEF195;1388.
 Package logreq Info: Writing requests to 'paper.run.xml'.
 \openout1 = `paper.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36816 strings out of 475964
- 757256 string characters out of 5776121
- 1628221 words of memory out of 5000000
- 59094 multiletter control sequences out of 15000+600000
+ 36822 strings out of 475964
+ 757384 string characters out of 5776121
+ 1630346 words of memory out of 5000000
+ 59100 multiletter control sequences out of 15000+600000
  564941 words of font info for 84 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,12n,87p,1002b,850s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on paper.pdf (5 pages).
+Output written on paper.pdf (6 pages).

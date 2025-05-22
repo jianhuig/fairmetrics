@@ -78,7 +78,8 @@ Group fairness criteria are commonly categorized into three main types: independ
 
 # Evaluating Fairness Criteria
 
-The {fairmetrics} package requires that a model has been trained and validated with data that has been split appropriately. The primary required input is a data frame or tibble which containing the model predictions, true outcomes, and protected attributes. \ref{workflow} shows the workflow for using {fairmetrics}. It is possible to evaluate a model for a specific or multiple group fairness metrics. 
+The {fairmetrics} package requires that a model has been trained and validated with data that has been split appropriately. The primary required input is a data frame or tibble which containing the model predictions, true outcomes, and protected attributes. \hyperref[workflow]{Figure ~\ref*{workflow}}
+ shows the workflow for using {fairmetrics}. It is possible to evaluate a model for a specific or multiple group fairness metrics. 
 
 ![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
 
@@ -134,13 +135,24 @@ This case it can be seen from both the difference and ratio of the false positiv
 
 # Related Work
 
-Other R packages similar to {fairmetrics} include {fairness}[@fairness_package] and {fairmodels}[@wisniewski2022fairmodels]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} allows for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool that can be used with modest hardware.
+Other R packages similar to {fairmetrics} include {fairness}[@fairness_package] and {fairmodels}[@wisniewski2022fairmodels]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} allows for the calculation of estimated confidence intervals of fairness metrics via bootstrap, which allows for more meaningful inferences about the fairness metrics calculated. Additionally, the {fairness} package has fewer dependencies and a lower memory footprint, making the for a more environment agnostic tool that can be used with modest hardware. \hyperref[tab:memory_usage]{Table~\ref*{tab:memory_usage}} shows the memory comparison when loading each library. 
 
-<!--
-Jesse: Should I add the table which I genereated in README here?
---->
+\begin{table}[ht]
+\centering
+\begin{tabular}{l r}
+\hline
+\textbf{Package} & \textbf{Memory (MB)} \\
+\hline
+fairmodels  & 17.02  \\
+fairness    & 117.61 \\
+fairmetrics & 0.05   \\
+\hline
+\end{tabular}
+\caption{Memory usage of {fairmetrics} vs similar packages (MB)}
+\label{tab:memory_usage}
+\end{table}
 
-For python users, the {fairlearn} library [@Weerts_Dudík_Edgar_Jalali_Lutz_Madaio_2023] provides a broader set of fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
+For python users, the {fairlearn} library [@fairlearn_paper] provides a broader set of fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
 
 # Licensing and Availability
 
