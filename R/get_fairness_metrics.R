@@ -58,7 +58,7 @@
 #' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
-#' # Evaluate Accuracy Parity
+#' # Get Fairness Metrics
 #' get_fairness_metrics(
 #'  data = test_data,
 #'  outcome = "day_28_flg",
