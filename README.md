@@ -43,9 +43,10 @@ Consider the following:
 > measure_memory(c("fairmodels","fairness","fairmetrics"))
 Memory usage (MB):
       package    memory_mb
-1  fairmodels  17.02067566
-2    fairness 117.61164856
-3 fairmetrics   0.04934692
+1   fairmodels  17.02067566
+2     fairness 117.61164856
+3 mlr3fairness  58.10791016
+4  fairmetrics   0.04934692
 ```
 
 2. Show comparisonn in package comparisons between fairmetrics, fairness and fairmodels:
@@ -56,6 +57,9 @@ Memory usage (MB):
 > 
 > packrat:::recursivePackageDependencies("fairness", ignore = "", lib.loc = .libPaths()[1]) |> length()
 [1] 141
+>
+> packrat:::recursivePackageDependencies("mlr3fairness", ignore = "", lib.loc = .libPaths()[1]) |> length()
+[1] 0
 > 
 > packrat:::recursivePackageDependencies("fairmetrics", ignore = "", lib.loc = .libPaths()[1]) |> length()
 [1] 0
