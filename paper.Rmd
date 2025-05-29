@@ -107,13 +107,15 @@ Ben Response: FPR is used. FNR is not. Removed FNR.
 
 <!--
 1. Ben - The package doesn't require data splitting, some people may want to use the package and incorporate CV within training.  Also, sometimes people evaluate fairness metrics on validation data. So suggest you simplify text + figure. Just start with the input.  Also, it doesn't seem like multiple should be a separate node?  doesnt it just include all the 4 boxes (sep, suff, ind, other)? can this be depicted? Also suggest you make the names more descriptive "Separation-based Metrics", "Independence-based Metrics", etc.
+
+Ben Response: Created 3 different figures to review. I think v3 is the best. Please critique if there are any issues.
 --->
 The primary input to the {fairmetrics} package is a data frame or tibble which containing the model's predictions, true outcomes, and the protected attribute in question. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. It is possible to evaluate a model for a specific or multiple group fairness metrics. 
 
-![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
+![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow-v3.png)
 
 <!---
-Edited by Jesse
+Previously edited by Jesse, now edited by Ben
 --->
 A simple example of how to use the {fairmetrics} package is shown below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. This dataset consists of 1776 hemodynamically stable patients with resperatory failure, and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating wheter the patient died within 28 days of admission.
 
@@ -124,7 +126,8 @@ While the choice of fairness metric used is context dependent, we show all metri
 Ben Response: Done.
 
 2. Ben - suggest you show more of the functions in the package - say that, while the choice of metric is context dependent, we show all metrics to show the full range of the package. Also include interpretation of the various results.  Simple way to do this is show, the multiple output then show an example of one of the separation-based criterion or other to show users they can specify what they want.  
-Ben Response: Please see below for the example and review.
+
+Ben Response: Please see below for the examples and review.
 ---->
 
 ```r
