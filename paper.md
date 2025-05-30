@@ -12,16 +12,13 @@ authors:
   - name: Jianhui Gao
     orcid: 0000-0003-0915-1473
     affiliation: 1
-  - name: Benson Chou
-    orcid: 0009-0007-0265-033X
-    affiliation: 1
   - name: Jessica Gronsbell
     orcid: 0000-0002-5360-5869
     affiliation: 1
 affiliations:
   - name: "University of Toronto"
     index: 1
-date: "2025-03-08"
+date: "2025-05-30"
 bibliography: paper.bib
 output:
   rticles::joss_article
@@ -34,9 +31,9 @@ journal: JOSS
 # Summary
 
 <!--- 
-Rewritten by Jesse
+Edited 
 --->
-Fairness is a growing area of machine learning (ML) that focuses on ensuring models do not produce systematically biased outcomes for certain groups, particularly those defined by protected attributes such as race, gender, or age. Evaluating fairness is a critical aspect of model development, as biased models can perpetuate or exacerbate existing social inequalities.  The {fairmetrics} R package offers a user-friendly framework for rigorously evaluating numerous group-based fairness criteria, including metrics based on independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). These criteria assess whether a model is equally accurate or well-calibrated across predefined groups so that appropriate bias mitigation strategies can be implemented. {fairmetrics} provides both point and interval estimates for multiple metrics through convenient wrapper functions, and includes example an dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical].
+Fairness is a growing area of machine learning (ML) that focuses on ensuring models do not produce systematically biased outcomes for particular groups, particularly those defined by protected attributes such as race, gender, or age. Evaluating fairness is a critical aspect of ML model development, as biased models can perpetuate structural inequalities.  The {fairmetrics} R package offers a user-friendly framework for rigorously evaluating numerous group-based fairness criteria, including metrics based on independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). Group-based fairness criteria assess whether a model is equally accurate or well-calibrated across a set of predefined groups so that appropriate bias mitigation strategies can be implemented. {fairmetrics} provides both point and interval estimates for multiple metrics through convenient wrapper functions and includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical].
 
 
 # Statement of Need
