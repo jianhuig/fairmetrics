@@ -75,34 +75,18 @@ Group fairness criteria are primarily classified into three main categories: ind
 
 -   **Accuracy Parity:** Compares the overall accuracy of a predictive model across groups.
 
--   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, ensuring the balance of missed detections versus false alarms is consistent.
+-   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, evaluating whether the trade-off between missed detections of positive outcomes and false alarms of negative outcomes is balanced.
 
 # Evaluating Fairness Criteria
 
-<!--
-1. Ben - The package doesn't require data splitting, some people may want to use the package and incorporate CV within training.  Also, sometimes people evaluate fairness metrics on validation data. So suggest you simplify text + figure. Just start with the input.  Also, it doesn't seem like multiple should be a separate node?  doesnt it just include all the 4 boxes (sep, suff, ind, other)? can this be depicted? Also suggest you make the names more descriptive "Separation-based Metrics", "Independence-based Metrics", etc.
-
-Ben Response: Created 3 different figures to review. I think v3 is the best. Please critique if there are any issues.
---->
-The primary input to the {fairmetrics} package is a data frame or tibble which containing the model's predictions, true outcomes, and the protected attribute in question. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. It is possible to evaluate a model for a specific or multiple group fairness metrics. 
+<!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness?  -->
+The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function.. 
 
 ![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow-v3.png)
 
-<!---
-Previously edited by Jesse, now edited by Ben
---->
-A simple example of how to use the {fairmetrics} package is shown below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. This dataset consists of 1776 hemodynamically stable patients with respiratory failure, and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
+A simple example of how to use the {fairmetrics} package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from the MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in the {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. The dataset consists of 1,776 hemodynamically stable patients with respiratory failure and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
 
-While the choice of fairness metric used is context dependent, we show all metrics available with the `get_fairness_metrics()` function. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data, and predictions are made on a test set. 
-<!---
-1. Ben - need to add detail on what the detail is in the above paragraph. What does the data contaon, where did it come from, what is the sample size, etc.   
-
-Ben Response: Done.
-
-2. Ben - suggest you show more of the functions in the package - say that, while the choice of metric is context dependent, we show all metrics to show the full range of the package. Also include interpretation of the various results.  Simple way to do this is show, the multiple output then show an example of one of the separation-based criterion or other to show users they can specify what they want.  
-
-Ben Response: Please see below for the examples and review.
----->
+While the choice of fairness metric used is context dependent, we show all metrics available with the `get_fairness_metrics()` function for the purposes of illustration. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data and the predictions are made and evaluated on a test set. 
 
 ```r
 library(fairmetrics)
