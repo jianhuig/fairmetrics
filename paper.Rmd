@@ -141,7 +141,7 @@ get_fairness_metrics(
 #> 10                        Treatment Equality        1.03      3.24      -2.21 [-4.35, -0.07]  0.32 [0.15, 0.68]
 ```
 
-Should the user wish to calculate an individual metric, it is possible to use any of the `eval_*` functions. For example, to calculate the equal opportunity metric, the user can call the `eval_equal_opportunity()` function.
+Should the user wish to calculate an individual criteria, it is possible to use any of the `eval_*` functions. For example, to calculate equal opportunity, the user can call the `eval_equal_opportunity()` function.
 
 ```r
 eval_eq_opp(
@@ -157,7 +157,9 @@ eval_eq_opp(
 #>1    FNR        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.85]
 ```
 
-For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group. [ NOTE: To me it is unclear why this is a separate function.  I think instead it makes sense to have an argument in your get_fairness_metrics function that turns the CI calculation on or off.  ]
+For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group.
+
+[ NOTE: To me it is unclear why this is a separate function.  I think instead it makes sense to have an argument in your get_fairness_metrics function that turns the CI calculation on or off.  ]
 
 ```r
 get_all_metrics(
