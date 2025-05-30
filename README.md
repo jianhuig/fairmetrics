@@ -40,7 +40,7 @@ Consider the following:
 +   invisible(df)
 + }
 > 
-> measure_memory(c("fairmodels","fairness","fairmetrics"))
+> measure_memory(c("fairmodels","fairness","mlr3fairness","fairmetrics"))
 Memory usage (MB):
       package    memory_mb
 1   fairmodels  17.02067566
