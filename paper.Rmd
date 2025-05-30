@@ -80,7 +80,7 @@ Group fairness criteria are primarily classified into three main categories: ind
 # Evaluating Fairness Criteria
 
 <!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so needs an update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness? This isn't clear to me. Also I think you should have an argument for level for the CIs - that is, users input 0.95 for 95\% or 0.99 etc as that should be adjustable.   -->
-The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function.. 
+The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function. 
 
 ![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow-v3.png)
 
