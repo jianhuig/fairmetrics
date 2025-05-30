@@ -182,7 +182,7 @@ get_all_metrics(
 
 # Related Work
 
-Other R packages similar to {fairmetrics} include {fairness}[@fairness_package], {fairmodels} [@wisniewski2022fairmodels] and {mlr3fairness}[mlr3fairness_package]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} calculates the ratio and difference between group fairness criterion and allows estimated confidence intervals of fairness metrics via bootstrap - allowing for more meaningful inferences about the fairness metrics calculated. Additionally, in contrast to the {fairmodels}, {fairness} and {mlr3fairness} packages, the {fairmetrics} package does not posses any external dependencies and has a lower memory footprint, resulting in an environment agnostic tool that can be used with modest hardware and older systems. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
+Other R packages similar to {fairmetrics} include {fairness}[@fairness_package], {fairmodels} [@wisniewski2022fairmodels] and {mlr3fairness}[mlr3fairness_package]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} calculates the ratio and difference between group fairness criterion and their corresponding confidence intervals of fairness metrics via bootstrap, allowing for more meaningful inferences about the fairness criteria. Additionally, in contrast to the {fairmodels}, {fairness} and {mlr3fairness} packages, the {fairmetrics} package does not posses any external dependencies and has a lower memory footprint, resulting in an environment agnostic tool that can be used with modest hardware and older systems. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
 
 \begin{table}[ht]
 \centering
@@ -196,11 +196,11 @@ fairmodels  & 58.11  & 45 \\
 fairmetrics & 0.05   & 0  \\
 \hline
 \end{tabular}
-\caption{Memory usage and dependencies of {fairmetrics} vs similar packages (MB)}
+\caption{Memory usage (in MB) and dependencies of {fairmetrics} vs similar packages.}
 \label{tab:memory_dep_usage}
 \end{table}
 
-For python users, the {fairlearn} library [@fairlearn_paper] provides a broader set of fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
+For python users, the {fairlearn} library [@fairlearn_paper] provides additional fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
 
 # Licensing and Availability
 
