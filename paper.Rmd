@@ -45,10 +45,6 @@ The `{fairmetrics}` package is designed to evaluate group fairness in the settin
 
 # Fairness Criteria
 
-<!---
-This section needs to be cleaned up for clarity - see comments below.
---->
-
 Group fairness criteria are typically classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model’s predictions be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the prediction and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model’s prediction is known, the protected attribute provides no additional information about the true outcome.
 
 <!---
