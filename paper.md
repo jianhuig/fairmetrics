@@ -1,5 +1,5 @@
 ---
-title: '{fairmetrics}: An R package for fairness evaluation metrics with confidence intervals'
+title: '{fairmetrics}: An R package for group fairness evaluation'
 tags:
   - R
   - Fairness
@@ -16,9 +16,9 @@ authors:
     orcid: 0000-0002-5360-5869
     affiliation: 1
 affiliations:
-  - name: "University of Toronto"
+  - name: "Department of Statistcial Science, University of Toronto"
     index: 1
-date: "2025-05-30"
+date: "2025-03-08"
 bibliography: paper.bib
 output:
   rticles::joss_article
@@ -30,28 +30,22 @@ journal: JOSS
 
 # Summary
 
-<!--- 
-Edited 
---->
 Fairness is a growing area of machine learning (ML) that focuses on ensuring models do not produce systematically biased outcomes for particular groups, particularly those defined by protected attributes such as race, gender, or age. Evaluating fairness is a critical aspect of ML model development, as biased models can perpetuate structural inequalities.  The {fairmetrics} R package offers a user-friendly framework for rigorously evaluating numerous group-based fairness criteria, including metrics based on independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). Group-based fairness criteria assess whether a model is equally accurate or well-calibrated across a set of predefined groups so that appropriate bias mitigation strategies can be implemented. {fairmetrics} provides both point and interval estimates for multiple metrics through convenient wrapper functions and includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical].
 
 
 # Statement of Need
 
-<!---
-Jianhui - this is too similar to the original paper still and I suggest we emphasize that the package isn't restricted to biomedical data.  We can of course use it as an example but this isn't the need for the package. Can you rewrite this to just be about the general use of fairness?  i.e., point 1 - ml increasing integrated into different areas, point 2 - give a few examples, point 3 - need for the package in light of other work.  I don't think interpetable is the correct word here, the key difference is allowing for uncertainty quantification, we also provide ratio + difference estimates, i dont think R fairness package does, I would emphasize   
---->
+ML models are increasingly integrated into high-stakes domains to support decision making that significantly impacts individuals and society more broadly, including criminal justice, healthcare, finance, employment, and education[@mehrabi_survey_21].  Mounting evidence suggest that these models often exhibit bias across groups defined by protected attributes. For example, within criminal justice, the Correctional Offender Management Profiling for Alternative Sanctions (COMPAS) software, a tool used by U.S. courts to evaluate the risk of defendants becoming recidivists, was found to incorrectly classify Black defendants as high-risk at nearly twice the rate of white defendants[@mattuMachineBias].  This bias impacted Black defendants by potentially leading to harsher bail decisions, longer sentences, and reduced parole opportunities compared to white defendants with similar risk profiles. Similarly, within healthcare, a commercial risk-prediction algorithm deployed in the U.S. to identify patients with complex health needs for high-risk care management programs was shown to be significantly lower calibrated for Black patients relative to white patients[@obermeyerDissectingRacialBias2019]. This caused Black patients with equivalent health conditions to be under-referred for essential care services compared to white patients.  These examples illustrate that there is an urgent need for ML practitioners and researchers to ensure that ML models support fair decision before they are deployed in real-world applications.
 
-Machine learning (ML) offers significant potential for predictive modelling in biomedical research [@rajpurkarAIHealthMedicine2022]. Despite its promise, there is substantial evidence that, without appropriate forethought and planning, ML models can introduce or exacerbate health inequities by making less accurate decisions for certain groups or individuals [@grote2022enabling]. While existing software can compute fairness metrics, none provide out-of-the-box statistical inference, leaving practitioners without guidance on the uncertainty around those metrics. As ML becomes increasingly embedded in healthcare systems, ensuring equitable model performance across diverse populations is essential[@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. The {fairmetrics} R package fills this gap by offering a suite of popular group-fairness metrics along with bootstrap-based confidence intervals, enabling more rigorous and interpretable assessments of fairness in biomedical ML.
+While existing software can compute group fairness criteria, they only point estimates and/or visualizations without quantifying the uncertainty around the criteria. This limitation prevents users from determining whether observed disparities between groups are statistically significant or merely the result of random variation due to finite sample size, potentially leading to incorrect conclusions about fairness violations. The {fairmetrics} R package addresses this gap by providing bootstrap-based confidence intervals (CIs) for both difference-based and ratio-based group fairness metrics, empowering users to make statistically grounded decisions about the fairness of their models, which is inconsistently done in practice. 
+
+# Scope
+
+The `{fairmetrics}` package is designed to evaluate group fairness in the setting of binary classification with a binary protected attribute. This restriction reflects standard practice in the fairness literature and is motivated by several considerations. First, binary classification remains prevalent in many high-stakes applications, such as loan approval, hiring decisions, and disease screening, where outcomes are typically framed as accept/reject or positive/negative[@mehrabi_survey_21]. Second, group fairness is the most widely used framework for binary classification tasks[@mehrabi_survey_21]. Third, when protected attributes have more than two categories, there is no clear consensus on how to evaluate group fairness. This focus enables {fairmetrics} to provide statistically grounded uncertainty quantification for group fairness metrics commonly applied in binary classification tasks across diverse application domains.
 
 # Fairness Criteria
 
-<!---
-This section needs to be cleaned up for clarity - see comments below.
---->
-
-Group fairness criteria are typically classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. The {fairmetrics} package computes a range of group fairness metrics together with bootstrap-based confidence intervals for uncertainty quantification.  The metrics implemented in the package are briefly described below.
-
+Group fairness criteria are typically classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model’s predictions be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the prediction and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model’s prediction is known, the protected attribute provides no additional information about the true outcome.
 
 <!---
 1. Jianhui - The scope of the package is not defined in the above paragprah so one would not understand the definitons below (i.e., "positive classification" is never defined).  Specifically, you need to say you consider binary classification and a binary protected attribute - I do not believe your package handles more than.  Explain why this is done and then update the definitions below to reflect this. 
@@ -75,7 +69,7 @@ Ben Response: Rewritten to use "Compares".
 
 ## Separation
 
--   **Equal Opportunity:**  Compares disparities in false negative rates between two groups, quantifying any difference in missed positive cases.
+-   **Equal Opportunity:**  Compares disparities in false negative rates between groups, quantifying any difference in missed positive cases.
 
 <!---
 Do you need the acronyms for FNR and FPR? If you don't use them later, they don't need to be defined.
@@ -84,9 +78,16 @@ Ben Response: FPR is used. FNR is not. Removed FNR.
 --->
 -   **Predictive Equality:** Compares false positive rates (FPR) between groups, ensuring that no group is disproportionately flagged as positive when the true outcome is negative.
 
--   **Positive Class Balance:**  Compares the distribution of predicted probabilities among individuals whose true outcome is positive between groups, ensuring that the model does not favor one group over another in its positive predictions.
 
--   **Negative Class Balance:** Compares the distribution of predicted probabilities among individuals whose true outcome is negative between groups, ensuring that the model does not favor one group over another in its negative predictions.
+<!---
+Updated the two defs below. It only checks the first-moment of the predicted probabilities, does not check the distribution. 
+
+Also updated the name, Balance of Positive/Negative Class is the name the original paper used.
+--->
+
+-   **Balance for Positive Class:**  Compares if the average of predicted probabilities among individuals whose true outcome is positive is similar between groups.
+
+-   **Balance for Negative Class:** Compares if the average of predicted probabilities among individuals whose true outcome is negative is similar between groups.
 
 ## Sufficiency
 
@@ -94,9 +95,9 @@ Ben Response: FPR is used. FNR is not. Removed FNR.
 
 ## Other Criteria
 
--   **Brier Score Parity:** Compares the Brier score—the mean squared error of probabilistic predictions—is similar across groups, indicating comparable calibration.
+-   **Brier Score Parity:** Compares the Brier score—the mean squared error of predicted probabilities—is similar across groups, indicating comparable calibration.
 
--   **Accuracy Parity:** Compares the overall accuracy of a predictive model is equivalent across different groups.
+-   **Accuracy Parity:** Compares the overall accuracy of a predictive model is equivalent across groups.
 
 -   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, ensuring the balance of missed detections versus false alarms is consistent.
 
@@ -114,7 +115,7 @@ The primary input to the {fairmetrics} package is a data frame or tibble which c
 <!---
 Previously edited by Jesse, now edited by Ben
 --->
-A simple example of how to use the {fairmetrics} package is shown below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. This dataset consists of 1776 hemodynamically stable patients with resperatory failure, and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating wheter the patient died within 28 days of admission.
+A simple example of how to use the {fairmetrics} package is shown below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. This dataset consists of 1776 hemodynamically stable patients with respiratory failure, and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
 
 While the choice of fairness metric used is context dependent, we show all metrics available with the `get_fairness_metrics()` function. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data, and predictions are made on a test set. 
 <!---
@@ -198,7 +199,7 @@ eval_eq_opp(
 #>1    FNR        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.85]
 ```
 
-For more traditional fairness metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group.
+For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group.
 
 ```r
 get_all_metrics(
