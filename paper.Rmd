@@ -79,14 +79,14 @@ Group fairness criteria are primarily classified into three main categories: ind
 
 # Evaluating Fairness Criteria
 
-<!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness?  -->
+<!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so needs an update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness? This isn't clear to me. Also I think you should have an argument for level for the CIs - that is, users input 0.95 for 95\% or 0.99 etc as that should be adjustable.   -->
 The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function.. 
 
 ![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow-v3.png)
 
 A simple example of how to use the {fairmetrics} package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from the MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in the {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. The dataset consists of 1,776 hemodynamically stable patients with respiratory failure and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
 
-While the choice of fairness metric used is context dependent, we show all metrics available with the `get_fairness_metrics()` function for the purposes of illustration. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data and the predictions are made and evaluated on a test set. 
+While the choice of fairness criteria used is context dependent, we show all criteria available with the `get_fairness_metrics()` function for the purposes of illustration. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data and the predictions are made and evaluated on a test set.  The `get_fairness_metrics()` function outputs difference and ratio-based metrics as well as their corresponding confidence intervals.  A statistically significant difference across groups at a given level of significance is indicated when the confidence interval for a difference-based metric does not include zero or when the interval for a ratio-based metric does not include one.
 
 ```r
 library(fairmetrics)
@@ -141,9 +141,7 @@ get_fairness_metrics(
 #> 10                        Treatment Equality        1.03      3.24      -2.21 [-4.35, -0.07]  0.32 [0.15, 0.68]
 ```
 
-Among the fairness metrics calculated, metrics whose difference confidence intervals cross zero and whose ratio confidence intervals cross one indicate no significant difference between the groups. In this example, the statistical parity, conditional statistical pairty, equal opportunity, predictive equality, positive class balance, negative class balance, and treatment equaltiy metrics show a significant differences. While, the predictive parity, Brier score parity, and overall accuracy parity metrics do not show significant differences between the groups. 
-
-Should the user wish to calculate an individual metric, it is possible to use any of the `eval_*` functions. For example, to calculate the equal opportunity metric, the user can use the `eval_equal_opportunity()` function.
+Should the user wish to calculate an individual metric, it is possible to use any of the `eval_*` functions. For example, to calculate the equal opportunity metric, the user can call the `eval_equal_opportunity()` function.
 
 ```r
 eval_eq_opp(
@@ -159,7 +157,7 @@ eval_eq_opp(
 #>1    FNR        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.85]
 ```
 
-For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group.
+For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group. [ NOTE: To me it is unclear why this is a separate function.  I think instead it makes sense to have an argument in your get_fairness_metrics function that turns the CI calculation on or off.  ]
 
 ```r
 get_all_metrics(
@@ -184,22 +182,6 @@ get_all_metrics(
 
 # Related Work
 
-<!---
-## Both - you are missing this one: https://mlr3fairness.mlr-org.com
-## Do these metrics give difference and ratio based criteria? Are there any other differences? 
-
-Ben Response: Added mlr3fairness package updated the differences.
-
-For comparison: 
-
-- {fairness}- does not give difference or ratio based criteria, only point estimates. The package also produces plots which {fairmetrics} does not (not in our scope).
-- {fairmodels}- does give ratio criteria but not GROUP ratio based criteria, only overall ratio. The package also produces plots which {fairmetrics} does not (not in our scope). No difference based criteria.
-- Same with {mlr3fairness} - does not give difference or ratio based criteria, only point estimates. The package also produces plots which {fairmetrics} does not (not in our scope).
-
-
-(I would also add that the {fairmodels} has added complexity required to using it, and {mlr3fairness} packages are designed for use with the mlr3 framework, which is not as widely adopted in the R community. This could be a "skill issue" on my part. However I don't think such a comment would be appropriate for the paper.)
-
---->
 Other R packages similar to {fairmetrics} include {fairness}[@fairness_package], {fairmodels} [@wisniewski2022fairmodels] and {mlr3fairness}[mlr3fairness_package]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} calculates the ratio and difference between group fairness criterion and allows estimated confidence intervals of fairness metrics via bootstrap - allowing for more meaningful inferences about the fairness metrics calculated. Additionally, in contrast to the {fairmodels}, {fairness} and {mlr3fairness} packages, the {fairmetrics} package does not posses any external dependencies and has a lower memory footprint, resulting in an environment agnostic tool that can be used with modest hardware and older systems. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
 
 \begin{table}[ht]
