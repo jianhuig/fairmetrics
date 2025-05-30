@@ -45,59 +45,35 @@ The `{fairmetrics}` package is designed to evaluate group fairness in the settin
 
 # Fairness Criteria
 
-Group fairness criteria are typically classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model’s predictions be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the prediction and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model’s prediction is known, the protected attribute provides no additional information about the true outcome.
-
-<!---
-1. Jianhui - The scope of the package is not defined in the above paragprah so one would not understand the definitons below (i.e., "positive classification" is never defined).  Specifically, you need to say you consider binary classification and a binary protected attribute - I do not believe your package handles more than.  Explain why this is done and then update the definitions below to reflect this. 
-
-2. Jianhui - why do you use bootstrap for this package rather than IF?  Is it because you don't have IF for all metrics?
-
-3. Jianhui - please update the initial sentences describing the 3 categories to be more intuitive, akin to what we have in the paper.  
---->
+Group fairness criteria are primarily classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model’s classifications be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the classifications and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within the positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model’s prediction is known, the protected attribute provides no additional information about the true outcome.  Below we summarize the fairness metrics that are available within the {fairmetrics} package.  
 
 ## Independence
 
--   **Statistical Parity:** Compares the overall rate of positive predictions between groups, irrespective of the true outcome.
+-   **Statistical Parity:** Compares the overall rate of positive predictions between groups.
 
 -   **Conditional Statistical Parity:** Restricts the comparison of positive prediction rates to a specific subgroup (e.g., within a hospital unit or age bracket), offering a more context-specific fairness assessment.
 
-<!---
-Use consistent language throughout - alternating between checks/compares/focuses/assess/measure/etc is confusing as all functions do the same thing.  Suggest use "Compares" for all. 
-
-Ben Response: Rewritten to use "Compares".
---->
-
 ## Separation
 
--   **Equal Opportunity:**  Compares disparities in false negative rates between groups, quantifying any difference in missed positive cases.
+-   **Equal Opportunity:**  Compares disparities in the false negative rates between groups, quantifying differences in the likelihood of missing positive outcomes.
 
-<!---
-Do you need the acronyms for FNR and FPR? If you don't use them later, they don't need to be defined.
+-   **Predictive Equality:** Compares the false positive rates (FPR) between groups, quantifying differences in the likelihood of incorrectly labeling negative outcomes as positive.
 
-Ben Response: FPR is used. FNR is not. Removed FNR. 
---->
--   **Predictive Equality:** Compares false positive rates (FPR) between groups, ensuring that no group is disproportionately flagged as positive when the true outcome is negative.
+-   **Balance for Positive Class:**  Compares the average of the predicted probabilities among individuals whose true outcome is positive across groups.
 
-
-<!---
-Updated the two defs below. It only checks the first-moment of the predicted probabilities, does not check the distribution. 
-
-Also updated the name, Balance of Positive/Negative Class is the name the original paper used.
---->
-
--   **Balance for Positive Class:**  Compares if the average of predicted probabilities among individuals whose true outcome is positive is similar between groups.
-
--   **Balance for Negative Class:** Compares if the average of predicted probabilities among individuals whose true outcome is negative is similar between groups.
+-   **Balance for Negative Class:** Compares the average of the predicted probabilities among individuals whose true outcome is negative across groups.
 
 ## Sufficiency
 
--   **Predictive Parity:** Compares positive predictive values across groups, assessing whether the precision of positive predictions is equivalent.
+-   **(Positive) Predictive Parity:** Compares the positive predictive values across groups, assessing differences in the precision of positive predictions.
+
+-   **(Negative) Predictive Parity:** Compares the negative predictive values across groups, assessing differences in the precision of negative predictions. [Note: Please add this to the package.]
 
 ## Other Criteria
 
--   **Brier Score Parity:** Compares the Brier score—the mean squared error of predicted probabilities—is similar across groups, indicating comparable calibration.
+-   **Brier Score Parity:** Compares the Brier score (i.e., the mean squared error of predicted probabilities) across groups, evaluating differences in calibration. 
 
--   **Accuracy Parity:** Compares the overall accuracy of a predictive model is equivalent across groups.
+-   **Accuracy Parity:** Compares the overall accuracy of a predictive model across groups.
 
 -   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, ensuring the balance of missed detections versus false alarms is consistent.
 
