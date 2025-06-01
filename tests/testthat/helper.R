@@ -1,4 +1,4 @@
-library(FairnessEval)
+library(fairmetrics)
 library(dplyr)
 library(randomForest)
 # Data for tests

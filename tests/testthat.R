@@ -8,4 +8,4 @@
 
 library(testthat)
 
-test_check("FairnessEval")
+test_check("fairmetrics")

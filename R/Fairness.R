@@ -17,6 +17,7 @@
 #' predicted probabilities or risk scores.
 #' @param cutoff A numeric value used to threshold predicted probabilities into
 #' binary decisions; defaults to 0.5.
+#' @param confint Whether to compute 95% confidence interval, default is TRUE.
 #' @param bootstraps An integer specifying the number of bootstrap resamples for
 #' constructing confidence intervals; defaults to 2500.
 #' @param alpha Significance level for constructing the (1 - \code{alpha})
@@ -77,7 +78,7 @@
 #' }
 #' @export
 
-eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
+eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,confint = TRUE,
                         bootstraps = 2500, alpha = 0.05, digits = 2,
                         message = TRUE) {
   # Check if outcome is binary
@@ -94,48 +95,63 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
   fnr_diff <- fnr[[1]] - fnr[[2]]
   fnr_ratio <- fnr[1] / fnr[[2]]
 
-  # Calculate difference confidence interval
-  se <- replicate(bootstraps, {
-    # Bootstrap within each group
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
+  if(confint){
+    # Calculate difference confidence interval
+    se <- replicate(bootstraps, {
+      # Bootstrap within each group
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+
+      fnr_boot <- 1 - get_tpr(
+        data = data_boot, outcome = outcome, group = group,
+        probs = probs, cutoff = cutoff
+      )
+      return(c(fnr_boot[[1]] - fnr_boot[[2]], log(fnr_boot[[1]] / fnr_boot[[2]])))
+    })
+
+    lower_ci <- round(fnr_diff - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    upper_ci <- round(fnr_diff + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    lower_ratio_ci <- round(exp(log(fnr_ratio) - qnorm(1 - alpha / 2) *
+                                  sd(se[2, ])), digits)
+    upper_ratio_ci <- round(exp(log(fnr_ratio) + qnorm(1 - alpha / 2) *
+                                  sd(se[2, ])), digits)
+
+    # Create a dataframe for the results
+    results_df <- data.frame(
+      "FNR",
+      fnr[[1]],
+      fnr[[2]],
+      fnr_diff,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(fnr_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
     )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
+
+    colnames(results_df) <- c(
+      "Metric", paste0("Group", sort(unique(data[[group]]))[[1]]),
+      paste0("Group", sort(unique(data[[group]]))[[2]]),
+      "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
     )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-
-    fnr_boot <- 1 - get_tpr(
-      data = data_boot, outcome = outcome, group = group,
-      probs = probs, cutoff = cutoff
+  } else{
+    results_df <- data.frame(
+      "FNR",
+      fnr[[1]],
+      fnr[[2]],
+      fnr_diff,
+      round(fnr_ratio, digits)
     )
-    return(c(fnr_boot[[1]] - fnr_boot[[2]], log(fnr_boot[[1]] / fnr_boot[[2]])))
-  })
 
-  lower_ci <- round(fnr_diff - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  upper_ci <- round(fnr_diff + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  lower_ratio_ci <- round(exp(log(fnr_ratio) - qnorm(1 - alpha / 2) *
-    sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(fnr_ratio) + qnorm(1 - alpha / 2) *
-    sd(se[2, ])), digits)
-
-  # Create a dataframe for the results
-  results_df <- data.frame(
-    "FNR",
-    fnr[[1]],
-    fnr[[2]],
-    fnr_diff,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(fnr_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
-
-  colnames(results_df) <- c(
-    "Metric", paste0("Group", sort(unique(data[[group]]))[[1]]),
-    paste0("Group", sort(unique(data[[group]]))[[2]]),
-    "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
-  )
-
+    colnames(results_df) <- c(
+      "Metric", paste0("Group", sort(unique(data[[group]]))[[1]]),
+      paste0("Group", sort(unique(data[[group]]))[[2]]),
+      "Difference", "Ratio"
+    )
+  }
 
   # Print message if desired
   if (message) {
@@ -170,6 +186,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #' predicted probabilities or risk scores.
 #' @param cutoff A numeric value used to threshold predicted probabilities into
 #' binary predictions; defaults to 0.5.
+#' @param confint Whether to compute 95% confidence interval, default is TRUE.
 #' @param bootstraps An integer specifying the number of bootstrap resamples for
 #' constructing confidence intervals; vdefaults to 2500.
 #' @param alpha Significance level for the (1 - \code{alpha}) confidence
@@ -229,7 +246,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,
 #' )
 #' }
 #' @export
-eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
+eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                          bootstraps = 2500, alpha = 0.05, digits = 2,
                          message = TRUE) {
   # Check if outcome is binary
@@ -252,69 +269,89 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5,
   fnr_ratio <- fnr[[1]] / fnr[[2]]
   fpr_ratio <- fpr[[1]] / fpr[[2]]
 
-  # Calculate confidence interval
-  se <- replicate(bootstraps, {
-    indices1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    indices2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    boot_data <- rbind(data[indices1, ], data[indices2, ])
+  if(confint){
 
-    boot_fnr <- 1 - get_tpr(
-      data = boot_data, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    boot_fpr <- get_fpr(
-      data = boot_data, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    c(
-      boot_fnr[[1]] - boot_fnr[[2]], boot_fpr[[1]] - boot_fpr[[2]],
-      log(boot_fnr[[1]] / boot_fnr[[2]]), log(boot_fpr[[1]] / boot_fpr[[2]])
-    )
-  })
-
-  # Calculate confidence intervals
-  fnr_lower <- round(fnr_diff - qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
-  fnr_upper <- round(fnr_diff + qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
-  fpr_lower <- round(fpr_diff - qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
-  fpr_upper <- round(fpr_diff + qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
-  fnr_ratio_lower <- round(exp(log(fnr_ratio) - qnorm(1 - alpha / 4) *
-    sd(se[3, ])), digits)
-  fnr_ratio_upper <- round(exp(log(fnr_ratio) + qnorm(1 - alpha / 4) *
-    sd(se[3, ])), digits)
-  fpr_ratio_lower <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 4) *
-    sd(se[4, ])), digits)
-  fpr_ratio_upper <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 4) *
-    sd(se[4, ])), digits)
-
-  # Structure the results as a dataframe
-  results_df <- data.frame(
-    Metric = c("FNR; FPR"),
-    Group1 = paste0(fnr[[1]], "; ", fpr[[1]]),
-    Group2 = paste0(fnr[[2]], "; ", fpr[[2]]),
-    Difference = paste0(fnr_diff, "; ", fpr_diff),
-    CI =
-      paste0(
-        "[", fnr_lower, ", ", fnr_upper, "]", "; ",
-        "[", fpr_lower, ", ", fpr_upper, "]"
-      ),
-    Ratio = paste0(round(fnr_ratio, digits), "; ", round(fpr_ratio, digits)),
-    Ratio_CI =
-      paste0(
-        "[", fnr_ratio_lower, ", ", fnr_ratio_upper, "]", "; ",
-        "[", fpr_ratio_lower, ", ", fpr_ratio_upper, "]"
+    # Calculate confidence interval
+    se <- replicate(bootstraps, {
+      indices1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                         replace = TRUE
       )
-  )
+      indices2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                         replace = TRUE
+      )
+      boot_data <- rbind(data[indices1, ], data[indices2, ])
 
-  colnames(results_df) <- c(
-    "Metric",
-    paste0("Group ", sort(unique(data[[group]]))[[1]]),
-    paste0("Group ", sort(unique(data[[group]]))[[2]]),
-    "Difference", "95% CR", "Ratio", "95% CR"
-  )
+      boot_fnr <- 1 - get_tpr(
+        data = boot_data, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      boot_fpr <- get_fpr(
+        data = boot_data, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      c(
+        boot_fnr[[1]] - boot_fnr[[2]], boot_fpr[[1]] - boot_fpr[[2]],
+        log(boot_fnr[[1]] / boot_fnr[[2]]), log(boot_fpr[[1]] / boot_fpr[[2]])
+      )
+    })
+
+    # Calculate confidence intervals
+    fnr_lower <- round(fnr_diff - qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
+    fnr_upper <- round(fnr_diff + qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
+    fpr_lower <- round(fpr_diff - qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
+    fpr_upper <- round(fpr_diff + qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
+    fnr_ratio_lower <- round(exp(log(fnr_ratio) - qnorm(1 - alpha / 4) *
+                                   sd(se[3, ])), digits)
+    fnr_ratio_upper <- round(exp(log(fnr_ratio) + qnorm(1 - alpha / 4) *
+                                   sd(se[3, ])), digits)
+    fpr_ratio_lower <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 4) *
+                                   sd(se[4, ])), digits)
+    fpr_ratio_upper <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 4) *
+                                   sd(se[4, ])), digits)
+
+    # Structure the results as a dataframe
+    results_df <- data.frame(
+      Metric = c("FNR; FPR"),
+      Group1 = paste0(fnr[[1]], "; ", fpr[[1]]),
+      Group2 = paste0(fnr[[2]], "; ", fpr[[2]]),
+      Difference = paste0(fnr_diff, "; ", fpr_diff),
+      CI =
+        paste0(
+          "[", fnr_lower, ", ", fnr_upper, "]", "; ",
+          "[", fpr_lower, ", ", fpr_upper, "]"
+        ),
+      Ratio = paste0(round(fnr_ratio, digits), "; ", round(fpr_ratio, digits)),
+      Ratio_CI =
+        paste0(
+          "[", fnr_ratio_lower, ", ", fnr_ratio_upper, "]", "; ",
+          "[", fpr_ratio_lower, ", ", fpr_ratio_upper, "]"
+        )
+    )
+
+    colnames(results_df) <- c(
+      "Metric",
+      paste0("Group ", sort(unique(data[[group]]))[[1]]),
+      paste0("Group ", sort(unique(data[[group]]))[[2]]),
+      "Difference", "95% CI", "Ratio", "95% CI"
+    )
+  }else{
+
+    # Structure the results as a dataframe
+    results_df <- data.frame(
+      Metric = c("FNR; FPR"),
+      Group1 = paste0(fnr[[1]], "; ", fpr[[1]]),
+      Group2 = paste0(fnr[[2]], "; ", fpr[[2]]),
+      Difference = paste0(fnr_diff, "; ", fpr_diff),
+      Ratio = paste0(round(fnr_ratio, digits), "; ", round(fpr_ratio, digits))
+    )
+
+    colnames(results_df) <- c(
+      "Metric",
+      paste0("Group ", sort(unique(data[[group]]))[[1]]),
+      paste0("Group ", sort(unique(data[[group]]))[[2]]),
+      "Difference", "Ratio"
+    )
+  }
 
   # Print summary message if desired
   if (message) {
@@ -410,44 +447,64 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
   ppr_diff <- ppr[[1]] - ppr[[2]]
   ppr_ratio <- ppr[[1]] / ppr[[2]]
 
-  # Calculate confidence interval
-  se <- replicate(bootstraps, {
-    indices1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    indices2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    boot_data <- rbind(data[indices1, ], data[indices2, ])
-    ppr <- get_ppr(
-      data = boot_data, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    return(c(ppr[[1]] - ppr[[2]], log(ppr[[1]] / ppr[[2]])))
-  })
+  if(confint){
+    # Calculate confidence interval
+    se <- replicate(bootstraps, {
+      indices1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                         replace = TRUE
+      )
+      indices2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                         replace = TRUE
+      )
+      boot_data <- rbind(data[indices1, ], data[indices2, ])
+      ppr <- get_ppr(
+        data = boot_data, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      return(c(ppr[[1]] - ppr[[2]], log(ppr[[1]] / ppr[[2]])))
+    })
 
-  lower_ci <- round(ppr_diff - qnorm(1 - alpha / 2) * sd(unlist(se[1, ])), digits)
-  upper_ci <- round(ppr_diff + qnorm(1 - alpha / 2) * sd(unlist(se[1, ])), digits)
-  lower_ratio_ci <- round(exp(log(ppr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(ppr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ci <- round(ppr_diff - qnorm(1 - alpha / 2) * sd(unlist(se[1, ])), digits)
+    upper_ci <- round(ppr_diff + qnorm(1 - alpha / 2) * sd(unlist(se[1, ])), digits)
+    lower_ratio_ci <- round(exp(log(ppr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    upper_ratio_ci <- round(exp(log(ppr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
-  # Structure the results as a dataframe
-  results_df <- data.frame(
-    Metric = "PPR",
-    Group1 = ppr[[1]],
-    Group2 = ppr[[2]],
-    Difference = ppr_diff,
-    CI = paste0("[", lower_ci, ", ", upper_ci, "]"),
-    Ratio = round(ppr_ratio, digits),
-    Ratio_CI = paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
+    # Structure the results as a dataframe
+    results_df <- data.frame(
+      Metric = "PPR",
+      Group1 = ppr[[1]],
+      Group2 = ppr[[2]],
+      Difference = ppr_diff,
+      CI = paste0("[", lower_ci, ", ", upper_ci, "]"),
+      Ratio = round(ppr_ratio, digits),
+      Ratio_CI = paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
 
-  colnames(results_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[[1]]),
-    paste0("Group", sort(unique(data[[group]]))[[2]]),
-    "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
-  )
+    colnames(results_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[[1]]),
+      paste0("Group", sort(unique(data[[group]]))[[2]]),
+      "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
+    )
+  }else{
+    # Structure the results as a dataframe
+    results_df <- data.frame(
+      Metric = "PPR",
+      Group1 = ppr[[1]],
+      Group2 = ppr[[2]],
+      Difference = ppr_diff,
+      Ratio = round(ppr_ratio, digits)
+      )
+
+    colnames(results_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[[1]]),
+      paste0("Group", sort(unique(data[[group]]))[[2]]),
+      "Difference",
+      "Ratio"
+      )
+  }
+
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -479,6 +536,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #' the sign of the condition and the value to threshold the continuous variable
 #' (e.g. "<50", ">50", "<=50", ">=50").
 #' @param probs Name of the predicted outcome variable
+#' @param confint Whether to compute 95% confidence interval, default is TRUE
 #' @param cutoff Threshold for the predicted outcome, default is 0.5
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
@@ -538,6 +596,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 
 eval_cond_stats_parity <- function(data, outcome, group,
                                    group2, condition, probs,
+                                   confint = TRUE,
                                    cutoff = 0.5,
                                    bootstraps = 2500, alpha = 0.05,
                                    message = TRUE,
@@ -561,7 +620,7 @@ eval_cond_stats_parity <- function(data, outcome, group,
       )
       return(
         eval_stats_parity(
-          data = subset_data, outcome = outcome, group = group, probs = probs,
+          data = subset_data, outcome = outcome, group = group, probs = probs, confint = confint,
           cutoff = cutoff, bootstraps = bootstraps, alpha = alpha,
           digits = digits, message = message
         )
@@ -575,7 +634,7 @@ eval_cond_stats_parity <- function(data, outcome, group,
       subset_data <- subset(data, data[[group2]] == condition)
       return(
         eval_stats_parity(
-          data = subset_data, outcome = outcome, group = group, probs = probs,
+          data = subset_data, outcome = outcome, group = group, probs = probs,confint = confint,
           cutoff = cutoff, alpha = alpha, bootstraps = bootstraps,
           digits = digits, message = message
         )
@@ -666,44 +725,62 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
   ppv_dif <- ppv[[1]] - ppv[[2]]
   ppv_ratio <- ppv[[1]] / ppv[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == sort(unique(data[[group]]))[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == sort(unique(data[[group]]))[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    ppv_boot <- get_ppv(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    return(c(ppv_boot[[1]] - ppv_boot[[2]], log(ppv_boot[[1]] / ppv_boot[[2]])))
-  })
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == sort(unique(data[[group]]))[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == sort(unique(data[[group]]))[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      ppv_boot <- get_ppv(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      return(c(ppv_boot[[1]] - ppv_boot[[2]], log(ppv_boot[[1]] / ppv_boot[[2]])))
+    })
 
-  lower_ci <- round(ppv_dif - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  upper_ci <- round(ppv_dif + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  lower_ratio_ci <- round(exp(log(ppv_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(ppv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ci <- round(ppv_dif - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    upper_ci <- round(ppv_dif + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    lower_ratio_ci <- round(exp(log(ppv_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    upper_ratio_ci <- round(exp(log(ppv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
-  result_df <- data.frame(
-    "PPV",
-    ppv[[1]],
-    ppv[[2]],
-    ppv_dif,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(ppv_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    result_df <- data.frame(
+      "PPV",
+      ppv[[1]],
+      ppv[[2]],
+      ppv_dif,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(ppv_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+  }else{
+    result_df <- data.frame(
+      "PPV",
+      ppv[[1]],
+      ppv[[2]],
+      ppv_dif,
+      round(ppv_ratio, digits)
+      )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+      )
+  }
+
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -800,6 +877,7 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
   npv_dif <- npv[[1]] - npv[[2]]
   npv_ratio <- npv[[1]] / npv[[2]]
 
+  if(confint){
   se <- replicate(bootstraps, {
     group1 <- sample(which(data[[group]] == sort(unique(data[[group]]))[1]),
                      replace = TRUE
@@ -838,6 +916,24 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
     "Ratio",
     "95% Ratio CI"
   )
+  }else{
+    result_df <- data.frame(
+      "NPV",
+      npv[[1]],
+      npv[[2]],
+      npv_dif,
+      round(npv_ratio, digits)
+      )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+      )
+
+  }
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -932,44 +1028,63 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
   fpr_dif <- fpr[[1]] - fpr[[2]]
   fpr_ratio <- fpr[[1]] / fpr[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    fpr_boot <- get_fpr(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff
-    )
-    return(c(fpr_boot[[1]] - fpr_boot[[2]], log(fpr_boot[[1]] / fpr_boot[[2]])))
-  })
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      fpr_boot <- get_fpr(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff
+      )
+      return(c(fpr_boot[[1]] - fpr_boot[[2]], log(fpr_boot[[1]] / fpr_boot[[2]])))
+    })
 
-  lower_ci <- round(fpr_dif - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  upper_ci <- round(fpr_dif + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  lower_ratio_ci <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ci <- round(fpr_dif - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    upper_ci <- round(fpr_dif + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    lower_ratio_ci <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    upper_ratio_ci <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
-  result_df <- data.frame(
-    "FPR",
-    fpr[[1]],
-    fpr[[2]],
-    fpr_dif,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(fpr_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    result_df <- data.frame(
+      "FPR",
+      fpr[[1]],
+      fpr[[2]],
+      fpr_dif,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(fpr_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+  }else{
+    result_df <- data.frame(
+      "FPR",
+      fpr[[1]],
+      fpr[[2]],
+      fpr_dif,
+      round(fpr_ratio, digits)
+    )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+    )
+
+  }
+
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -1077,50 +1192,67 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
   ppv_diff <- ppv[[1]] - ppv[[2]]
   npv_diff <- npv[[1]] - npv[[2]]
 
-  # Calculate confidence interval
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    ppv_boot <- get_ppv(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    npv_boot <- get_npv(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    c(ppv_boot[[1]] - ppv_boot[[2]], npv_boot[[1]] - npv_boot[[2]])
-  })
-
-  ppv_lower_ci <- round(ppv_diff - qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
-  ppv_upper_ci <- round(ppv_diff + qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
-  npv_lower_ci <- round(npv_diff - qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
-  npv_upper_ci <- round(npv_diff + qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
-
-  result_df <- data.frame(
-    Metric = c("PPV; NPV"),
-    Group1 = paste0(ppv[[1]], "; ", npv[[1]]),
-    Group2 = paste0(ppv[[2]], "; ", npv[[2]]),
-    Difference = paste0(ppv_diff, "; ", npv_diff),
-    CI =
-      paste0(
-        "[", ppv_lower_ci, ", ", ppv_upper_ci, "]", "; ",
-        "[", npv_lower_ci, ", ", npv_upper_ci, "]"
+  if(confint){
+    # Calculate confidence interval
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
       )
-  )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      ppv_boot <- get_ppv(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      npv_boot <- get_npv(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      c(ppv_boot[[1]] - ppv_boot[[2]], npv_boot[[1]] - npv_boot[[2]])
+    })
 
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% CI"
-  )
+    ppv_lower_ci <- round(ppv_diff - qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
+    ppv_upper_ci <- round(ppv_diff + qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
+    npv_lower_ci <- round(npv_diff - qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
+    npv_upper_ci <- round(npv_diff + qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
+
+    result_df <- data.frame(
+      Metric = c("PPV; NPV"),
+      Group1 = paste0(ppv[[1]], "; ", npv[[1]]),
+      Group2 = paste0(ppv[[2]], "; ", npv[[2]]),
+      Difference = paste0(ppv_diff, "; ", npv_diff),
+      CI =
+        paste0(
+          "[", ppv_lower_ci, ", ", ppv_upper_ci, "]", "; ",
+          "[", npv_lower_ci, ", ", npv_upper_ci, "]"
+        )
+    )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% CI"
+    )
+  }else{
+    result_df <- data.frame(
+      Metric = c("PPV; NPV"),
+      Group1 = paste0(ppv[[1]], "; ", npv[[1]]),
+      Group2 = paste0(ppv[[2]], "; ", npv[[2]]),
+      Difference = paste0(ppv_diff, "; ", npv_diff),
+    )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference"
+      )
+  }
+
 
   if (message) {
     if (ppv_lower_ci > 0 || ppv_upper_ci < 0 || npv_lower_ci > 0 ||
@@ -1216,45 +1348,64 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
   acc_diff <- acc[[1]] - acc[[2]]
   acc_ratio <- acc[[1]] / acc[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    acc_boot <- get_acc(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      digits = digits, cutoff = cutoff
-    )
-    return(c(acc_boot[[1]] - acc_boot[[2]], log(acc_boot[[1]] / acc_boot[[2]])))
-  })
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      acc_boot <- get_acc(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        digits = digits, cutoff = cutoff
+      )
+      return(c(acc_boot[[1]] - acc_boot[[2]], log(acc_boot[[1]] / acc_boot[[2]])))
+    })
 
-  lower_ci <- round(acc_diff - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  upper_ci <- round(acc_diff + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  lower_ratio_ci <- round(exp(log(acc_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(acc_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ci <- round(acc_diff - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    upper_ci <- round(acc_diff + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    lower_ratio_ci <- round(exp(log(acc_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    upper_ratio_ci <- round(exp(log(acc_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
-  result_df <- data.frame(
-    "Accuracy",
-    acc[[1]],
-    acc[[2]],
-    acc_diff,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(acc_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
+    result_df <- data.frame(
+      "Accuracy",
+      acc[[1]],
+      acc[[2]],
+      acc_diff,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(acc_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
 
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+  }else{
+    result_df <- data.frame(
+      "Accuracy",
+      acc[[1]],
+      acc[[2]],
+      acc_diff,
+      round(acc_ratio, digits)
+      )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+    )
+  }
+
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -1346,45 +1497,65 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
   bs_diff <- bs[[1]] - bs[[2]]
   bs_ratio <- bs[[1]] / bs[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    bs_boot <- get_brier_score(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      digits = digits
-    )
-    return(c(bs_boot[[1]] - bs_boot[[2]], log(bs_boot[[1]] / bs_boot[[2]])))
-  })
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      bs_boot <- get_brier_score(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        digits = digits
+      )
+      return(c(bs_boot[[1]] - bs_boot[[2]], log(bs_boot[[1]] / bs_boot[[2]])))
+    })
 
-  lower_ci <- round(bs_diff - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  upper_ci <- round(bs_diff + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
-  lower_ratio_ci <- round(exp(log(bs_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(bs_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ci <- round(bs_diff - qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    upper_ci <- round(bs_diff + qnorm(1 - alpha / 2) * sd(se[1, ]), digits)
+    lower_ratio_ci <- round(exp(log(bs_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    upper_ratio_ci <- round(exp(log(bs_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
-  result_df <- data.frame(
-    "Brier Score",
-    bs[[1]],
-    bs[[2]],
-    bs_diff,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(bs_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
+    result_df <- data.frame(
+      "Brier Score",
+      bs[[1]],
+      bs[[2]],
+      bs_diff,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(bs_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
 
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+
+  }else{
+
+    result_df <- data.frame(
+      "Brier Score",
+      bs[[1]],
+      bs[[2]],
+      bs_diff,
+      round(bs_ratio, digits)
+    )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+    )
+  }
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -1484,49 +1655,68 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
   err_ratio_diff <- err_ratio[[1]] - err_ratio[[2]]
   err_ratio_ratio <- err_ratio[[1]] / err_ratio[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    err_ratio_boot <- get_err_ratio(
-      data = data_boot, outcome = outcome, group = group, probs = probs,
-      cutoff = cutoff, digits = digits
-    )
-    return(c(
-      err_ratio_boot[[1]] - err_ratio_boot[[2]],
-      log(err_ratio_boot[[1]] / err_ratio_boot[[2]])
-    ))
-  })
-  se[!is.finite(se)] <- NA
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      err_ratio_boot <- get_err_ratio(
+        data = data_boot, outcome = outcome, group = group, probs = probs,
+        cutoff = cutoff, digits = digits
+      )
+      return(c(
+        err_ratio_boot[[1]] - err_ratio_boot[[2]],
+        log(err_ratio_boot[[1]] / err_ratio_boot[[2]])
+      ))
+    })
+    se[!is.finite(se)] <- NA
 
-  lower_ci <- round(err_ratio_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-  upper_ci <- round(err_ratio_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-  lower_ratio_ci <- round(exp(log(err_ratio_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
-  upper_ratio_ci <- round(exp(log(err_ratio_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
+    lower_ci <- round(err_ratio_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
+    upper_ci <- round(err_ratio_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
+    lower_ratio_ci <- round(exp(log(err_ratio_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(err_ratio_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
 
-  result_df <- data.frame(
-    "FN/FP Ratio",
-    err_ratio[[1]],
-    err_ratio[[2]],
-    err_ratio_diff,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(err_ratio_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
+    result_df <- data.frame(
+      "FN/FP Ratio",
+      err_ratio[[1]],
+      err_ratio[[2]],
+      err_ratio_diff,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(err_ratio_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
 
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+  }else{
+    result_df <- data.frame(
+      "FN/FP Ratio",
+      err_ratio[[1]],
+      err_ratio[[2]],
+      err_ratio_diff,
+      round(err_ratio_ratio, digits)
+    )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+    )
+  }
+
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -1618,48 +1808,67 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
   avg_prob_diff <- avg_prob[[1]] - avg_prob[[2]]
   avg_prob_ratio <- avg_prob[[1]] / avg_prob[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    pos_data_boot <- data_boot[data_boot[[outcome]] == 1, ]
-    avg_prob_boot <- get_avg_prob(
-      data = pos_data_boot, group = group, probs = probs
-    )
-    return(c(
-      avg_prob_boot[[1]] - avg_prob_boot[[2]],
-      log(avg_prob_boot[[1]] / avg_prob_boot[[2]])
-    ))
-  })
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      pos_data_boot <- data_boot[data_boot[[outcome]] == 1, ]
+      avg_prob_boot <- get_avg_prob(
+        data = pos_data_boot, group = group, probs = probs
+      )
+      return(c(
+        avg_prob_boot[[1]] - avg_prob_boot[[2]],
+        log(avg_prob_boot[[1]] / avg_prob_boot[[2]])
+      ))
+    })
 
-  lower_ci <- round(avg_prob_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-  upper_ci <- round(avg_prob_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-  lower_ratio_ci <- round(exp(log(avg_prob_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
-  upper_ratio_ci <- round(exp(log(avg_prob_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
+    lower_ci <- round(avg_prob_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
+    upper_ci <- round(avg_prob_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
+    lower_ratio_ci <- round(exp(log(avg_prob_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(avg_prob_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
 
-  result_df <- data.frame(
-    "Avg. Predicted Prob.",
-    avg_prob[[1]],
-    avg_prob[[2]],
-    avg_prob_diff,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(avg_prob_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
+    result_df <- data.frame(
+      "Avg. Predicted Prob.",
+      avg_prob[[1]],
+      avg_prob[[2]],
+      avg_prob_diff,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(avg_prob_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
 
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+
+  }else{
+    result_df <- data.frame(
+      "Avg. Predicted Prob.",
+      avg_prob[[1]],
+      avg_prob[[2]],
+      avg_prob_diff,
+      round(avg_prob_ratio, digits)
+    )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+    )
+  }
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {
@@ -1751,48 +1960,67 @@ eval_neg_class_bal <- function(data, outcome, group, probs, confint = TRUE,
   avg_prob_diff <- avg_prob[[1]] - avg_prob[[2]]
   avg_prob_ratio <- avg_prob[[1]] / avg_prob[[2]]
 
-  se <- replicate(bootstraps, {
-    group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
-      replace = TRUE
-    )
-    group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
-      replace = TRUE
-    )
-    data_boot <- rbind(data[group1, ], data[group2, ])
-    neg_data_boot <- data_boot[data_boot[[outcome]] == 0, ]
-    avg_prob_boot <- get_avg_prob(
-      data = neg_data_boot, group = group, probs = probs
-    )
-    return(c(
-      avg_prob_boot[[1]] - avg_prob_boot[[2]],
-      log(avg_prob_boot[[1]] / avg_prob_boot[[2]])
-    ))
-  })
+  if(confint){
+    se <- replicate(bootstraps, {
+      group1 <- sample(which(data[[group]] == unique(data[[group]])[1]),
+                       replace = TRUE
+      )
+      group2 <- sample(which(data[[group]] == unique(data[[group]])[2]),
+                       replace = TRUE
+      )
+      data_boot <- rbind(data[group1, ], data[group2, ])
+      neg_data_boot <- data_boot[data_boot[[outcome]] == 0, ]
+      avg_prob_boot <- get_avg_prob(
+        data = neg_data_boot, group = group, probs = probs
+      )
+      return(c(
+        avg_prob_boot[[1]] - avg_prob_boot[[2]],
+        log(avg_prob_boot[[1]] / avg_prob_boot[[2]])
+      ))
+    })
 
-  lower_ci <- round(avg_prob_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-  upper_ci <- round(avg_prob_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-  lower_ratio_ci <- round(exp(log(avg_prob_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
-  upper_ratio_ci <- round(exp(log(avg_prob_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
+    lower_ci <- round(avg_prob_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
+    upper_ci <- round(avg_prob_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
+    lower_ratio_ci <- round(exp(log(avg_prob_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(avg_prob_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
 
-  result_df <- data.frame(
-    "Avg. Predicted Prob.",
-    avg_prob[[1]],
-    avg_prob[[2]],
-    avg_prob_diff,
-    paste0("[", lower_ci, ", ", upper_ci, "]"),
-    round(avg_prob_ratio, digits),
-    paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
-  )
+    result_df <- data.frame(
+      "Avg. Predicted Prob.",
+      avg_prob[[1]],
+      avg_prob[[2]],
+      avg_prob_diff,
+      paste0("[", lower_ci, ", ", upper_ci, "]"),
+      round(avg_prob_ratio, digits),
+      paste0("[", lower_ratio_ci, ", ", upper_ratio_ci, "]")
+    )
 
-  colnames(result_df) <- c(
-    "Metric",
-    paste0("Group", sort(unique(data[[group]]))[1]),
-    paste0("Group", sort(unique(data[[group]]))[2]),
-    "Difference",
-    "95% Diff CI",
-    "Ratio",
-    "95% Ratio CI"
-  )
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "95% Diff CI",
+      "Ratio",
+      "95% Ratio CI"
+    )
+
+  }else{
+    result_df <- data.frame(
+      "Avg. Predicted Prob.",
+      avg_prob[[1]],
+      avg_prob[[2]],
+      avg_prob_diff,
+      round(avg_prob_ratio, digits)
+    )
+
+    colnames(result_df) <- c(
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
+    )
+  }
 
   if (message) {
     if (lower_ci > 0 || upper_ci < 0) {

@@ -11,6 +11,7 @@ eval_cond_stats_parity(
   group2,
   condition,
   probs,
+  confint = TRUE,
   cutoff = 0.5,
   bootstraps = 2500,
   alpha = 0.05,
@@ -35,6 +36,8 @@ the sign of the condition and the value to threshold the continuous variable
 (e.g. "<50", ">50", "<=50", ">=50").}
 
 \item{probs}{Name of the predicted outcome variable}
+
+\item{confint}{Whether to compute 95\% confidence interval, default is TRUE}
 
 \item{cutoff}{Threshold for the predicted outcome, default is 0.5}
 

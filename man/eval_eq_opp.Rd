@@ -10,6 +10,7 @@ eval_eq_opp(
   group,
   probs,
   cutoff = 0.5,
+  confint = TRUE,
   bootstraps = 2500,
   alpha = 0.05,
   digits = 2,
@@ -31,6 +32,8 @@ predicted probabilities or risk scores.}
 
 \item{cutoff}{A numeric value used to threshold predicted probabilities into
 binary decisions; defaults to 0.5.}
+
+\item{confint}{Whether to compute 95\% confidence interval, default is TRUE.}
 
 \item{bootstraps}{An integer specifying the number of bootstrap resamples for
 constructing confidence intervals; defaults to 2500.}

@@ -13,7 +13,8 @@
 #' - **Balance for Positive Class**: Checks whether the predicted probability distributions for
 #'   positive outcomes are similar across groups.
 #' - **Balance for Negative Class**: Same as above, but for negative outcomes.
-#' - **Predictive Parity**: Difference in positive predictive values (precision) across groups.
+#' - **Positive Predictive Parity**: Difference in positive predictive values (precision) across groups.
+#' - **Negative Predictive Parity**: Difference in negative predictive values across groups.
 #' - **Brier Score Parity**: Difference in Brier scores across groups.
 #' - **Overall Accuracy Parity**: Difference in overall accuracy across groups.
 #' - **Treatment Equality**: Ratio of false negatives to false positives across groups.
@@ -28,6 +29,7 @@
 #' the sign of the condition and the value to threshold the continuous variable
 #' (e.g. "<50", ">50", "<=50", ">=50").
 #' @param probs The name of the column with predicted probabilities.
+#' @param confint Logical indicating whether to calculate confidence intervals.
 #' @param cutoff Numeric threshold for classification. Default is 0.5.
 #' @param bootstraps Number of bootstrap samples. Default is 2500.
 #' @param alpha Significance level for confidence intervals. Default is 0.05.
@@ -66,7 +68,9 @@
 #'  group2 = "age",
 #'  condition = ">=60",
 #'  probs = "pred",
-#'  cutoff = 0.41
+#'  confint = TRUE,
+#'  cutoff = 0.41,
+#'  alpha = 0.05
 #' )
 #' }
 #'
@@ -78,6 +82,7 @@ get_fairness_metrics <- function(data,
                                  group2 = NULL,
                                  condition = NULL,
                                  probs,
+                                 confint = TRUE,
                                  cutoff = 0.5,
                                  bootstraps = 2500,
                                  alpha = 0.05,
@@ -87,6 +92,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -106,6 +112,7 @@ get_fairness_metrics <- function(data,
       group2 = group2,
       condition = condition,
       probs = probs,
+      confint = confint,
       cutoff = cutoff,
       bootstraps = bootstraps,
       alpha = alpha,
@@ -115,13 +122,13 @@ get_fairness_metrics <- function(data,
 
     split_condition <- strsplit(condition, split = '')[[1]]
     if (split_condition[1] == ">" | split_condition[1] == "=") {
-      cond_stats_parity[["Metric"]] <- paste0("Conditional Statistical Parity (",
+      cond_stats_parity[["Full Metric Name"]] <- paste0("Conditional Statistical Parity (",
                                               group2,
                                               " ",
                                               condition,
                                               ")")
     } else {
-      cond_stats_parity[["Metric"]] <- paste0("Conditional Statistical Parity (",
+      cond_stats_parity[["Full Metric Name"]] <- paste0("Conditional Statistical Parity (",
                                               condition,
                                               " ",
                                               group2,
@@ -134,6 +141,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -145,6 +153,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -156,6 +165,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     bootstraps = bootstraps,
     alpha = alpha,
     digits = digits,
@@ -166,6 +176,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     bootstraps = bootstraps,
     alpha = alpha,
     digits = digits,
@@ -177,6 +188,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -189,6 +201,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -201,6 +214,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     bootstraps = bootstraps,
     alpha = alpha,
     digits = digits,
@@ -211,6 +225,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -222,6 +237,7 @@ get_fairness_metrics <- function(data,
     outcome = outcome,
     group = group,
     probs = probs,
+    confint = confint,
     cutoff = cutoff,
     bootstraps = bootstraps,
     alpha = alpha,
@@ -230,16 +246,16 @@ get_fairness_metrics <- function(data,
   )
 
   # Rename metrics so that its easy to read
-  stats_parity[["Metric"]] <- "Statistical Parity"
-  eq_opp[["Metric"]] <- "Equal Opportunity"
-  pred_equality[["Metric"]] <- "Predictive Equality"
-  pos_class_bal[["Metric"]] <- "Balance for Positive Class"
-  neg_class_bal[["Metric"]] <- "Balance for Negative Class"
-  pos_pred_parity[["Metric"]] <- "Positive Predictive Parity"
-  neg_pred_parity[["Metric"]] <- "Negative Predictive Parity"
-  bs_parity[["Metric"]] <- "Brier Score Parity"
-  acc_parity[["Metric"]] <- "Overall Accuracy Parity"
-  treatment_equality[["Metric"]] <- "Treatment Equality"
+  stats_parity[["Full Metric Name"]] <- "Statistical Parity"
+  eq_opp[["Full Metric Name"]] <- "Equal Opportunity"
+  pred_equality[["Full Metric Name"]] <- "Predictive Equality"
+  pos_class_bal[["Full Metric Name"]] <- "Balance for Positive Class"
+  neg_class_bal[["Full Metric Name"]] <- "Balance for Negative Class"
+  pos_pred_parity[["Full Metric Name"]] <- "Positive Predictive Parity"
+  neg_pred_parity[["Full Metric Name"]] <- "Negative Predictive Parity"
+  bs_parity[["Full Metric Name"]] <- "Brier Score Parity"
+  acc_parity[["Full Metric Name"]] <- "Overall Accuracy Parity"
+  treatment_equality[["Full Metric Name"]] <- "Treatment Equality"
 
   if (!(is.null(group2) & is.null(condition))) {
     result <- do.call(
@@ -278,6 +294,7 @@ get_fairness_metrics <- function(data,
 
   }
 
+  result <- result[, c("Metric", "Full Metric Name", setdiff(names(result), c("Metric", "Full Metric Name")))]
 
   return(result)
 }

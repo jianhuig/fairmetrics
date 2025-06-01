@@ -11,6 +11,7 @@ get_fairness_metrics(
   group2 = NULL,
   condition = NULL,
   probs,
+  confint = TRUE,
   cutoff = 0.5,
   bootstraps = 2500,
   alpha = 0.05,
@@ -33,6 +34,8 @@ the sign of the condition and the value to threshold the continuous variable
 (e.g. "<50", ">50", "<=50", ">=50").}
 
 \item{probs}{The name of the column with predicted probabilities.}
+
+\item{confint}{Logical indicating whether to calculate confidence intervals.}
 
 \item{cutoff}{Numeric threshold for classification. Default is 0.5.}
 
@@ -61,7 +64,8 @@ Parity conditioned on a second group and value.
 \item \strong{Balance for Positive Class}: Checks whether the predicted probability distributions for
 positive outcomes are similar across groups.
 \item \strong{Balance for Negative Class}: Same as above, but for negative outcomes.
-\item \strong{Predictive Parity}: Difference in positive predictive values (precision) across groups.
+\item \strong{Positive Predictive Parity}: Difference in positive predictive values (precision) across groups.
+\item \strong{Negative Predictive Parity}: Difference in negative predictive values across groups.
 \item \strong{Brier Score Parity}: Difference in Brier scores across groups.
 \item \strong{Overall Accuracy Parity}: Difference in overall accuracy across groups.
 \item \strong{Treatment Equality}: Ratio of false negatives to false positives across groups.
@@ -99,7 +103,9 @@ get_fairness_metrics(
  group2 = "age",
  condition = ">=60",
  probs = "pred",
- cutoff = 0.41
+ confint = TRUE,
+ cutoff = 0.41,
+ alpha = 0.05
 )
 }
 
