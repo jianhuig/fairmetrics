@@ -84,10 +84,10 @@ Group fairness criteria are primarily classified into three main categories: ind
 
 BEN RESPONSE: 
 
-1. Updated the visual to not use abbreviations
+1. Updated the visual to not use abbreviations.
 2. Changed "sensitive' attribute to "protected" attribute
 3. Added negative predictive parity to package (`eval_neg_pred_parity()`; renamed `eval_pred_parity()` to `eval_pos_pred_parity()`). Submitted & Uploaded to CRAN. Added to the visual as well.
-4.  The difference between `get_all_metrics()` and `get_fairness_metrics()` is that `get_all_metrics()` returns the group-specific performance metrics (e.g. TPR, FPR, PPV, NPV, etc.) while `get_fairness_metrics()` returns the group fairness criteria. I would loop Jainhui on this as well. However, my understanding is that `get_all_metrics()` gives the raw group-specific performance metrics while `get_fairness_metrics()` gives difference and ratio-based metrics along with the confidence intervals.
+4.  Noted. Refactored the code to allow get_fairness_metrics() to cover the functionality of get_all_metrics(). This can be specified with the confint = FALSE.
 5.  There is an argument level for the CIs, its the `alpha` parameter which by default is set to 0.05. Added the argument to the code. Do you want me to talk about it in the text as well? 
  -->
 The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function. 
@@ -138,19 +138,18 @@ get_fairness_metrics(
  alpha = 0.05
 )
 
-#>                                       Metric GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
-#> 1                         Statistical Parity        1.14      1.06       0.08   [0.04, 0.12]  1.08 [1.04, 1.11]
-#> 2  Conditional Statistical Parity (age >=60)        1.26      1.17       0.09   [0.01, 0.17]  1.08 [1.01, 1.15]
-#> 3                          Equal Opportunity       -0.42     -0.23      -0.19 [-0.33, -0.05]  1.83 [1.12, 2.97]
-#> 4                        Predictive Equality        1.08      1.03       0.05   [0.02, 0.08]  1.05 [1.02, 1.08]
-#> 5                 Balance for Positive Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
-#> 6                 Balance for Negative Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
-#> 7                 Positive Predictive Parity        0.21      0.16       0.05       [0, 0.1]  1.31 [0.98, 1.75]
-#> 8                 Negative Predictive Parity        0.89      0.88       0.01  [-0.05, 0.07]  1.01 [0.75, 1.36]
-#> 9                         Brier Score Parity        0.37      0.40      -0.03 [-0.04, -0.02]  0.92  [0.9, 0.96]
-#> 10                   Overall Accuracy Parity        1.01      1.00       0.01  [-0.03, 0.05]  1.01 [0.97, 1.05]
-#> 11                        Treatment Equality        0.11      0.12      -0.01  [-0.06, 0.04]  0.92 [0.61, 1.39]
-> 
+#>                 Metric                          Full Metric Name GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
+#> 1                   PPR                        Statistical Parity        0.17      0.08       0.09   [0.05, 0.13]  2.12 [1.48, 3.05]
+#> 2                   PPR Conditional Statistical Parity (age >=60)        0.34      0.21       0.13   [0.05, 0.21]  1.62 [1.18, 2.22]
+#> 3                   FNR                         Equal Opportunity        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]
+#> 4                   FPR                       Predictive Equality        0.08      0.03       0.05   [0.02, 0.08]  2.67  [1.39, 5.1]
+#> 5  Avg. Predicted Prob.                Balance for Positive Class        0.46      0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.41]
+#> 6  Avg. Predicted Prob.                Balance for Negative Class        0.15      0.10       0.05   [0.03, 0.07]  1.50 [1.29, 1.74]
+#> 7                   PPV                Positive Predictive Parity        0.62      0.66      -0.04  [-0.21, 0.13]  0.94 [0.72, 1.23]
+#> 8                   NPV                Negative Predictive Parity        0.92      0.90       0.02  [-0.15, 0.19]  1.02 [0.79, 1.33]
+#> 9           Brier Score                        Brier Score Parity        0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.88, 1.43]
+#> 10             Accuracy                   Overall Accuracy Parity        0.87      0.88      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]
+#> 11          FN/FP Ratio                        Treatment Equality        1.03      3.24      -2.21   [-4.5, 0.08]  0.32 [0.15, 0.69]
 ```
 
 Should the user wish to calculate an individual criteria, it is possible to use any of the `eval_*` functions. For example, to calculate equal opportunity, the user can call the `eval_equal_opportunity()` function.
@@ -161,8 +160,9 @@ eval_eq_opp(
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred",
+  confint = TRUE,
   cutoff = 0.41,
-   alpha = 0.05
+  alpha = 0.05
 )
 
 #>There is evidence that model does not satisfy equal opportunity.
@@ -170,28 +170,6 @@ eval_eq_opp(
 #>1    FNR        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.85]
 ```
 
-For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group.
-
-```r
-get_all_metrics(
-  dat = test_data,
-  outcome = "day_28_flg",
-  group = "gender",
-  probs = "pred",
-  cutoff = 0.41
-)
-
-#>         Metric Group Female Group Male
-#> 1           TPR         0.62       0.38
-#> 2           FPR         0.08       0.03
-#> 3           PPR         0.17       0.08
-#> 4           PPV         0.62       0.66
-#> 5           NPV         0.92       0.90
-#> 6           ACC         0.87       0.88
-#> 7   Brier Score         0.09       0.08
-#> 8   FN/FP Ratio         1.03       3.24
-#> 9 Avg Pred Prob         0.21       0.14
-```
 
 # Related Work
 
