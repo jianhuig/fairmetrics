@@ -22,6 +22,7 @@ date: "2025-03-08"
 bibliography: paper.bib
 output:
   rticles::joss_article
+  #rticles::arxiv_article
   # md_document:
   #   preserve_yaml: TRUE
   #   variant: "markdown_strict"
@@ -45,7 +46,7 @@ The `{fairmetrics}` package is designed to evaluate group fairness in the settin
 
 # Fairness Criteria
 
-Group fairness criteria are primarily classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model’s classifications be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the classifications and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within the positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model’s prediction is known, the protected attribute provides no additional information about the true outcome.  Below we summarize the fairness metrics that are available within the {fairmetrics} package.  
+Group fairness criteria are primarily classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model's classifications be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the classifications and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within the positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model's prediction is known, the protected attribute provides no additional information about the true outcome.  Below we summarize the fairness metrics that are available within the {fairmetrics} package.  
 
 ## Independence
 
@@ -65,9 +66,9 @@ Group fairness criteria are primarily classified into three main categories: ind
 
 ## Sufficiency
 
--   **(Positive) Predictive Parity:** Compares the positive predictive values across groups, assessing differences in the precision of positive predictions.
+-   **Positive Predictive Parity:** Compares the positive predictive values across groups, assessing differences in the precision of positive predictions.
 
--   **(Negative) Predictive Parity:** Compares the negative predictive values across groups, assessing differences in the precision of negative predictions. [Note: Please add this to the package.]
+-   **Negative Predictive Parity:** Compares the negative predictive values across groups, assessing differences in the precision of negative predictions.
 
 ## Other Criteria
 
@@ -79,10 +80,19 @@ Group fairness criteria are primarily classified into three main categories: ind
 
 # Evaluating Fairness Criteria
 
-<!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so needs an update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness? This isn't clear to me. Also I think you should have an argument for level for the CIs - that is, users input 0.95 for 95\% or 0.99 etc as that should be adjustable.   -->
+<!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so needs an update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness? This isn't clear to me. Also I think you should have an argument for level for the CIs - that is, users input 0.95 for 95\% or 0.99 etc as that should be adjustable.  
+
+BEN RESPONSE: 
+
+1. Updated the visual to not use abbreviations
+2. Changed "sensitive' attribute to "protected" attribute
+3. Added negative predictive parity to package (`eval_neg_pred_parity()`; renamed `eval_pred_parity()` to `eval_pos_pred_parity()`). Submitted & Uploaded to CRAN. Added to the visual as well.
+4.  The difference between `get_all_metrics()` and `get_fairness_metrics()` is that `get_all_metrics()` returns the group-specific performance metrics (e.g. TPR, FPR, PPV, NPV, etc.) while `get_fairness_metrics()` returns the group fairness criteria. I would loop Jainhui on this as well. However, my understanding is that `get_all_metrics()` gives the raw group-specific performance metrics while `get_fairness_metrics()` gives difference and ratio-based metrics along with the confidence intervals.
+5.  There is an argument level for the CIs, its the `alpha` parameter which by default is set to 0.05. Added the argument to the code. Do you want me to talk about it in the text as well? 
+ -->
 The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function. 
 
-![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow-v3.png)
+![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
 
 A simple example of how to use the {fairmetrics} package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from the MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in the {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. The dataset consists of 1,776 hemodynamically stable patients with respiratory failure and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
 
@@ -115,9 +125,8 @@ rf_model <- randomForest::randomForest(
 # Make predictions on the test set
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")
 
-# Evaluate predictive equality
-# (Setting message=FALSE to avoid cluttering the output)
-
+# Get fairness metrics
+# Setting alpha=0.05 for 95% confidence intervals
 get_fairness_metrics(
  data = test_data,
  outcome = "day_28_flg",
@@ -125,20 +134,23 @@ get_fairness_metrics(
  group2 = "age",
  condition = ">=60",
  probs = "pred",
- cutoff = 0.41
+ cutoff = 0.41, 
+ alpha = 0.05
 )
 
 #>                                       Metric GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
-#> 1                         Statistical Parity        0.17      0.08       0.09   [0.05, 0.13]  2.12 [1.48, 3.05]
-#> 2  Conditional Statistical Parity (age >=60)        0.34      0.21       0.13   [0.05, 0.21]  1.62 [1.18, 2.22]
-#> 3                          Equal Opportunity        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]
-#> 4                        Predictive Equality        0.08      0.03       0.05   [0.02, 0.08]  2.67  [1.39, 5.1]
-#> 5                 Balance for Positive Class        0.46      0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.41]
-#> 6                 Balance for Negative Class        0.15      0.10       0.05   [0.03, 0.07]  1.50 [1.29, 1.74]
-#> 7                          Predictive Parity        0.62      0.66      -0.04  [-0.21, 0.13]  0.94 [0.72, 1.23]
-#> 8                         Brier Score Parity        0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.89, 1.43]
-#> 9                    Overall Accuracy Parity        0.87      0.88      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]
-#> 10                        Treatment Equality        1.03      3.24      -2.21 [-4.35, -0.07]  0.32 [0.15, 0.68]
+#> 1                         Statistical Parity        1.14      1.06       0.08   [0.04, 0.12]  1.08 [1.04, 1.11]
+#> 2  Conditional Statistical Parity (age >=60)        1.26      1.17       0.09   [0.01, 0.17]  1.08 [1.01, 1.15]
+#> 3                          Equal Opportunity       -0.42     -0.23      -0.19 [-0.33, -0.05]  1.83 [1.12, 2.97]
+#> 4                        Predictive Equality        1.08      1.03       0.05   [0.02, 0.08]  1.05 [1.02, 1.08]
+#> 5                 Balance for Positive Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
+#> 6                 Balance for Negative Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
+#> 7                 Positive Predictive Parity        0.21      0.16       0.05       [0, 0.1]  1.31 [0.98, 1.75]
+#> 8                 Negative Predictive Parity        0.89      0.88       0.01  [-0.05, 0.07]  1.01 [0.75, 1.36]
+#> 9                         Brier Score Parity        0.37      0.40      -0.03 [-0.04, -0.02]  0.92  [0.9, 0.96]
+#> 10                   Overall Accuracy Parity        1.01      1.00       0.01  [-0.03, 0.05]  1.01 [0.97, 1.05]
+#> 11                        Treatment Equality        0.11      0.12      -0.01  [-0.06, 0.04]  0.92 [0.61, 1.39]
+> 
 ```
 
 Should the user wish to calculate an individual criteria, it is possible to use any of the `eval_*` functions. For example, to calculate equal opportunity, the user can call the `eval_equal_opportunity()` function.
@@ -149,7 +161,8 @@ eval_eq_opp(
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred",
-  cutoff = 0.41
+  cutoff = 0.41,
+   alpha = 0.05
 )
 
 #>There is evidence that model does not satisfy equal opportunity.
@@ -158,8 +171,6 @@ eval_eq_opp(
 ```
 
 For group-specific performance metrics, such as the True Positive Rate (TPR), False Positive Rate (FPR), Positive Predictive Value (PPV), Negative Predictive Value (NPV), and others, the `get_all_metrics()` function can be used. This function returns a data frame with the metrics calculated for each group.
-
-[ NOTE: To me it is unclear why this is a separate function.  I think instead it makes sense to have an argument in your get_fairness_metrics function that turns the CI calculation on or off.  ]
 
 ```r
 get_all_metrics(

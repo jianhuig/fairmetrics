@@ -22,6 +22,7 @@ date: "2025-03-08"
 bibliography: paper.bib
 output:
   rticles::joss_article
+  #rticles::arxiv_article
   # md_document:
   #   preserve_yaml: TRUE
   #   variant: "markdown_strict"
@@ -45,88 +46,57 @@ The `{fairmetrics}` package is designed to evaluate group fairness in the settin
 
 # Fairness Criteria
 
-Group fairness criteria are typically classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model’s predictions be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the prediction and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model’s prediction is known, the protected attribute provides no additional information about the true outcome.
-
-<!---
-1. Jianhui - The scope of the package is not defined in the above paragprah so one would not understand the definitons below (i.e., "positive classification" is never defined).  Specifically, you need to say you consider binary classification and a binary protected attribute - I do not believe your package handles more than.  Explain why this is done and then update the definitions below to reflect this. 
-
-2. Jianhui - why do you use bootstrap for this package rather than IF?  Is it because you don't have IF for all metrics?
-
-3. Jianhui - please update the initial sentences describing the 3 categories to be more intuitive, akin to what we have in the paper.  
---->
+Group fairness criteria are primarily classified into three main categories: independence, separation, and sufficiency [@barocas2023fairness; @Berk_Heidari_Jabbari_Kearns_Roth_2018; @Castelnovo_Crupi_Greco_Regoli_Penco_Cosentini_2022]. Independence requires that the model's classifications be statistically independent of the protected attribute, meaning the likelihood of receiving a positive prediction is the same across protected groups. Separation requires independence between the classifications and the protected attribute conditional on the true outcome, so that the probability of a positive prediction is equal across protected groups within the positive (or negative) outcome class. Sufficiency requires independence between the outcome and the protected attribute conditional on the prediction, implying that once the model's prediction is known, the protected attribute provides no additional information about the true outcome.  Below we summarize the fairness metrics that are available within the {fairmetrics} package.  
 
 ## Independence
 
--   **Statistical Parity:** Compares the overall rate of positive predictions between groups, irrespective of the true outcome.
+-   **Statistical Parity:** Compares the overall rate of positive predictions between groups.
 
 -   **Conditional Statistical Parity:** Restricts the comparison of positive prediction rates to a specific subgroup (e.g., within a hospital unit or age bracket), offering a more context-specific fairness assessment.
 
-<!---
-Use consistent language throughout - alternating between checks/compares/focuses/assess/measure/etc is confusing as all functions do the same thing.  Suggest use "Compares" for all. 
-
-Ben Response: Rewritten to use "Compares".
---->
-
 ## Separation
 
--   **Equal Opportunity:**  Compares disparities in false negative rates between groups, quantifying any difference in missed positive cases.
+-   **Equal Opportunity:**  Compares disparities in the false negative rates between groups, quantifying differences in the likelihood of missing positive outcomes.
 
-<!---
-Do you need the acronyms for FNR and FPR? If you don't use them later, they don't need to be defined.
+-   **Predictive Equality:** Compares the false positive rates (FPR) between groups, quantifying differences in the likelihood of incorrectly labeling negative outcomes as positive.
 
-Ben Response: FPR is used. FNR is not. Removed FNR. 
---->
--   **Predictive Equality:** Compares false positive rates (FPR) between groups, ensuring that no group is disproportionately flagged as positive when the true outcome is negative.
+-   **Balance for Positive Class:**  Compares the average of the predicted probabilities among individuals whose true outcome is positive across groups.
 
-
-<!---
-Updated the two defs below. It only checks the first-moment of the predicted probabilities, does not check the distribution. 
-
-Also updated the name, Balance of Positive/Negative Class is the name the original paper used.
---->
-
--   **Balance for Positive Class:**  Compares if the average of predicted probabilities among individuals whose true outcome is positive is similar between groups.
-
--   **Balance for Negative Class:** Compares if the average of predicted probabilities among individuals whose true outcome is negative is similar between groups.
+-   **Balance for Negative Class:** Compares the average of the predicted probabilities among individuals whose true outcome is negative across groups.
 
 ## Sufficiency
 
--   **Predictive Parity:** Compares positive predictive values across groups, assessing whether the precision of positive predictions is equivalent.
+-   **Positive Predictive Parity:** Compares the positive predictive values across groups, assessing differences in the precision of positive predictions.
+
+-   **Negative Predictive Parity:** Compares the negative predictive values across groups, assessing differences in the precision of negative predictions.
 
 ## Other Criteria
 
--   **Brier Score Parity:** Compares the Brier score—the mean squared error of predicted probabilities—is similar across groups, indicating comparable calibration.
+-   **Brier Score Parity:** Compares the Brier score (i.e., the mean squared error of predicted probabilities) across groups, evaluating differences in calibration. 
 
--   **Accuracy Parity:** Compares the overall accuracy of a predictive model is equivalent across groups.
+-   **Accuracy Parity:** Compares the overall accuracy of a predictive model across groups.
 
--   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, ensuring the balance of missed detections versus false alarms is consistent.
+-   **Treatment Equality:** Compares the ratio of false negatives to false positives across groups, evaluating whether the trade-off between missed detections of positive outcomes and false alarms of negative outcomes is balanced.
 
 # Evaluating Fairness Criteria
 
-<!--
-1. Ben - The package doesn't require data splitting, some people may want to use the package and incorporate CV within training.  Also, sometimes people evaluate fairness metrics on validation data. So suggest you simplify text + figure. Just start with the input.  Also, it doesn't seem like multiple should be a separate node?  doesnt it just include all the 4 boxes (sep, suff, ind, other)? can this be depicted? Also suggest you make the names more descriptive "Separation-based Metrics", "Independence-based Metrics", etc.
+<!-- The figure looks good but do not use any abbreviations (i.e., Predicted probabilities).  Also, we use "protected" not sensitive attribute in paper so needs an update.  Also add negative predictive parity once added to the package. For combined: What's the difference between get_all and get_fairness? This isn't clear to me. Also I think you should have an argument for level for the CIs - that is, users input 0.95 for 95\% or 0.99 etc as that should be adjustable.  
 
-Ben Response: Created 3 different figures to review. I think v3 is the best. Please critique if there are any issues.
---->
-The primary input to the {fairmetrics} package is a data frame or tibble which containing the model's predictions, true outcomes, and the protected attribute in question. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. It is possible to evaluate a model for a specific or multiple group fairness metrics. 
+BEN RESPONSE: 
 
-![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow-v3.png)
+1. Updated the visual to not use abbreviations
+2. Changed "sensitive' attribute to "protected" attribute
+3. Added negative predictive parity to package (`eval_neg_pred_parity()`; renamed `eval_pred_parity()` to `eval_pos_pred_parity()`). Submitted & Uploaded to CRAN. Added to the visual as well.
+4.  The difference between `get_all_metrics()` and `get_fairness_metrics()` is that `get_all_metrics()` returns the group-specific performance metrics (e.g. TPR, FPR, PPV, NPV, etc.) while `get_fairness_metrics()` returns the group fairness criteria. I would loop Jainhui on this as well. However, my understanding is that `get_all_metrics()` gives the raw group-specific performance metrics while `get_fairness_metrics()` gives difference and ratio-based metrics along with the confidence intervals.
+5.  There is an argument level for the CIs, its the `alpha` parameter which by default is set to 0.05. Added the argument to the code. Do you want me to talk about it in the text as well? 
+ -->
+The input to the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute of interest. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}. Users can evaluate a model for a specific criterion or multiple group fairness criteria using the combined metrics function. 
 
-<!---
-Previously edited by Jesse, now edited by Ben
---->
-A simple example of how to use the {fairmetrics} package is shown below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. This dataset consists of 1776 hemodynamically stable patients with respiratory failure, and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
+![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
 
-While the choice of fairness metric used is context dependent, we show all metrics available with the `get_fairness_metrics()` function. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data, and predictions are made on a test set. 
-<!---
-1. Ben - need to add detail on what the detail is in the above paragraph. What does the data contaon, where did it come from, what is the sample size, etc.   
+A simple example of how to use the {fairmetrics} package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the the Indwelling Arterial Catheter (IAC) Clinical Dataset, from the MIMIC-II clinical database^[The raw version of this data is made available by PhysioNet [@goldberger2000physiobank] and can be accessed in the {fairmetrics} package by loading the `mimic` dataset.] [@raffa2016clinical; @raffa2016data]. The dataset consists of 1,776 hemodynamically stable patients with respiratory failure and includes demographic information (patient age and gender), vital signs, laboratory results, whether an IAC was used, and a binary outcome indicating whether the patient died within 28 days of admission.
 
-Ben Response: Done.
-
-2. Ben - suggest you show more of the functions in the package - say that, while the choice of metric is context dependent, we show all metrics to show the full range of the package. Also include interpretation of the various results.  Simple way to do this is show, the multiple output then show an example of one of the separation-based criterion or other to show users they can specify what they want.  
-
-Ben Response: Please see below for the examples and review.
----->
+While the choice of fairness criteria used is context dependent, we show all criteria available with the `get_fairness_metrics()` function for the purposes of illustration. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data and the predictions are made and evaluated on a test set.  The `get_fairness_metrics()` function outputs difference and ratio-based metrics as well as their corresponding confidence intervals.  A statistically significant difference across groups at a given level of significance is indicated when the confidence interval for a difference-based metric does not include zero or when the interval for a ratio-based metric does not include one.
 
 ```r
 library(fairmetrics)
@@ -155,9 +125,8 @@ rf_model <- randomForest::randomForest(
 # Make predictions on the test set
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")
 
-# Evaluate predictive equality
-# (Setting message=FALSE to avoid cluttering the output)
-
+# Get fairness metrics
+# Setting alpha=0.05 for 95% confidence intervals
 get_fairness_metrics(
  data = test_data,
  outcome = "day_28_flg",
@@ -165,25 +134,26 @@ get_fairness_metrics(
  group2 = "age",
  condition = ">=60",
  probs = "pred",
- cutoff = 0.41
+ cutoff = 0.41, 
+ alpha = 0.05
 )
 
 #>                                       Metric GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
-#> 1                         Statistical Parity        0.17      0.08       0.09   [0.05, 0.13]  2.12 [1.48, 3.05]
-#> 2  Conditional Statistical Parity (age >=60)        0.34      0.21       0.13   [0.05, 0.21]  1.62 [1.18, 2.22]
-#> 3                          Equal Opportunity        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]
-#> 4                        Predictive Equality        0.08      0.03       0.05   [0.02, 0.08]  2.67  [1.39, 5.1]
-#> 5                 Balance for Positive Class        0.46      0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.41]
-#> 6                 Balance for Negative Class        0.15      0.10       0.05   [0.03, 0.07]  1.50 [1.29, 1.74]
-#> 7                          Predictive Parity        0.62      0.66      -0.04  [-0.21, 0.13]  0.94 [0.72, 1.23]
-#> 8                         Brier Score Parity        0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.89, 1.43]
-#> 9                    Overall Accuracy Parity        0.87      0.88      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]
-#> 10                        Treatment Equality        1.03      3.24      -2.21 [-4.35, -0.07]  0.32 [0.15, 0.68]
+#> 1                         Statistical Parity        1.14      1.06       0.08   [0.04, 0.12]  1.08 [1.04, 1.11]
+#> 2  Conditional Statistical Parity (age >=60)        1.26      1.17       0.09   [0.01, 0.17]  1.08 [1.01, 1.15]
+#> 3                          Equal Opportunity       -0.42     -0.23      -0.19 [-0.33, -0.05]  1.83 [1.12, 2.97]
+#> 4                        Predictive Equality        1.08      1.03       0.05   [0.02, 0.08]  1.05 [1.02, 1.08]
+#> 5                 Balance for Positive Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
+#> 6                 Balance for Negative Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
+#> 7                 Positive Predictive Parity        0.21      0.16       0.05       [0, 0.1]  1.31 [0.98, 1.75]
+#> 8                 Negative Predictive Parity        0.89      0.88       0.01  [-0.05, 0.07]  1.01 [0.75, 1.36]
+#> 9                         Brier Score Parity        0.37      0.40      -0.03 [-0.04, -0.02]  0.92  [0.9, 0.96]
+#> 10                   Overall Accuracy Parity        1.01      1.00       0.01  [-0.03, 0.05]  1.01 [0.97, 1.05]
+#> 11                        Treatment Equality        0.11      0.12      -0.01  [-0.06, 0.04]  0.92 [0.61, 1.39]
+> 
 ```
 
-Among the fairness metrics calculated, metrics whose difference confidence intervals cross zero and whose ratio confidence intervals cross one indicate no significant difference between the groups. In this example, the statistical parity, conditional statistical pairty, equal opportunity, predictive equality, positive class balance, negative class balance, and treatment equaltiy metrics show a significant differences. While, the predictive parity, Brier score parity, and overall accuracy parity metrics do not show significant differences between the groups. 
-
-Should the user wish to calculate an individual metric, it is possible to use any of the `eval_*` functions. For example, to calculate the equal opportunity metric, the user can use the `eval_equal_opportunity()` function.
+Should the user wish to calculate an individual criteria, it is possible to use any of the `eval_*` functions. For example, to calculate equal opportunity, the user can call the `eval_equal_opportunity()` function.
 
 ```r
 eval_eq_opp(
@@ -191,7 +161,8 @@ eval_eq_opp(
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred",
-  cutoff = 0.41
+  cutoff = 0.41,
+   alpha = 0.05
 )
 
 #>There is evidence that model does not satisfy equal opportunity.
@@ -224,23 +195,7 @@ get_all_metrics(
 
 # Related Work
 
-<!---
-## Both - you are missing this one: https://mlr3fairness.mlr-org.com
-## Do these metrics give difference and ratio based criteria? Are there any other differences? 
-
-Ben Response: Added mlr3fairness package updated the differences.
-
-For comparison: 
-
-- {fairness}- does not give difference or ratio based criteria, only point estimates. The package also produces plots which {fairmetrics} does not (not in our scope).
-- {fairmodels}- does give ratio criteria but not GROUP ratio based criteria, only overall ratio. The package also produces plots which {fairmetrics} does not (not in our scope). No difference based criteria.
-- Same with {mlr3fairness} - does not give difference or ratio based criteria, only point estimates. The package also produces plots which {fairmetrics} does not (not in our scope).
-
-
-(I would also add that the {fairmodels} has added complexity required to using it, and {mlr3fairness} packages are designed for use with the mlr3 framework, which is not as widely adopted in the R community. This could be a "skill issue" on my part. However I don't think such a comment would be appropriate for the paper.)
-
---->
-Other R packages similar to {fairmetrics} include {fairness}[@fairness_package], {fairmodels} [@wisniewski2022fairmodels] and {mlr3fairness}[mlr3fairness_package]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} calculates the ratio and difference between group fairness criterion and allows estimated confidence intervals of fairness metrics via bootstrap - allowing for more meaningful inferences about the fairness metrics calculated. Additionally, in contrast to the {fairmodels}, {fairness} and {mlr3fairness} packages, the {fairmetrics} package does not posses any external dependencies and has a lower memory footprint, resulting in an environment agnostic tool that can be used with modest hardware and older systems. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
+Other R packages similar to {fairmetrics} include {fairness}[@fairness_package], {fairmodels} [@wisniewski2022fairmodels] and {mlr3fairness}[mlr3fairness_package]. The differences between {fairmetrics} and these other packages is twofold. The primary difference between is that {fairmetrics} calculates the ratio and difference between group fairness criterion and their corresponding confidence intervals of fairness metrics via bootstrap, allowing for more meaningful inferences about the fairness criteria. Additionally, in contrast to the {fairmodels}, {fairness} and {mlr3fairness} packages, the {fairmetrics} package does not posses any external dependencies and has a lower memory footprint, resulting in an environment agnostic tool that can be used with modest hardware and older systems. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
 
 \begin{table}[ht]
 \centering
@@ -254,11 +209,11 @@ fairmodels  & 58.11  & 45 \\
 fairmetrics & 0.05   & 0  \\
 \hline
 \end{tabular}
-\caption{Memory usage and dependencies of {fairmetrics} vs similar packages (MB)}
+\caption{Memory usage (in MB) and dependencies of {fairmetrics} vs similar packages.}
 \label{tab:memory_dep_usage}
 \end{table}
 
-For python users, the {fairlearn} library [@fairlearn_paper] provides a broader set of fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
+For python users, the {fairlearn} library [@fairlearn_paper] provides additional fairness metrics and algorithms. The {fairmetrics} package is designed for seemless integration with R workflows, making it a more convenient choice for R-based ML applications.
 
 # Licensing and Availability
 
