@@ -48,6 +48,7 @@ to a specified subset of the population, defined by a conditioning variable.</p>
 <span>  <span class="va">group2</span>,</span>
 <span>  <span class="va">condition</span>,</span>
 <span>  <span class="va">probs</span>,</span>
+<span>  confint <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  bootstraps <span class="op">=</span> <span class="fl">2500</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
@@ -87,6 +88,10 @@ the sign of the condition and the value to threshold the continuous variable
 
 <dt id="arg-probs">probs<a class="anchor" aria-label="anchor" href="#arg-probs"></a></dt>
 <dd><p>Name of the predicted outcome variable</p></dd>
+
+
+<dt id="arg-confint">confint<a class="anchor" aria-label="anchor" href="#arg-confint"></a></dt>
+<dd><p>Whether to compute 95% confidence interval, default is TRUE</p></dd>
 
 
 <dt id="arg-cutoff">cutoff<a class="anchor" aria-label="anchor" href="#arg-cutoff"></a></dt>
