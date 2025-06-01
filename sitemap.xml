@@ -13,9 +13,10 @@
 <url><loc>/reference/eval_eq_odds.html</loc></url>
 <url><loc>/reference/eval_eq_opp.html</loc></url>
 <url><loc>/reference/eval_neg_class_bal.html</loc></url>
+<url><loc>/reference/eval_neg_pred_parity.html</loc></url>
 <url><loc>/reference/eval_pos_class_bal.html</loc></url>
+<url><loc>/reference/eval_pos_pred_parity.html</loc></url>
 <url><loc>/reference/eval_pred_equality.html</loc></url>
-<url><loc>/reference/eval_pred_parity.html</loc></url>
 <url><loc>/reference/eval_stats_parity.html</loc></url>
 <url><loc>/reference/eval_treatment_equality.html</loc></url>
 <url><loc>/reference/get_all_metrics.html</loc></url>

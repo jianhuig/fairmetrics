@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fairmetrics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -780,8 +780,8 @@ data with its predicted results into the
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Independence-based criteria"</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Separation-based criteria"</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Sufficiency-based criteria"</span>, <span class="fl">7</span>, <span class="fl">7</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Other criteria"</span>, <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Sufficiency-based criteria"</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Other criteria"</span>, <span class="fl">9</span>, <span class="fl">11</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
 <span>    full_width <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># Controls font size manually</span></span>
@@ -960,14 +960,14 @@ Balance for Negative Class
 [1.29, 1.74]
 </td>
 </tr>
-<tr grouplength="1">
+<tr grouplength="2">
 <td colspan="7" style="border-bottom: 1px solid;">
 <strong>Sufficiency-based criteria</strong>
 </td>
 </tr>
 <tr>
 <td style="text-align:left;padding-left: 2em;" indentlevel="1">
-Predictive Parity
+Positive Predictive Parity
 </td>
 <td style="text-align:right;">
 0.62
@@ -986,6 +986,29 @@ Predictive Parity
 </td>
 <td style="text-align:left;">
 [0.72, 1.23]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Negative Predictive Parity
+</td>
+<td style="text-align:right;">
+0.92
+</td>
+<td style="text-align:right;">
+0.90
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:left;">
+[-0.15, 0.19]
+</td>
+<td style="text-align:right;">
+1.02
+</td>
+<td style="text-align:left;">
+[0.79, 1.33]
 </td>
 </tr>
 <tr grouplength="3">
@@ -1013,7 +1036,7 @@ Brier Score Parity
 1.12
 </td>
 <td style="text-align:left;">
-[0.89, 1.43]
+[0.88, 1.43]
 </td>
 </tr>
 <tr>
@@ -1053,13 +1076,13 @@ Treatment Equality
 -2.21
 </td>
 <td style="text-align:left;">
-[-4.35, -0.07]
+[-4.5, 0.08]
 </td>
 <td style="text-align:right;">
 0.32
 </td>
 <td style="text-align:left;">
-[0.15, 0.68]
+[0.15, 0.69]
 </td>
 </tr>
 </tbody>
