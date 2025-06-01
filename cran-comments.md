@@ -11,4 +11,5 @@
 
 * Renamed eval_pred_parity -> eval_pos_pred_parity
 * Added function for evaluating negative predicitive parity (neg_pred_parity)
-* Minor documentation edits
+* Edited linking in documentation.
+* Minor edits to code in vingette. 

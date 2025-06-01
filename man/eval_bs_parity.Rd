@@ -88,5 +88,5 @@ eval_bs_parity(
 
 }
 \seealso{
-\code{\link{eval_acc_parity}}, \code{\link{eval_cond_acc_equality}}, \code{\link{eval_pred_parity}}
+\code{\link{eval_acc_parity}}, \code{\link{eval_cond_acc_equality}}, \code{\link{eval_pos_pred_parity}},  \code{\link{eval_neg_pred_parity}}
 }

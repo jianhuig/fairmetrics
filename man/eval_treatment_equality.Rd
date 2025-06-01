@@ -98,5 +98,5 @@ eval_treatment_equality(
 }
 }
 \seealso{
-\code{\link{eval_acc_parity}}, \code{\link{eval_bs_parity}}, \code{\link{eval_pred_parity}}
+\code{\link{eval_acc_parity}}, \code{\link{eval_bs_parity}}, \code{\link{eval_pos_pred_parity}},  \code{\link{eval_neg_pred_parity}}
 }

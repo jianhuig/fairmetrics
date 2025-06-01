@@ -912,7 +912,7 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
 #'   cutoff = 0.41
 #' )
 #' }
-#' @seealso \code{\link{eval_pred_parity}}, \code{\link{eval_stats_parity}}
+#' @seealso \code{\link{eval_pos_pred_parity}},  \code{\link{eval_neg_pred_parity}}, \code{\link{eval_stats_parity}}
 #' @export
 
 eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
@@ -1326,7 +1326,7 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' )
 #' }
 #'
-#' @seealso \code{\link{eval_acc_parity}}, \code{\link{eval_cond_acc_equality}}, \code{\link{eval_pred_parity}}
+#' @seealso \code{\link{eval_acc_parity}}, \code{\link{eval_cond_acc_equality}}, \code{\link{eval_pos_pred_parity}},  \code{\link{eval_neg_pred_parity}}
 #' @export
 
 eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
@@ -1465,7 +1465,7 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #'   message = FALSE
 #' )
 #' }
-#' @seealso \code{\link{eval_acc_parity}}, \code{\link{eval_bs_parity}}, \code{\link{eval_pred_parity}}
+#' @seealso \code{\link{eval_acc_parity}}, \code{\link{eval_bs_parity}}, \code{\link{eval_pos_pred_parity}},  \code{\link{eval_neg_pred_parity}}
 #' @export
 
 eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,

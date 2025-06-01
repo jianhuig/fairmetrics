@@ -194,8 +194,8 @@ kableExtra::kable(fairness_result, booktabs = TRUE, escape = FALSE) %>%
   kableExtra::kable_styling(full_width = FALSE) %>%
   kableExtra::pack_rows("Independence-based criteria", 1, 2) %>%
   kableExtra::pack_rows("Separation-based criteria", 3, 6) %>%
-  kableExtra::pack_rows("Sufficiency-based criteria", 7, 7) %>%
-  kableExtra::pack_rows("Other criteria", 8, 10) %>%
+  kableExtra::pack_rows("Sufficiency-based criteria", 7, 8) %>%
+  kableExtra::pack_rows("Other criteria", 9, 11) %>%
   kableExtra::kable_styling(
     full_width = FALSE,
     font_size = 10,         # Controls font size manually

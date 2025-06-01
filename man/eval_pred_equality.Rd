@@ -93,5 +93,5 @@ eval_pred_equality(
 }
 }
 \seealso{
-\code{\link{eval_pred_parity}}, \code{\link{eval_stats_parity}}
+\code{\link{eval_pos_pred_parity}},  \code{\link{eval_neg_pred_parity}}, \code{\link{eval_stats_parity}}
 }

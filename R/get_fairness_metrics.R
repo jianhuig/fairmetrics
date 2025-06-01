@@ -172,7 +172,19 @@ get_fairness_metrics <- function(data,
     message = FALSE
   )
 
-  pred_parity <- eval_pred_parity(
+  pos_pred_parity <- eval_pos_pred_parity(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
+
+  neg_pred_parity <- eval_neg_pred_parity(
     data = data,
     outcome = outcome,
     group = group,
@@ -223,7 +235,8 @@ get_fairness_metrics <- function(data,
   pred_equality[["Metric"]] <- "Predictive Equality"
   pos_class_bal[["Metric"]] <- "Balance for Positive Class"
   neg_class_bal[["Metric"]] <- "Balance for Negative Class"
-  pred_parity[["Metric"]] <- "Predictive Parity"
+  pos_pred_parity[["Metric"]] <- "Positive Predictive Parity"
+  neg_pred_parity[["Metric"]] <- "Negative Predictive Parity"
   bs_parity[["Metric"]] <- "Brier Score Parity"
   acc_parity[["Metric"]] <- "Overall Accuracy Parity"
   treatment_equality[["Metric"]] <- "Treatment Equality"
@@ -238,7 +251,8 @@ get_fairness_metrics <- function(data,
         pred_equality,
         pos_class_bal,
         neg_class_bal,
-        pred_parity,
+        pos_pred_parity,
+        neg_pred_parity,
         bs_parity,
         acc_parity,
         treatment_equality
@@ -254,7 +268,8 @@ get_fairness_metrics <- function(data,
         pred_equality,
         pos_class_bal,
         neg_class_bal,
-        pred_parity,
+        pos_pred_parity,
+        neg_pred_parity,
         bs_parity,
         acc_parity,
         treatment_equality
