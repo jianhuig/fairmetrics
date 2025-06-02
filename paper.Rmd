@@ -72,7 +72,7 @@ Group fairness criteria are primarily classified into three main categories: ind
 
 ## Other Criteria
 
--   **Brier Score Parity:** Compares the Brier score (i.e., the mean squared error of predicted probabilities) across groups, evaluating differences in calibration. 
+-   **Brier Score Parity:** Compares the Brier score (i.e., the mean squared error of the predicted probabilities) across groups, evaluating differences in calibration. 
 
 -   **Accuracy Parity:** Compares the overall accuracy of a predictive model across groups.
 
