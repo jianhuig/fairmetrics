@@ -129,7 +129,6 @@ get_fairness_metrics(
 )
 
 #>    Metric               `Full Metric Name`                        GroupFemale
-#>    <chr>                <chr>                                           <dbl>
 #>  1 PPR                  Statistical Parity                               1.13
 #>  2 PPR                  Conditional Statistical Parity (age >=60)        1.24
 #>  3 FNR                  Equal Opportunity                               -0.38
@@ -142,7 +141,6 @@ get_fairness_metrics(
 #> 10 Accuracy             Overall Accuracy Parity                          1.01
 #> 11 FN/FP Ratio          Treatment Equality                               0.12
 #>    GroupMale Difference `95% Diff CI`  Ratio `95% Ratio CI`
-#>        <dbl>      <dbl> <chr>          <dbl> <chr>
 #>  1      1.06     0.0700 [0.03, 0.11]    1.07 [1.03, 1.1]
 #>  2      1.17     0.0700 [0, 0.14]       1.06 [1, 1.13]
 #>  3     -0.25    -0.130  [-0.27, 0.01]   1.52 [0.96, 2.41]  

@@ -1852,7 +1852,17 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
       "95% Ratio CI"
     )
 
-  }else{
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that the model does not satisfy
+            balance for positive class.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            balance for positive class.\n")
+      }
+    }
+  } else{
     result_df <- data.frame(
       "Avg. Predicted Prob.",
       avg_prob[[1]],
@@ -1868,16 +1878,7 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
       "Difference",
       "Ratio"
     )
-  }
 
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that the model does not satisfy
-            balance for positive class.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            balance for positive class.\n")
-    }
   }
 
   return(result_df)
