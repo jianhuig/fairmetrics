@@ -16,7 +16,7 @@ authors:
     orcid: 0000-0002-5360-5869
     affiliation: 1
 affiliations:
-  - name: "Department of Statistcial Science, University of Toronto"
+  - name: "Department of Statistical Science, University of Toronto"
     index: 1
 date: "2025-06-02"
 bibliography: paper.bib
