@@ -95,11 +95,78 @@
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+</div>
+</div>
+<div class="section level1">
+<h1 id="id_1-gao-j-et-al-what-is-fair-defining-fairness-in-machine-learning-for-health-arxivorg-httpsarxivorgabs240609307-2024">1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <a href="https://arxiv.org/abs/2406.09307" class="external-link uri">https://arxiv.org/abs/2406.09307</a> (2024).<a class="anchor" aria-label="anchor" href="#id_1-gao-j-et-al-what-is-fair-defining-fairness-in-machine-learning-for-health-arxivorg-httpsarxivorgabs240609307-2024"></a>
+</h1>
+</div>
+<div class="section level1">
+<h1 id="fairness_joss_paper">fairness_joss_paper<a class="anchor" aria-label="anchor" href="#fairness_joss_paper"></a>
+</h1>
+<p>fairmetrics package JOSS article draft and edits.</p>
+<div class="section level2">
+<h2 id="some-notes">Some notes:<a class="anchor" aria-label="anchor" href="#some-notes"></a>
+</h2>
+<p>Consider the following:</p>
 <ol style="list-style-type: decimal">
-<li>Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <a href="https://arxiv.org/abs/2406.09307" class="external-link uri">https://arxiv.org/abs/2406.09307</a> (2024).</li>
+<li>Show the comparison between memory usage for fairmetrics and its comparison to the fairness and fairmodels package:</li>
 </ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(pryr)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">library</span>(callr)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="sc">&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="er">&gt;</span> measure_memory <span class="ot">&lt;-</span> <span class="cf">function</span>(pkgs) {</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="sc">+</span>   <span class="fu">stopifnot</span>(<span class="fu">is.character</span>(pkgs))</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="sc">+</span>   results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pkgs, <span class="cf">function</span>(pkg) {</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="sc">+</span>     mem_bytes <span class="ot">&lt;-</span> callr<span class="sc">::</span><span class="fu">r</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="sc">+</span>       <span class="cf">function</span>(pkg) {</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="sc">+</span>         <span class="fu">gc</span>()</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="sc">+</span>         before <span class="ot">&lt;-</span> pryr<span class="sc">::</span><span class="fu">mem_used</span>()</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="sc">+</span>         <span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(pkg, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="sc">+</span>         <span class="fu">gc</span>()</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="sc">+</span>         after <span class="ot">&lt;-</span> pryr<span class="sc">::</span><span class="fu">mem_used</span>()</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="sc">+</span>         <span class="fu">as.numeric</span>(after <span class="sc">-</span> before)</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="sc">+</span>       },</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="sc">+</span>       <span class="at">args =</span> <span class="fu">list</span>(pkg),</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="sc">+</span>       <span class="at">show =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="sc">+</span>     )</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="sc">+</span>     <span class="fu">data.frame</span>(</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="sc">+</span>       <span class="at">package =</span> pkg,</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="sc">+</span>       <span class="at">memory_mb =</span> mem_bytes <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="sc">+</span>       <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="sc">+</span>     )</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="sc">+</span>   })</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="sc">+</span>   df <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, results)</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="sc">+</span>   <span class="fu">rownames</span>(df) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="sc">+</span>   <span class="fu">message</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Memory usage (MB):"</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="sc">+</span>   <span class="fu">print</span>(df)</span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="sc">+</span>   <span class="fu">invisible</span>(df)</span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="sc">+</span> }</span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="sc">&gt;</span> </span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="er">&gt;</span> <span class="fu">measure_memory</span>(<span class="fu">c</span>(<span class="st">"fairmodels"</span>,<span class="st">"fairness"</span>,<span class="st">"mlr3fairness"</span>,<span class="st">"fairmetrics"</span>))</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>Memory <span class="fu">usage</span> (MB)<span class="sc">:</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>      package    memory_mb</span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="dv">1</span>   fairmodels  <span class="fl">17.02067566</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="dv">2</span>     fairness <span class="fl">117.61164856</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="dv">3</span> mlr3fairness  <span class="fl">58.10791016</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="dv">4</span>  fairmetrics   <span class="fl">0.04934692</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Show comparisonn in package comparisons between fairmetrics, fairness and fairmodels:</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="sc">&gt;</span> packrat<span class="sc">:::</span><span class="fu">recursivePackageDependencies</span>(<span class="st">"fairmodels"</span>, <span class="at">ignore =</span> <span class="st">""</span>, <span class="at">lib.loc =</span> <span class="fu">.libPaths</span>()[<span class="dv">1</span>]) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">29</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="sc">&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="er">&gt;</span> packrat<span class="sc">:::</span><span class="fu">recursivePackageDependencies</span>(<span class="st">"fairness"</span>, <span class="at">ignore =</span> <span class="st">""</span>, <span class="at">lib.loc =</span> <span class="fu">.libPaths</span>()[<span class="dv">1</span>]) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">141</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="sc">&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="er">&gt;</span> packrat<span class="sc">:::</span><span class="fu">recursivePackageDependencies</span>(<span class="st">"mlr3fairness"</span>, <span class="at">ignore =</span> <span class="st">""</span>, <span class="at">lib.loc =</span> <span class="fu">.libPaths</span>()[<span class="dv">1</span>]) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="sc">&gt;</span> </span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="er">&gt;</span> packrat<span class="sc">:::</span><span class="fu">recursivePackageDependencies</span>(<span class="st">"fairmetrics"</span>, <span class="at">ignore =</span> <span class="st">""</span>, <span class="at">lib.loc =</span> <span class="fu">.libPaths</span>()[<span class="dv">1</span>]) <span class="sc">|&gt;</span> <span class="fu">length</span>()</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>[<span class="dv">1</span>] <span class="dv">0</span></span></code></pre></div>
 </div>
 </div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
