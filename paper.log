@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.12.23)  1 JUN 2025 17:00
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.12.23)  3 JUN 2025 23:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -996,7 +996,7 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <8> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 361.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 360.
 [1
 
 ]
@@ -1026,9 +1026,9 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 
 [3]
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 509.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 508.
 
-Underfull \vbox (badness 4765) detected at line 561
+Underfull \vbox (badness 4765) detected at line 560
  []
 
 
@@ -1054,8 +1054,8 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
 [5]
-Overfull \hbox (120.58546pt too wide) in paragraph at lines 672--676
-[]\TU/lmr/m/n/10 Mattu, Lauren Kirchner, Jeff Larson. n.d. “Machine Bias.” \TU/lmr/m/it/10 ProPublica\TU/lmr/m/n/10 . https://www.propublica.org/article/machine-
+Overfull \hbox (126.68546pt too wide) in paragraph at lines 677--680
+[]\TU/lmr/m/n/10 Mattu, Lauren Kirchner, Jeff Larson. 2016. “Machine Bias.” \TU/lmr/m/it/10 ProPublica\TU/lmr/m/n/10 . https://www.propublica.org/article/machine-
  []
 
 
@@ -1092,10 +1092,10 @@ Package logreq Info: Writing requests to 'paper.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36834 strings out of 475964
- 757623 string characters out of 5776121
- 1629152 words of memory out of 5000000
- 59106 multiletter control sequences out of 15000+600000
+ 36836 strings out of 475964
+ 757707 string characters out of 5776121
+ 1629276 words of memory out of 5000000
+ 59108 multiletter control sequences out of 15000+600000
  564965 words of font info for 87 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,12n,87p,1002b,850s stack positions out of 10000i,1000n,20000p,200000b,200000s
