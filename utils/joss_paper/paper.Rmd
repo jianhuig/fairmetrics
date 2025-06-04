@@ -128,18 +128,33 @@ get_fairness_metrics(
  alpha = 0.05
 )
 
-#>                  Metric                          Full Metric Name GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
-#> 1                   PPR                        Statistical Parity        1.12      1.06       0.06    [0.02, 0.1]  1.06 [1.02, 1.09]
-#> 2                   PPR Conditional Statistical Parity (age >=60)        1.23      1.16       0.07      [0, 0.14]  1.06    [1, 1.13]
-#> 3                   FNR                         Equal Opportunity       -0.35     -0.23      -0.12  [-0.26, 0.02]  1.52  [0.9, 2.58]
-#> 4                   FPR                       Predictive Equality        1.07      1.03       0.04   [0.01, 0.07]  1.04 [1.01, 1.07]
-#> 5  Avg. Predicted Prob.                Balance for Positive Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
-#> 6  Avg. Predicted Prob.                Balance for Negative Class        0.50      0.50       0.00         [0, 0]  1.00       [1, 1]
-#> 7                   PPV                Positive Predictive Parity        0.21      0.16       0.05       [0, 0.1]  1.31 [0.99, 1.74]
-#> 8                   NPV                Negative Predictive Parity        0.87      0.88      -0.01  [-0.06, 0.04]  0.99 [0.74, 1.32]
-#> 9           Brier Score                        Brier Score Parity        0.37      0.40      -0.03 [-0.04, -0.02]  0.92 [0.89, 0.96]
-#> 10             Accuracy                   Overall Accuracy Parity        1.00      1.01      -0.01  [-0.05, 0.03]  0.99 [0.95, 1.03]
-#> 11          FN/FP Ratio                        Treatment Equality        0.13      0.12       0.01  [-0.04, 0.06]  1.08  [0.73, 1.6]
+#>    Metric               `Full Metric Name`                        GroupFemale
+#>    <chr>                <chr>                                           <dbl>
+#>  1 PPR                  Statistical Parity                               1.13
+#>  2 PPR                  Conditional Statistical Parity (age >=60)        1.24
+#>  3 FNR                  Equal Opportunity                               -0.38
+#>  4 FPR                  Predictive Equality                              1.07
+#>  5 Avg. Predicted Prob. Balance for Positive Class                       0.5 
+#>  6 Avg. Predicted Prob. Balance for Negative Class                       0.5
+#>  7 PPV                  Positive Predictive Parity                       0.21
+#>  8 NPV                  Negative Predictive Parity                       0.88
+#>  9 Brier Score          Brier Score Parity                               0.37
+#> 10 Accuracy             Overall Accuracy Parity                          1.01
+#> 11 FN/FP Ratio          Treatment Equality                               0.12
+#>    GroupMale Difference `95% Diff CI`  Ratio `95% Ratio CI`
+#>        <dbl>      <dbl> <chr>          <dbl> <chr>
+#>  1      1.06     0.0700 [0.03, 0.11]    1.07 [1.03, 1.1]
+#>  2      1.17     0.0700 [0, 0.14]       1.06 [1, 1.13]
+#>  3     -0.25    -0.130  [-0.27, 0.01]   1.52 [0.96, 2.41]  
+#>  4      1.03     0.0400 [0.01, 0.07]    1.04 [1.01, 1.07]
+#>  5      0.5      0      [0, 0]          1    [1, 1]
+#>  6      0.5      0      [0, 0]          1    [1, 1]
+#>  7      0.17     0.0400 [-0.01, 0.09]   1.24 [0.93, 1.65]
+#>  8      0.89    -0.0100 [-0.07, 0.05]   0.99 [0.74, 1.33]
+#>  9      0.4     -0.0300 [-0.04, -0.02]  0.92 [0.89, 0.96]
+#> 10      1.01     0      [-0.04, 0.04]   1    [0.96, 1.04]  
+#> 11      0.12     0      [-0.05, 0.05]   1    [0.67, 1.49]
+
 ```
 
 
