@@ -142,6 +142,7 @@ get_fairness_metrics(
 #> 11          FN/FP Ratio                        Treatment Equality        0.13      0.12       0.01  [-0.04, 0.06]  1.08  [0.73, 1.6]
 ```
 
+
 Should the user wish to calculate an individual criteria, it is possible to use any of the `eval_*` functions. For example, to calculate equal opportunity, the user can call the `eval_equal_opportunity()` function.
 
 ```r
