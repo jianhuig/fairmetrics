@@ -29,7 +29,6 @@ output:
 journal: JOSS
 ---
 
-
 # Summary
 
 Fairness is a growing area of machine learning (ML) that focuses on ensuring models do not produce systematically biased outcomes for specific groups, particularly those defined by protected attributes such as race, gender, or age. Evaluating fairness is a critical aspect of ML model development, as biased models can perpetuate structural inequalities.  The {fairmetrics} R package offers a user-friendly framework for rigorously evaluating numerous group-based fairness criteria, including metrics based on independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). Group-based fairness criteria assess whether a model is equally accurate or well-calibrated across a set of predefined groups so that appropriate bias mitigation strategies can be implemented. {fairmetrics} provides both point and interval estimates for multiple metrics through a convenient wrapper function and includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical].
@@ -43,7 +42,7 @@ While existing software can compute group fairness criteria, they only provide p
 
 # Scope
 
-The `{fairmetrics}` package is designed to evaluate group fairness in the setting of binary classification with a binary protected attribute. This restriction reflects standard practice in the fairness literature and is motivated by several considerations. First, binary classification remains prevalent in many high-stakes applications, such as loan approval, hiring decisions, and disease screening, where outcomes are typically framed as accept/reject or positive/negative [@mehrabi_survey_21]. Second, group fairness is the most widely used framework for binary classification tasks [@mehrabi_survey_21]. Third, when protected attributes have more than two categories, there is no clear consensus on how to evaluate group fairness [@lum_bias_22]. This focus enables {fairmetrics} to provide statistically grounded uncertainty quantification for group fairness metrics commonly applied in binary classification tasks across diverse application domains.
+The `{fairmetrics}` package is designed to evaluate group fairness in the setting of binary classification with a binary protected attribute. This restriction reflects standard practice in the fairness literature and is motivated by several considerations. First, binary classification remains prevalent in many high-stakes applications, such as loan approval, hiring decisions, and disease screening, where outcomes are typically framed as accept/reject or positive/negative [@mehrabi_survey_21]. Second, group fairness is the most widely used framework for binary classification tasks [@mehrabi_survey_21]. Third, when protected attributes have more than two categories, there is no clear consensus on how to evaluate group fairness [@lum_debias_22]. This focus enables {fairmetrics} to provide statistically grounded uncertainty quantification for group fairness metrics commonly applied in binary classification tasks across diverse application domains.
 
 # Fairness Criteria
 
@@ -89,8 +88,7 @@ A simple example of how to use the {fairmetrics} package is illustrated below. T
 
 While the choice of fairness criteria used is context dependent, we show all criteria available with the `get_fairness_metrics()` function for the purposes of illustration. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on patients older than 60 years old. The model is trained on a subset of the data and the predictions are made and evaluated on a test set.  The `get_fairness_metrics()` function outputs difference and ratio-based metrics as well as their corresponding confidence intervals.  A statistically significant difference across groups at a given level of significance is indicated when the confidence interval for a difference-based metric does not include zero or when the interval for a ratio-based metric does not include one.
 
-
-``` r
+```r
 library(fairmetrics)
 library(dplyr)
 library(magrittr)
@@ -147,8 +145,7 @@ get_fairness_metrics(
 
 Should the user wish to calculate an individual criteria, it is possible to use any of the `eval_*` functions. For example, to calculate equal opportunity, the user can call the `eval_equal_opportunity()` function.
 
-
-``` r
+```r
 eval_eq_opp(
   data = test_data,
   outcome = "day_28_flg",
