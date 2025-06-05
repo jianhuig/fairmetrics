@@ -113,7 +113,7 @@ rf_model <- randomForest::randomForest(
   )
   
 # Make predictions on the test set
-test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")
+test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[,2]
 
 # Get fairness metrics
 # Setting alpha=0.05 for 95% confidence intervals
@@ -128,30 +128,30 @@ get_fairness_metrics(
  alpha = 0.05
 )
 
-#>    Metric               `Full Metric Name`                        GroupFemale
-#>  1 PPR                  Statistical Parity                               1.13
-#>  2 PPR                  Conditional Statistical Parity (age >=60)        1.24
-#>  3 FNR                  Equal Opportunity                               -0.38
-#>  4 FPR                  Predictive Equality                              1.07
-#>  5 Avg. Predicted Prob. Balance for Positive Class                       0.5 
-#>  6 Avg. Predicted Prob. Balance for Negative Class                       0.5
-#>  7 PPV                  Positive Predictive Parity                       0.21
-#>  8 NPV                  Negative Predictive Parity                       0.88
-#>  9 Brier Score          Brier Score Parity                               0.37
-#> 10 Accuracy             Overall Accuracy Parity                          1.01
-#> 11 FN/FP Ratio          Treatment Equality                               0.12
-#>    GroupMale Difference `95% Diff CI`  Ratio `95% Ratio CI`
-#>  1      1.06     0.0700 [0.03, 0.11]    1.07 [1.03, 1.1]
-#>  2      1.17     0.0700 [0, 0.14]       1.06 [1, 1.13]
-#>  3     -0.25    -0.130  [-0.27, 0.01]   1.52 [0.96, 2.41]  
-#>  4      1.03     0.0400 [0.01, 0.07]    1.04 [1.01, 1.07]
-#>  5      0.5      0      [0, 0]          1    [1, 1]
-#>  6      0.5      0      [0, 0]          1    [1, 1]
-#>  7      0.17     0.0400 [-0.01, 0.09]   1.24 [0.93, 1.65]
-#>  8      0.89    -0.0100 [-0.07, 0.05]   0.99 [0.74, 1.33]
-#>  9      0.4     -0.0300 [-0.04, -0.02]  0.92 [0.89, 0.96]
-#> 10      1.01     0      [-0.04, 0.04]   1    [0.96, 1.04]  
-#> 11      0.12     0      [-0.05, 0.05]   1    [0.67, 1.49]
+#>                  Metric                          Full Metric Name GroupFemale
+#> 1                   PPR                        Statistical Parity        0.17
+#> 2                   PPR Conditional Statistical Parity (age >=60)        0.34
+#> 3                   FNR                         Equal Opportunity        0.36
+#> 4                   FPR                       Predictive Equality        0.07
+#> 5  Avg. Predicted Prob.                Balance for Positive Class        0.46
+#> 6  Avg. Predicted Prob.                Balance for Negative Class        0.15
+#> 7                   PPV                Positive Predictive Parity        0.64
+#> 8                   NPV                Negative Predictive Parity        0.93
+#> 9           Brier Score                        Brier Score Parity        0.09
+#> 10             Accuracy                   Overall Accuracy Parity        0.88
+#> 11          FN/FP Ratio                        Treatment Equality        1.00
+#>    GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
+#> 1       0.09       0.08   [0.04, 0.12]  1.89 [1.34, 2.67]
+#> 2       0.24       0.10   [0.02, 0.18]  1.42 [1.05, 1.91]
+#> 3       0.58      -0.22 [-0.37, -0.07]  0.62 [0.43, 0.89]
+#> 4       0.03       0.04   [0.01, 0.07]  2.33 [1.19, 4.56]
+#> 5       0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]
+#> 6       0.10       0.05   [0.03, 0.07]  1.50 [1.29, 1.75]
+#> 7       0.69      -0.05  [-0.21, 0.11]  0.93 [0.72, 1.19]
+#> 8       0.91       0.02  [-0.15, 0.19]  1.02 [0.79, 1.32]
+#> 9       0.08       0.01  [-0.01, 0.03]  1.12 [0.88, 1.43]
+#> 10      0.89      -0.01  [-0.05, 0.03]  0.99 [0.95, 1.03]
+#> 11      3.00      -2.00  [-4.11, 0.11]  0.33 [0.15, 0.73]
 
 ```
 
