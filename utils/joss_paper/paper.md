@@ -1,5 +1,5 @@
 ---
-title: '{fairmetrics}: An R package for group fairness evaluation'
+title: 'fairmetrics: An R package for group fairness evaluation'
 tags:
   - R
   - Fairness
