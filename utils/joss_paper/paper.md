@@ -170,9 +170,9 @@ eval_eq_opp(
   alpha = 0.05
 )
 
-#>There is evidence that model does not satisfy equal opportunity.
-#>  Metric GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
-#>1    FNR        0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.85]
+#> There is evidence that model does not satisfy equal opportunity.
+#>   Metric GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
+#> 1    FNR        0.36      0.58      -0.22 [-0.37, -0.07]  0.62 [0.43, 0.89]
 ```
 
 
