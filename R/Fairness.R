@@ -123,7 +123,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,confint = TRUE
 
     # Create a dataframe for the results
     results_df <- data.frame(
-      "FNR",
+      "False Negative Rate",
       fnr[[1]],
       fnr[[2]],
       fnr_diff,
@@ -139,7 +139,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,confint = TRUE
     )
   } else{
     results_df <- data.frame(
-      "FNR",
+      "False Negative Rate",
       fnr[[1]],
       fnr[[2]],
       fnr_diff,
@@ -471,7 +471,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 
     # Structure the results as a dataframe
     results_df <- data.frame(
-      Metric = "PPR",
+      Metric = "Positive Prediction Rate",
       Group1 = ppr[[1]],
       Group2 = ppr[[2]],
       Difference = ppr_diff,
@@ -489,7 +489,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
   }else{
     # Structure the results as a dataframe
     results_df <- data.frame(
-      Metric = "PPR",
+      Metric = "Positive Prediction Rate",
       Group1 = ppr[[1]],
       Group2 = ppr[[2]],
       Difference = ppr_diff,
@@ -747,7 +747,7 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
     upper_ratio_ci <- round(exp(log(ppv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
     result_df <- data.frame(
-      "PPV",
+      "Positive Predictive Value",
       ppv[[1]],
       ppv[[2]],
       ppv_dif,
@@ -766,7 +766,7 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
     )
   }else{
     result_df <- data.frame(
-      "PPV",
+      "Positive Predictive Value",
       ppv[[1]],
       ppv[[2]],
       ppv_dif,
@@ -899,7 +899,7 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
   upper_ratio_ci <- round(exp(log(npv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
   result_df <- data.frame(
-    "NPV",
+    "Negative Predictive Value",
     npv[[1]],
     npv[[2]],
     npv_dif,
@@ -918,7 +918,7 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
   )
   }else{
     result_df <- data.frame(
-      "NPV",
+      "Negative Predictive Value",
       npv[[1]],
       npv[[2]],
       npv_dif,
@@ -1050,7 +1050,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
     upper_ratio_ci <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
 
     result_df <- data.frame(
-      "FPR",
+      "False Positive Rate",
       fpr[[1]],
       fpr[[2]],
       fpr_dif,
@@ -1069,7 +1069,7 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
     )
   }else{
     result_df <- data.frame(
-      "FPR",
+      "False Positive Rate",
       fpr[[1]],
       fpr[[2]],
       fpr_dif,
@@ -1681,7 +1681,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
     upper_ratio_ci <- round(exp(log(err_ratio_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm = TRUE)), digits)
 
     result_df <- data.frame(
-      "FN/FP Ratio",
+      "(False Negative)/(False Positive) Ratio",
       err_ratio[[1]],
       err_ratio[[2]],
       err_ratio_diff,
@@ -1701,7 +1701,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
     )
   }else{
     result_df <- data.frame(
-      "FN/FP Ratio",
+      "(False Negative)/(False Positive) Ratio",
       err_ratio[[1]],
       err_ratio[[2]],
       err_ratio_diff,
