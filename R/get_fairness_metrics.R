@@ -258,7 +258,7 @@ get_fairness_metrics <- function(data,
                      neg_class_bal, pos_pred_parity, neg_pred_parity, bs_parity,
                      acc_parity, treatment_equality)
     fairness_summary <- summary[, -c(1:3)]
-    fairness_summary <- cbind( "Metirc" = c("Statistical Parity",
+    fairness_summary <- cbind( "Metric" = c("Statistical Parity",
                                             "Equal Opportunity",
                                             "Predictive Equality",
                                             "Balance for Positive Class",
