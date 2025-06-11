@@ -1,10 +1,12 @@
 #' Compute Fairness Metrics for Binary Classification
 #'
-#' This function evaluates a comprehensive set of fairness metrics for binary classification models
-#' across groups defined by a sensitive attribute (e.g., race, gender). It returns a unified
-#' data frame containing metric values, optionally with bootstrap confidence intervals.
+#' Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a sensitive attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
 #'
-#' ### Metrics Included:
+#' The results are returned as a list of two data frames:
+#' - `performance`: Contains performance metrics (e.g., TPR, FPR, PPV) by group.
+#' - `fairness`: Contains group-level fairness metrics (e.g., disparities or ratios), confidence intervals (if specified).
+#'
+#' ### Fairness Metrics Included:
 #' - **Statistical Parity**: Difference in positive prediction rates across groups.
 #' - **Conditional Statistical Parity** *(if group2 and condition are specified)*:
 #'   Parity conditioned on a second group and value.
@@ -35,7 +37,11 @@
 #' @param alpha Significance level for confidence intervals. Default is 0.05.
 #' @param digits Number of digits to round the metrics to. Default is 2.
 #'
-#' @return A data frame with the evaluated fairness metrics.
+#' @return A list containing:
+#' \describe{
+#'   \item{performance}{Data frame with performance metrics by group.}
+#'   \item{fairness}{Data frame with computed fairness metrics and optional confidence intervals.}
+#' }
 #'
 #' @examples
 #' \donttest{

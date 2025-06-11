@@ -46,15 +46,22 @@ the sign of the condition and the value to threshold the continuous variable
 \item{digits}{Number of digits to round the metrics to. Default is 2.}
 }
 \value{
-A data frame with the evaluated fairness metrics.
+A list containing:
+\describe{
+\item{performance}{Data frame with performance metrics by group.}
+\item{fairness}{Data frame with computed fairness metrics and optional confidence intervals.}
+}
 }
 \description{
-This function evaluates a comprehensive set of fairness metrics for binary classification models
-across groups defined by a sensitive attribute (e.g., race, gender). It returns a unified
-data frame containing metric values, optionally with bootstrap confidence intervals.
+Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a sensitive attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
 }
 \details{
-\subsection{Metrics Included:}{
+The results are returned as a list of two data frames:
+\itemize{
+\item \code{performance}: Contains performance metrics (e.g., TPR, FPR, PPV) by group.
+\item \code{fairness}: Contains group-level fairness metrics (e.g., disparities or ratios), confidence intervals (if specified).
+}
+\subsection{Fairness Metrics Included:}{
 \itemize{
 \item \strong{Statistical Parity}: Difference in positive prediction rates across groups.
 \item \strong{Conditional Statistical Parity} \emph{(if group2 and condition are specified)}:
