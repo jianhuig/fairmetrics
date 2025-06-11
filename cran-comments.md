@@ -1,7 +1,7 @@
 ## Version 1.0.3
 
 * Changing abbreviations to full names for `eval_*` functions. 
-* Updating `get_fairness_metrics` to return two separate dataframes - `performance` and `fairness` for separating model performance metrics from fairness metrics. 
+* Updating `get_fairness_metrics` to return two separate dataframes - `performance` and `fairness` for separating model performance metrics from fairness metrics. Re-documented as well. 
 
 ## Version 1.0.2
 
