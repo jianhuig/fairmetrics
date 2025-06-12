@@ -1,3 +1,7 @@
+## NOTE TO CRAN MAINTAINERS
+
+The code here has been reformatted and edited for release with a associated article in the Journal of Open Source Software. I am in contact with the Journal Editors and they will be reviewing this reviewing this version of the package.
+
 ## Version 1.0.3
 
 * Changing abbreviations to full names for `eval_*` functions. 
