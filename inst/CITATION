@@ -1,0 +1,50 @@
+bibentry(
+  bibtype = "Manual",
+  title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals",
+  author = c(
+    person("Jianhui", "Gao"),
+    person("Benjamin", "Smith"),
+    person("Benson", "Chou"),
+    person("Jessica", "Gronsbell")
+  ),
+  year = "2025",
+  url = "https://github.com/jianhuig/fairmetrics"
+)
+
+bibentry(
+    bibtype = "Misc",
+    key = "Smith_Gao_Gronsbell_2025",
+    title = "fairmetrics: An R package for group fairness evaluation",
+    author = c(
+      person("Benjamin", "Smith"),
+      person("Jianhui", "Gao"),
+      person("Jessica", "Gronsbell")
+    ),
+    year = "2025",
+    month = "jun",
+    note = "arXiv:2506.06243",
+    url = "https://arxiv.org/abs/2506.06243",
+    textVersion = "Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation. arXiv:2506.06243."
+
+  )
+
+bibentry(
+  bibtype = "Misc",
+  key = "Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024",
+  title = "What is Fair? Defining Fairness in Machine Learning for Health",
+  author = c(
+    person("Jianhui", "Gao"),
+    person("Benson", "Chou"),
+    person("Zachary R.", "McCaw"),
+    person("Hilary", "Thurston"),
+    person("Paul", "Varghese"),
+    person("Chuan", "Hong"),
+    person("Jessica", "Gronsbell")
+  ),
+  year = "2024",
+  month = "jun",
+  note = "arXiv:2406.09307",
+  url = "https://arxiv.org/abs/2406.09307",
+  textVersion = "Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307."
+)
+
