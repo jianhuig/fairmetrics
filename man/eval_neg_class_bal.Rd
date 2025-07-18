@@ -53,7 +53,7 @@ confidence interval for the ratio in average predicted probability
 \description{
 This function evaluates \emph{Balance for the Negative Class}, a fairness criterion
 that checks whether the model assigns similar predicted probabilities across groups
-among individuals whose true outcome is negative (i.e., \(Y = 0\)).
+among individuals whose true outcome is negative (i.e. \eqn{Y = 0}).
 }
 \examples{
 \donttest{

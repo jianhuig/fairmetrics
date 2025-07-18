@@ -1735,7 +1735,7 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #'
 #' This function evaluates *Balance for the Positive Class*, a fairness criterion
 #' that checks whether the model assigns similar predicted probabilities across groups
-#' among individuals whose true outcome is positive (i.e., \(Y = 1\)).
+#' among individuals whose true outcome is positive (i.e. \eqn{Y = 1}).
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
@@ -1888,7 +1888,7 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #'
 #' This function evaluates *Balance for the Negative Class*, a fairness criterion
 #' that checks whether the model assigns similar predicted probabilities across groups
-#' among individuals whose true outcome is negative (i.e., \(Y = 0\)).
+#' among individuals whose true outcome is negative (i.e. \eqn{Y = 0}).
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
 #' sensitive attribute
