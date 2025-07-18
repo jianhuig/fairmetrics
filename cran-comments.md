@@ -2,10 +2,11 @@
 
 The code here has been reformatted and edited for release with a associated article in the Journal of Open Source Software. I am in contact with the Journal Editors and they will be reviewing this reviewing this version of the package.
 
-
 ## Version 1.0.4
 
-* Implementing Edits Required by JOSS TEAM
+* Fixed LaTeX math issue in `eval_pos_class_bal` and `eval_neg_class_bal`
+* Fix typo in column names of `get_fairness_metrics` output
+* Adding tests to ensure the results from the `eval_*` functions work as expected. 
 
 ## Version 1.0.3
 
