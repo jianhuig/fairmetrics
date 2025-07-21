@@ -1,5 +1,5 @@
 ---
-title: '{fairmetrics}: An R package for group fairness evaluation'
+title: 'fairmetrics: An R package for group fairness evaluation'
 tags:
   - R
   - Fairness
@@ -20,8 +20,6 @@ affiliations:
     index: 1
 date: "2025-06-10"
 bibliography: paper.bib
-nocite: |
-  @*
 output:
   rticles::joss_article:
     keep_tex: true
@@ -34,16 +32,16 @@ journal: JOSS
 
 # Summary
 
-Fairness is a growing area of machine learning (ML) that focuses on ensuring that models do not produce systematically biased outcomes across groups defined by protected attributes, such as race, gender, or age. The {fairmetrics} R package provides a user-friendly framework for rigorously evaluating group-based fairness criteria, including independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). The package provides both point and interval estimates for a variety of commonly used criteria. {fairmetrics} also includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical] to demonstrate its use. 
+Fairness is a growing area of machine learning (ML) that focuses on ensuring that models do not produce systematically biased outcomes across groups defined by protected attributes, such as race, gender, or age. The `fairmetrics` R package provides a user-friendly framework for rigorously evaluating group-based fairness criteria, including independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). The package provides both point and interval estimates for a variety of commonly used criteria. `fairmetrics` also includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical] to demonstrate its use. 
 
 
 # Statement of Need
 
-ML models are increasingly used in high-stakes domains such as criminal justice, healthcare, finance, employment, and education [@mehrabi_survey_21, @mattuMachineBias].  Existing fairness evaluation software report point estimates and/or visualizations, without any measures of uncertainty. This limits users' ability to determine whether observed disparities are statistically significant. {fairmetrics} addresses this limitation by including confidence intervals for both difference and ratio based fairness metrics to enable more robust and statistically grounded fairness assessments. 
+ML models are increasingly used in high-stakes domains such as criminal justice, healthcare, finance, employment, and education [@mehrabi_survey_21; @mattuMachineBias]. As ML models become more integrated into sensitive domains, ensuring they are safe, effective, and equitable is essential to avoid exacerbating existing disparities [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. Existing fairness evaluation software report point estimates and/or visualizations, without any measures of uncertainty. This limits users' ability to determine whether observed disparities are statistically significant. `fairmetrics` addresses this limitation by including confidence intervals for both difference and ratio based fairness metrics to enable more robust and statistically grounded fairness assessments. 
 
 # Fairness Criteria
 
-{fairmetrics} is designed to evaluate fairness of binary classification models across binary protected attributes. The package supports the evaluation of metrics belonging to three major group fairness criteria: 
+`fairmetrics` is designed to evaluate fairness of binary classification models across binary protected attributes. The package supports the evaluation of metrics belonging to three major group fairness criteria: 
 
 - **Independence:** Statistical Parity (compares the overall rate of positive predictions between groups), Conditional Statistical Parity (compares the rate of positive predictions between groups within a specific subgroup).
 
@@ -55,11 +53,11 @@ The package also includes additional metrics, such as the Brier Score Parity (co
 
 # Evaluating Fairness Criteria
 
-The input required to evaluate model fairness with the {fairmetrics} package is a data frame or tibble containing the model's predicted probabilities, the true outcomes, and the protected attribute. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using {fairmetrics}.
+The input required to evaluate model fairness with the `fairmetrics` package is a `data.frame` or `tibble` containing the model's predicted probabilities, the true outcomes, and the protected attribute. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using `fairmetrics`.
 
-![Workflow for using {fairmetrics} to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
+![Workflow for using `fairmetrics` to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
 
-A simple example of how to use the {fairmetrics} package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the Indwelling Arterial Catheter (IAC) Clinical dataset, from the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical; @raffa2016data]. 
+A simple example of how to use the `fairmetrics` package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the Indwelling Arterial Catheter (IAC) Clinical dataset, from the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical; @raffa2016data]. 
 
 While the choice of fairness metric used is context dependent, we show all criteria available with the `get_fairness_metrics()` function for illustrative purposes. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on age greater than 60 years. The model is trained on a subset of the data and the predictions are made and evaluated on a test set.  A statistically significant difference across groups at a given level of significance is indicated when the confidence interval for a difference-based metric does not include zero or when the interval for a ratio-based metric does not include one.
 
@@ -115,7 +113,7 @@ test specific fairness conditions. Full usage examples are provided in the packa
 
 # Related Work
 
-Other R packages similar to {fairmetrics} include {fairness} [@fairness_package], {fairmodels} [@wisniewski2022fairmodels] and {mlr3fairness} [@mlr3fairness_package]. {fairmetrics} differs from these packages in two ways. The first difference is that {fairmetrics} calculates ratio and difference-based group fairness metrics and their corresponding confidence intervals, allowing for more meaningful inferences about the fairness criteria. The second difference is that {fairmetrics} does not possess any external dependencies and has a lower memory footprint. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
+Other R packages similar to `fairmetrics` include `fairness` [@fairness_package], `fairmodels` [@wisniewski2022fairmodels] and `mlr3fairness` [@mlr3fairness_package]. `fairmetrics` differs from these packages in two ways. The first difference is that `fairmetrics` calculates ratio and difference-based group fairness metrics and their corresponding confidence intervals, allowing for more meaningful inferences about the fairness criteria. The second difference is that `fairmetrics` does not possess any external dependencies and has a lower memory footprint. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
 
 \begin{table}[ht]
 \centering
@@ -129,15 +127,15 @@ mlr3fairness & 58.11  & 45 \\
 fairmetrics & 0.05   & 0  \\
 \hline
 \end{tabular}
-\caption{Memory usage (in MB) and dependencies of {fairmetrics} vs similar packages.}
+\caption{Memory usage (in MB) and dependencies of `fairmetrics` vs similar packages.}
 \label{tab:memory_dep_usage}
 \end{table}
 
-For Python users, the {fairlearn} library [@fairlearn_paper] provides additional fairness metrics and algorithms. The {fairmetrics} package is designed for seamless integration with R workflows, making it a more convenient choice for R users.
+For Python users, the `fairlearn` library [@fairlearn_paper] provides additional fairness metrics and algorithms. The `fairmetrics` package is designed for seamless integration with R workflows, making it a more convenient choice for R users.
 
 # Licensing and Availability
 
-The {fairmetrics} package is under the MIT license. It is available on CRAN and can be installed by using `install.packages("fairmetrics")`. Full documentation and its examples are available at: https://jianhuig.github.io/fairmetrics/articles/fairmetrics.html. Source code and issue tracking are hosted on GitHub: https://github.com/jianhuig/fairmetrics/.
+The `fairmetrics` package is under the MIT license. It is available on CRAN and can be installed by using `install.packages("fairmetrics")`. Full documentation and its examples are available at: https://jianhuig.github.io/fairmetrics/articles/fairmetrics.html. Source code and issue tracking are hosted on GitHub: https://github.com/jianhuig/fairmetrics/.
 
 
 # References

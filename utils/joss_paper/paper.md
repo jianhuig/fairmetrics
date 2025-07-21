@@ -20,8 +20,6 @@ affiliations:
     index: 1
 date: "2025-06-10"
 bibliography: paper.bib
-nocite: |
-  @*
 output:
   rticles::joss_article:
     keep_tex: true
@@ -39,7 +37,7 @@ Fairness is a growing area of machine learning (ML) that focuses on ensuring tha
 
 # Statement of Need
 
-ML models are increasingly used in high-stakes domains such as criminal justice, healthcare, finance, employment, and education [@mehrabi_survey_21; @mattuMachineBias].  Existing fairness evaluation software report point estimates and/or visualizations, without any measures of uncertainty. This limits users' ability to determine whether observed disparities are statistically significant. `fairmetrics` addresses this limitation by including confidence intervals for both difference and ratio based fairness metrics to enable more robust and statistically grounded fairness assessments. 
+ML models are increasingly used in high-stakes domains such as criminal justice, healthcare, finance, employment, and education [@mehrabi_survey_21; @mattuMachineBias]. As ML models become more integrated into sensitive domains, ensuring they are safe, effective, and equitable is essential to avoid exacerbating existing disparities [@Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024]. Existing fairness evaluation software report point estimates and/or visualizations, without any measures of uncertainty. This limits users' ability to determine whether observed disparities are statistically significant. `fairmetrics` addresses this limitation by including confidence intervals for both difference and ratio based fairness metrics to enable more robust and statistically grounded fairness assessments. 
 
 # Fairness Criteria
 
