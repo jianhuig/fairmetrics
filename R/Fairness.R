@@ -78,7 +78,7 @@
 #' }
 #' @export
 
-eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5,confint = TRUE,
+eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                         bootstraps = 2500, alpha = 0.05, digits = 2,
                         message = TRUE) {
   # Check if outcome is binary
