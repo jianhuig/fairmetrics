@@ -69,7 +69,7 @@ test_that('eval_bs_parity CI outcome test', {
                               probs = "y_pred",
                               digits = 1,
                               confint = TRUE,
-                              message = FALSE)
+                              message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
   list("[NA, NA]", "[-1, 1]"))
@@ -89,7 +89,7 @@ test_that('eval_eq_opp ratio+diff outcome test', {
                              probs = "y_pred",
                              digits = 1,
                              confint = TRUE,
-                             message = FALSE)
+                             message = TRUE)
     list(result$Ratio, result$Difference)
   },
   list(NaN,0))
@@ -111,7 +111,7 @@ test_that('eval_eq_opp CI outcome test', {
                              message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
-  list("[NaN, NaN]", "[NA, NA]"))
+  list("[NaN, NaN]", "[0, 0]"))
 })
 
 
@@ -151,7 +151,7 @@ test_that('eval_pred_equality CI outcome test', {
                           message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
-  list("[NA, NA]", "[NA, NA]"))
+  list("[NA, NA]", "[0, 0]"))
 })
 
 
