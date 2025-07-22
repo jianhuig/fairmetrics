@@ -117,9 +117,9 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRU
     lower_ci <- round(fnr_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
     upper_ci <- round(fnr_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
     lower_ratio_ci <- round(exp(log(fnr_ratio) - qnorm(1 - alpha / 2) *
-                                  sd(se[2, ])), digits)
+                                  sd(se[2, ], na.rm=TRUE)), digits)
     upper_ratio_ci <- round(exp(log(fnr_ratio) + qnorm(1 - alpha / 2) *
-                                  sd(se[2, ])), digits)
+                                  sd(se[2, ], na.rm=TRUE)), digits)
 
     # Create a dataframe for the results
     results_df <- data.frame(
@@ -298,18 +298,18 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TR
     })
 
     # Calculate confidence intervals
-    fnr_lower <- round(fnr_diff - qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
-    fnr_upper <- round(fnr_diff + qnorm(1 - alpha / 4) * sd(se[1, ]), digits)
-    fpr_lower <- round(fpr_diff - qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
-    fpr_upper <- round(fpr_diff + qnorm(1 - alpha / 4) * sd(se[2, ]), digits)
+    fnr_lower <- round(fnr_diff - qnorm(1 - alpha / 4) * sd(se[1, ],na.rm=TRUE), digits)
+    fnr_upper <- round(fnr_diff + qnorm(1 - alpha / 4) * sd(se[1, ],na.rm=TRUE), digits)
+    fpr_lower <- round(fpr_diff - qnorm(1 - alpha / 4) * sd(se[2, ],na.rm=TRUE), digits)
+    fpr_upper <- round(fpr_diff + qnorm(1 - alpha / 4) * sd(se[2, ],na.rm=TRUE), digits)
     fnr_ratio_lower <- round(exp(log(fnr_ratio) - qnorm(1 - alpha / 4) *
-                                   sd(se[3, ])), digits)
+                                   sd(se[3, ],na.rm=TRUE)), digits)
     fnr_ratio_upper <- round(exp(log(fnr_ratio) + qnorm(1 - alpha / 4) *
-                                   sd(se[3, ])), digits)
+                                   sd(se[3, ],na.rm=TRUE)), digits)
     fpr_ratio_lower <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 4) *
-                                   sd(se[4, ])), digits)
+                                   sd(se[4, ],na.rm=TRUE)), digits)
     fpr_ratio_upper <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 4) *
-                                   sd(se[4, ])), digits)
+                                   sd(se[4, ],na.rm=TRUE)), digits)
 
     # Structure the results as a dataframe
     results_df <- data.frame(
@@ -471,8 +471,8 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 
     lower_ci <- round(ppr_diff - qnorm(1 - alpha / 2) * sd(unlist(se[1, ]), na.rm = TRUE), digits)
     upper_ci <- round(ppr_diff + qnorm(1 - alpha / 2) * sd(unlist(se[1, ]), na.rm = TRUE), digits)
-    lower_ratio_ci <- round(exp(log(ppr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-    upper_ratio_ci <- round(exp(log(ppr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ratio_ci <- round(exp(log(ppr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(ppr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
 
     # Structure the results as a dataframe
     results_df <- data.frame(
@@ -750,8 +750,8 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
 
     lower_ci <- round(ppv_dif - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm=TRUE), digits)
     upper_ci <- round(ppv_dif + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm=TRUE), digits)
-    lower_ratio_ci <- round(exp(log(ppv_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-    upper_ratio_ci <- round(exp(log(ppv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ratio_ci <- round(exp(log(ppv_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(ppv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
 
     result_df <- data.frame(
       "Positive Predictive Value",
@@ -903,8 +903,8 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
 
   lower_ci <- round(npv_dif - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm =TRUE), digits)
   upper_ci <- round(npv_dif + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm =TRUE), digits)
-  lower_ratio_ci <- round(exp(log(npv_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-  upper_ratio_ci <- round(exp(log(npv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+  lower_ratio_ci <- round(exp(log(npv_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
+  upper_ratio_ci <- round(exp(log(npv_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
 
   result_df <- data.frame(
     "Negative Predictive Value",
@@ -1057,8 +1057,8 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 
     lower_ci <- round(fpr_dif - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
     upper_ci <- round(fpr_dif + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-    lower_ratio_ci <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-    upper_ratio_ci <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ratio_ci <- round(exp(log(fpr_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(fpr_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ], na.rm=TRUE)), digits)
 
     result_df <- data.frame(
       "False Positive Rate",
@@ -1379,8 +1379,8 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 
     lower_ci <- round(acc_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm=TRUE), digits)
     upper_ci <- round(acc_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm=TRUE), digits)
-    lower_ratio_ci <- round(exp(log(acc_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-    upper_ratio_ci <- round(exp(log(acc_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ratio_ci <- round(exp(log(acc_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ],na.rm=TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(acc_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ],na.rm=TRUE)), digits)
 
     result_df <- data.frame(
       "Accuracy",
@@ -1530,8 +1530,8 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 
     lower_ci <- round(bs_diff - qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
     upper_ci <- round(bs_diff + qnorm(1 - alpha / 2) * sd(se[1, ], na.rm = TRUE), digits)
-    lower_ratio_ci <- round(exp(log(bs_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
-    upper_ratio_ci <- round(exp(log(bs_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ])), digits)
+    lower_ratio_ci <- round(exp(log(bs_ratio) - qnorm(1 - alpha / 2) * sd(se[2, ],na.rm=TRUE)), digits)
+    upper_ratio_ci <- round(exp(log(bs_ratio) + qnorm(1 - alpha / 2) * sd(se[2, ],na.rm=TRUE)), digits)
 
     result_df <- data.frame(
       "Brier Score",

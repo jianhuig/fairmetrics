@@ -33,7 +33,7 @@ test_that('eval_acc_parity CI outcome test', {
                               message = FALSE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
-  list("[NA, NA]", "[-1, 1]"))
+  list("[NaN, NaN]", "[-1, 1]"))
 })
 
 
@@ -72,7 +72,7 @@ test_that('eval_bs_parity CI outcome test', {
                               message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
-  list("[NA, NA]", "[-1, 1]"))
+  list("[NaN, NaN]", "[-1, 1]"))
 })
 
 
@@ -151,7 +151,7 @@ test_that('eval_pred_equality CI outcome test', {
                           message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
-  list("[NA, NA]", "[0, 0]"))
+  list("[1, 1]", "[0, 0]"))
 })
 
 
