@@ -7,6 +7,8 @@ The code here has been reformatted and edited for release with a associated arti
 * Fixed LaTeX math issue in `eval_pos_class_bal` and `eval_neg_class_bal`
 * Fix typo in column names of `get_fairness_metrics` output
 * Adding tests to ensure the results from the `eval_*` functions work as expected. 
+* Bug fixes with messages.
+* Documentation fixes
 
 ## Version 1.0.3
 

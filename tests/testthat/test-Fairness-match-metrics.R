@@ -68,7 +68,7 @@ test_that('eval_eq_opp match metrics test', {
       group = "gender",
       probs = "pred",
       confint = FALSE,
-      message = FALSE
+      message = TRUE
       )[1:3]
     rownames(res)<- 1
     },
@@ -91,7 +91,7 @@ test_that('eval_neg_class_bal match metrics test', {
       group = "gender",
       probs = "pred",
       confint = FALSE,
-      message = FALSE
+      message = TRUE
     )[1:3]
     rownames(res) <- 1
   },
@@ -111,7 +111,7 @@ test_that('eval_pos_class_bal match metrics test', {
       group = "gender",
       probs = "pred",
       confint = FALSE,
-      message = FALSE
+      message = TRUE
     )[1:3]
     rownames(res) <- 1
   },
@@ -132,7 +132,7 @@ test_that('eval_pred_equality metrics test', {
       probs = "pred",
       cutoff = 0.41,
       confint = FALSE,
-      message = FALSE
+      message = TRUE
     )[1:3]
     rownames(res) <- 1
   },
@@ -153,7 +153,7 @@ test_that('eval_stats_parity metrics test', {
       probs = "pred",
       cutoff = 0.41,
       confint = FALSE,
-      message = FALSE
+      message = TRUE
     )[1:3]
     rownames(res) <- 1
   },
@@ -175,7 +175,7 @@ test_that('eval_treatment_equality metrics test', {
       probs = "pred",
       cutoff = 0.41,
       confint = FALSE,
-      message = FALSE
+      message = TRUE
     )[1:3]
     rownames(res) <- 1
   },

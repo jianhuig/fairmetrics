@@ -37,7 +37,8 @@ sensitive attribute}
 
 \item{digits}{Number of digits to round the results to, default is 2}
 
-\item{message}{Whether to print the results, default is TRUE}
+\item{message}{Logical; if TRUE (default), prints a textual summary of the
+fairness evaluation. Only works if \code{confint} is TRUE.}
 }
 \value{
 A list containing the following elements:

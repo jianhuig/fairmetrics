@@ -25,7 +25,7 @@
 #' @param digits Integer indicating the number of decimal places to round
 #' results to; defaults to 2.
 #' @param message Logical; if TRUE (default), prints a textual summary of the
-#' fairness evaluation.
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A data frame summarizing FNR-based group disparity metrics with the
 #' following columns:
 #'
@@ -137,6 +137,16 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRU
       paste0("Group", sort(unique(data[[group]]))[[2]]),
       "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
     )
+
+    # Print message if desired
+    if (message) {
+      if (lower_ci > 0 | upper_ci < 0) {
+        cat("There is evidence that model does not satisfy equal opportunity.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy equal
+          opportunity.\n")
+      }
+    }
   } else{
     results_df <- data.frame(
       "False Negative Rate",
@@ -153,15 +163,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRU
     )
   }
 
-  # Print message if desired
-  if (message) {
-    if (lower_ci > 0 | upper_ci < 0) {
-      cat("There is evidence that model does not satisfy equal opportunity.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy equal
-          opportunity.\n")
-    }
-  }
+
 
   return(results_df)
 }
@@ -194,7 +196,7 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRU
 #' @param digits Number of decimal places to round numeric results; defaults to
 #' 2.
 #' @param message Logical; if TRUE (default), prints a textual summary of the
-#' fairness evaluation.
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A data frame summarizing group disparities in both FNR and FPR with
 #' the following columns:
 #' \itemize{
@@ -334,6 +336,17 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TR
       paste0("Group ", sort(unique(data[[group]]))[[2]]),
       "Difference", "95% CI", "Ratio", "95% CI"
     )
+
+    # Print summary message if desired
+    if (message) {
+      if (any(fnr_lower > 0) || any(fnr_upper < 0) || any(fpr_lower > 0) ||
+          any(fpr_upper < 0)) {
+        cat("There is evidence that model does not satisfy equalized odds.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy the
+          equalized odds criterion.\n")
+      }
+    }
   }else{
 
     # Structure the results as a dataframe
@@ -353,16 +366,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TR
     )
   }
 
-  # Print summary message if desired
-  if (message) {
-    if (any(fnr_lower > 0) || any(fnr_upper < 0) || any(fpr_lower > 0) ||
-      any(fpr_upper < 0)) {
-      cat("There is evidence that model does not satisfy equalized odds.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy the
-          equalized odds criterion.\n")
-    }
-  }
+
 
   return(results_df)
 }
@@ -382,7 +386,8 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TR
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #'   - PPR_Group1: Positive Prediction Rate for the first group
 #'   - PPR_Group2: Positive Prediction Rate for the second group
@@ -486,6 +491,16 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
       paste0("Group", sort(unique(data[[group]]))[[2]]),
       "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
     )
+
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that model does not satisfy statistical parity.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            statistical parity.\n")
+      }
+    }
   }else{
     # Structure the results as a dataframe
     results_df <- data.frame(
@@ -503,16 +518,6 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
       "Difference",
       "Ratio"
       )
-  }
-
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that model does not satisfy statistical parity.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            statistical parity.\n")
-    }
   }
 
   return(results_df)
@@ -541,7 +546,8 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #'  - Conditions: The conditions used to calculate the conditional PPR
 #'  - PPR_Group1: Positive Prediction Rate for the first group
@@ -660,7 +666,8 @@ eval_cond_stats_parity <- function(data, outcome, group,
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #'  - PPV_Group1: Positive Predictive Value for the first group
 #'  - PPV_Group2: Positive Predictive Value for the second group
@@ -764,6 +771,14 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
       "Ratio",
       "95% Ratio CI"
     )
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that model does not satisfy positive predictive parity.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy positive predictive parity.\n")
+      }
+    }
   }else{
     result_df <- data.frame(
       "Positive Predictive Value",
@@ -781,14 +796,6 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
       )
   }
 
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that model does not satisfy positive predictive parity.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy positive predictive parity.\n")
-    }
-  }
 
   return(result_df)
 }
@@ -812,7 +819,8 @@ eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #'  - NPV_Group1: Negative Predictive Value for the first group
 #'  - NPV_Group2: Negative Predictive Value for the second group
@@ -916,6 +924,16 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
     "Ratio",
     "95% Ratio CI"
   )
+
+
+  if (message) {
+    if (lower_ci > 0 || upper_ci < 0) {
+      cat("There is evidence that model does not satisfy negative predictive parity.\n")
+    } else {
+      cat("There is not enough evidence that the model does not satisfy negative predictive parity.\n")
+    }
+  }
+
   }else{
     result_df <- data.frame(
       "Negative Predictive Value",
@@ -933,14 +951,6 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
       "Ratio"
       )
 
-  }
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that model does not satisfy negative predictive parity.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy negative predictive parity.\n")
-    }
   }
 
   return(result_df)
@@ -964,7 +974,8 @@ eval_neg_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, conf
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - FPR_Group1: False Positive Rate for the first group
 #' - FPR_Group2: False Positive Rate for the second group
@@ -1067,6 +1078,17 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
       "Ratio",
       "95% Ratio CI"
     )
+
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that model does not satisfy predictive
+            equality.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            predictive equality.\n")
+      }
+    }
   }else{
     result_df <- data.frame(
       "False Positive Rate",
@@ -1083,17 +1105,6 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
       "Ratio"
     )
 
-  }
-
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that model does not satisfy predictive
-            equality.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            predictive equality.\n")
-    }
   }
 
   return(result_df)
@@ -1115,7 +1126,8 @@ eval_pred_equality <- function(data, outcome, group, probs, cutoff = 0.5, confin
 #' @param bootstraps Number of bootstrap samples, default is 2500
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - PPV_Group1: Positive Predictive Value for the first group
 #' - PPV_Group2: Positive Predictive Value for the second group
@@ -1237,6 +1249,18 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
       "Difference",
       "95% CI"
     )
+
+
+    if (message) {
+      if (ppv_lower_ci > 0 || ppv_upper_ci < 0 || npv_lower_ci > 0 ||
+          npv_upper_ci < 0) {
+        cat("There is evidence that the model does not satisfy
+            conditional use accuracy equality.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            conditional use accuracy equality.\n")
+      }
+    }
   }else{
     result_df <- data.frame(
       Metric = c("PPV; NPV"),
@@ -1251,18 +1275,6 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
       paste0("Group", sort(unique(data[[group]]))[2]),
       "Difference"
       )
-  }
-
-
-  if (message) {
-    if (ppv_lower_ci > 0 || ppv_upper_ci < 0 || npv_lower_ci > 0 ||
-      npv_upper_ci < 0) {
-      cat("There is evidence that the model does not satisfy
-            conditional use accuracy equality.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            conditional use accuracy equality.\n")
-    }
   }
 
   return(result_df)
@@ -1283,7 +1295,8 @@ eval_cond_acc_equality <- function(data, outcome, group, probs, cutoff = 0.5, co
 #' @param bootstraps Number of bootstraps to use for confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - Accuracy for Group 1
 #' - Accuracy for Group 2
@@ -1388,6 +1401,17 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
       "Ratio",
       "95% Ratio CI"
     )
+
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that the model does not satisfy
+            accuracy parity.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            accuracy parity.\n")
+      }
+    }
   }else{
     result_df <- data.frame(
       "Accuracy",
@@ -1406,16 +1430,6 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
     )
   }
 
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that the model does not satisfy
-            accuracy parity.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            accuracy parity.\n")
-    }
-  }
   return(result_df)
 }
 
@@ -1434,7 +1448,8 @@ eval_acc_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint =
 #' @param confint Logical indicating whether to calculate confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - Brier Score for Group 1
 #' - Brier Score for Group 2
@@ -1538,6 +1553,16 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
       "95% Ratio CI"
     )
 
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that the model does not satisfy
+            Brier Score parity.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            Brier Score parity.\n")
+      }
+    }
   }else{
 
     result_df <- data.frame(
@@ -1555,16 +1580,6 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
       "Difference",
       "Ratio"
     )
-  }
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that the model does not satisfy
-            Brier Score parity.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            Brier Score parity.\n")
-    }
   }
 
   return(result_df)
@@ -1587,7 +1602,8 @@ eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
 #' @param bootstraps Number of bootstraps to use for confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - False Negative / False Positive ratio for Group 1
 #' - False Negative / False Positive ratio for Group 2
@@ -1699,6 +1715,16 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
       "Ratio",
       "95% Ratio CI"
     )
+
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is evidence that the model does not satisfy
+            treatment equality.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            treatment equality.\n")
+      }
+    }
   }else{
     result_df <- data.frame(
       "(False Negative)/(False Positive) Ratio",
@@ -1718,16 +1744,6 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
   }
 
 
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is evidence that the model does not satisfy
-            treatment equality.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            treatment equality.\n")
-    }
-  }
-
   return(result_df)
 }
 
@@ -1746,7 +1762,8 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
 #' @param bootstraps Number of bootstraps to use for confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - Average predicted probability for Group 1
 #' - Average predicted probability for Group 2
@@ -1899,7 +1916,8 @@ eval_pos_class_bal <- function(data, outcome, group, probs, confint = TRUE,
 #' @param bootstraps Number of bootstraps to use for confidence intervals
 #' @param alpha The 1 - significance level for the confidence interval, default is 0.05
 #' @param digits Number of digits to round the results to, default is 2
-#' @param message Whether to print the results, default is TRUE
+#' @param message Logical; if TRUE (default), prints a textual summary of the
+#' fairness evaluation. Only works if `confint` is TRUE.
 #' @return A list containing the following elements:
 #' - Average predicted probability for Group 1
 #' - Average predicted probability for Group 2
@@ -2005,6 +2023,15 @@ eval_neg_class_bal <- function(data, outcome, group, probs, confint = TRUE,
       "95% Ratio CI"
     )
 
+    if (message) {
+      if (lower_ci > 0 || upper_ci < 0) {
+        cat("There is enough evidence that the model does not satisfy
+            balance for negative class.\n")
+      } else {
+        cat("There is not enough evidence that the model does not satisfy
+            balance for negative class.\n")
+      }
+    }
   }else{
     result_df <- data.frame(
       "Avg. Predicted Prob.",
@@ -2021,16 +2048,6 @@ eval_neg_class_bal <- function(data, outcome, group, probs, confint = TRUE,
       "Difference",
       "Ratio"
     )
-  }
-
-  if (message) {
-    if (lower_ci > 0 || upper_ci < 0) {
-      cat("There is enough evidence that the model does not satisfy
-            balance for negative class.\n")
-    } else {
-      cat("There is not enough evidence that the model does not satisfy
-            balance for negative class.\n")
-    }
   }
 
   return(result_df)

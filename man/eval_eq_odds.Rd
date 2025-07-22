@@ -45,7 +45,7 @@ interval; defaults to 0.05.}
 2.}
 
 \item{message}{Logical; if TRUE (default), prints a textual summary of the
-fairness evaluation.}
+fairness evaluation. Only works if \code{confint} is TRUE.}
 }
 \value{
 A data frame summarizing group disparities in both FNR and FPR with

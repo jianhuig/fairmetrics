@@ -108,7 +108,7 @@ test_that('eval_eq_opp CI outcome test', {
                              probs = "y_pred",
                              digits = 1,
                              confint = TRUE,
-                             message = FALSE)
+                             message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
   list("[NaN, NaN]", "[NA, NA]"))
@@ -129,7 +129,7 @@ test_that('eval_pred_equality ratio+diff outcome test', {
                           probs = "y_pred",
                           digits = 1,
                           confint = TRUE,
-                          message = FALSE)
+                          message = TRUE)
     list(result$Ratio, result$Difference)
   },
   list(1,0))
@@ -148,7 +148,7 @@ test_that('eval_pred_equality CI outcome test', {
                           probs = "y_pred",
                           digits = 1,
                           confint = TRUE,
-                          message = FALSE)
+                          message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
   list("[NA, NA]", "[NA, NA]"))
@@ -169,7 +169,7 @@ test_that('eval_stats_parity ratio+diff outcome test', {
                                  probs = "y_pred",
                                  digits = 1,
                                  confint = TRUE,
-                                 message = FALSE)
+                                 message = TRUE)
     list(result$Ratio, result$Difference)
   },
   list(1,0))
@@ -188,7 +188,7 @@ test_that('eval_stats_parity CI outcome test', {
                                  probs = "y_pred",
                                  digits = 1,
                                  confint = TRUE,
-                                 message = FALSE)
+                                 message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
   list("[1, 1]", "[0, 0]"))
@@ -208,7 +208,7 @@ test_that('eval_treatment_equality ratio+diff outcome test', {
                                 probs = "y_pred",
                                 digits = 1,
                                 confint = TRUE,
-                                message = FALSE)
+                                message = TRUE)
     list(result$Ratio, result$Difference)
   },
   list(NaN,0))
@@ -227,7 +227,7 @@ test_that('eval_treatment_equality CI outcome test', {
                                 probs = "y_pred",
                                 digits = 1,
                                 confint = TRUE,
-                                message = FALSE)
+                                message = TRUE)
     list(result$`95% Ratio CI`, result$`95% Diff CI`)
   },
   list("[NaN, NaN]", "[0, 0]"))

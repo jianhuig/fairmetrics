@@ -45,7 +45,7 @@ confidence interval; defaults to 0.05.}
 results to; defaults to 2.}
 
 \item{message}{Logical; if TRUE (default), prints a textual summary of the
-fairness evaluation.}
+fairness evaluation. Only works if \code{confint} is TRUE.}
 }
 \value{
 A data frame summarizing FNR-based group disparity metrics with the

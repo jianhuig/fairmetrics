@@ -45,7 +45,8 @@ the sign of the condition and the value to threshold the continuous variable
 
 \item{alpha}{The 1 - significance level for the confidence interval, default is 0.05}
 
-\item{message}{Whether to print the results, default is TRUE}
+\item{message}{Logical; if TRUE (default), prints a textual summary of the
+fairness evaluation. Only works if \code{confint} is TRUE.}
 
 \item{digits}{Number of digits to round the results to, default is 2}
 }
