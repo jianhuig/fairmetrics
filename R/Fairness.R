@@ -334,7 +334,7 @@ eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TR
       "Metric",
       paste0("Group ", sort(unique(data[[group]]))[[1]]),
       paste0("Group ", sort(unique(data[[group]]))[[2]]),
-      "Difference", "95% CI", "Ratio", "95% CI"
+      "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
     )
 
     # Print summary message if desired
