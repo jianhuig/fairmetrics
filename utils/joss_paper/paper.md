@@ -12,6 +12,9 @@ authors:
   - name: Jianhui Gao
     orcid: 0000-0003-0915-1473
     affiliation: 1
+  - name: Benson Chou
+    orcid: 0009-0007-0265-033X
+    affiliation: 1
   - name: Jessica Gronsbell
     orcid: 0000-0002-5360-5869
     affiliation: 1
