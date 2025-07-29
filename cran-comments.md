@@ -4,7 +4,9 @@ The code here has been reformatted and edited for release with a associated arti
 
 ## Version 1.0.5
 
-* Separated exported functions into separate .R files
+* Separated exported functions into separate .R files.
+* Rmoved Helper.R as the functions contained are not used for function operations. 
+
 
 ## Version 1.0.4
 
