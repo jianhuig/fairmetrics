@@ -93,18 +93,6 @@ get_fairness_metrics <- function(data,
                                  bootstraps = 2500,
                                  alpha = 0.05,
                                  digits = 2) {
-  stats_parity <- eval_stats_parity(
-    data = data,
-    outcome = outcome,
-    group = group,
-    probs = probs,
-    confint = confint,
-    cutoff = cutoff,
-    bootstraps = bootstraps,
-    alpha = alpha,
-    digits = digits,
-    message = FALSE
-  )
 
   if (!(is.null(group2) & is.null(condition))) {
     if (!group2 %in% names(data)) {
@@ -125,6 +113,19 @@ get_fairness_metrics <- function(data,
       message = FALSE
     )
   }
+
+  stats_parity <- eval_stats_parity(
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    confint = confint,
+    cutoff = cutoff,
+    bootstraps = bootstraps,
+    alpha = alpha,
+    digits = digits,
+    message = FALSE
+  )
   eq_opp <- eval_eq_opp(
     data = data,
     outcome = outcome,
