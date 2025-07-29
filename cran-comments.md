@@ -2,6 +2,10 @@
 
 The code here has been reformatted and edited for release with a associated article in the Journal of Open Source Software. I am in contact with the Journal Editors and they will be reviewing this reviewing this version of the package.
 
+## Version 1.0.5
+
+* Separated exported functions into separate .R files
+
 ## Version 1.0.4
 
 * Fixed LaTeX math issue in `eval_pos_class_bal` and `eval_neg_class_bal`
