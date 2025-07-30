@@ -6,6 +6,7 @@ The code here has been reformatted and edited for release with a associated arti
 
 * Separated exported functions into separate .R files.
 * Rmoved Helper.R as the functions contained are not used for function operations. 
+* Refactored `get_fairness_metrics` to only preform the bootstrap once (as opposed to repeating multiple times for each metric) improving speed. 
 
 
 ## Version 1.0.4
