@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Fairness Evaluation Metrics with Confidence Intervals • fairmetrics</title>
+<title>Fairness Evaluation Metrics with Confidence Intervals for Binary Sensitive Attributes • fairmetrics</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Fairness Evaluation Metrics with Confidence Intervals">
-<meta name="description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare. It is based on the overview of fairness in machine learning written by Gao et al (2024) &lt;doi:10.48550/arXiv.2406.09307&gt;.">
-<meta property="og:description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare. It is based on the overview of fairness in machine learning written by Gao et al (2024) &lt;doi:10.48550/arXiv.2406.09307&gt;.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Fairness Evaluation Metrics with Confidence Intervals for Binary Sensitive Attributes">
+<meta name="description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary sensitive attributes. It is based on the overview of fairness in machine learning written by Gao et al (2024) &lt;doi:10.48550/arXiv.2406.09307&gt;.">
+<meta property="og:description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary sensitive attributes. It is based on the overview of fairness in machine learning written by Gao et al (2024) &lt;doi:10.48550/arXiv.2406.09307&gt;.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -46,11 +46,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="fairmetrics-fairness-evaluation-metrics-with-confidence-intervals-">fairmetrics: Fairness evaluation metrics with confidence intervals <a href="https://github.com/jianhuig/fairmetrics" class="external-link"><img src="https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png" align="right" height="300"></a>
-<a class="anchor" aria-label="anchor" href="#fairmetrics-fairness-evaluation-metrics-with-confidence-intervals-"></a>
+<div class="page-header"><h1 id="fairmetrics-fairness-evaluation-metrics-with-confidence-intervals-for-binary-sensitive-attributes-">fairmetrics: Fairness evaluation metrics with confidence intervals for binary sensitive attributes <a href="https://github.com/jianhuig/fairmetrics" class="external-link"><img src="https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png" align="right" height="300"></a>
+<a class="anchor" aria-label="anchor" href="#fairmetrics-fairness-evaluation-metrics-with-confidence-intervals-for-binary-sensitive-attributes-"></a>
 </h1></div>
 <p><a href="https://www.r-pkg.org/badges/version/fairmetrics" class="external-link"><img src="https://www.r-pkg.org/badges/version/fairmetrics" alt="CRAN_Status_Badge"></a> <a href="http://choosealicense.com/licenses/mit/" class="external-link"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="License"></a> <a href="https://cran.rstudio.com/web/packages/fairmetrics/index.html" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/fairmetrics" alt="Downloads"></a> <a href="https://shinyus.ipub.com/cranview/" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/fairmetrics" alt="total"></a> <a href="https://arxiv.org/abs/2406.09307" class="external-link"><img src="https://img.shields.io/badge/arXiv-2406.09307-b31b1b.svg" alt="arXiv"></a></p>
-<p>A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare. It is based on the overview of fairness in machine learning written by Gao et al (2024) (<a href="https://arxiv.org/abs/2406.09307" class="external-link uri">https://arxiv.org/abs/2406.09307</a>).</p>
+<p>A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary sensitive attributes. It is based on the overview of fairness in machine learning written by Gao et al (2024) (<a href="https://arxiv.org/abs/2406.09307" class="external-link uri">https://arxiv.org/abs/2406.09307</a>).</p>
 <ul>
 <li>
 <a href="https://jianhuig.github.io/fairmetrics/articles/fairmetrics.html" class="external-link">Link</a> to online tutorial.</li>
@@ -72,16 +72,64 @@
 </h2>
 <p>To cite package ‘fairmetrics’ in publications use:</p>
 <blockquote>
-<p>Gao J, Smith B, Chou B, Gronsbell J (2025). <em>fairmetrics: Fairness evaluation metrics with confidence intervals</em>. R package version 1.0.0, <a href="https://jianhuig.github.io/fairmetrics/" class="external-link uri">https://jianhuig.github.io/fairmetrics/</a>.</p>
+<p>Gao J, Smith B, Chou B, Gronsbell J (2025). <em>fairmetrics: Fairness Evaluation Metrics with Confidence Intervals</em>. <a href="https://github.com/jianhuig/fairmetrics" class="external-link uri">https://github.com/jianhuig/fairmetrics</a>.</p>
+</blockquote>
+<blockquote>
+<p>Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation. arXiv:2506.06243.</p>
+</blockquote>
+<blockquote>
+<p>Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307.</p>
 </blockquote>
 <p>A BibTeX entry for LaTeX users is</p>
-<pre><code>@Manual{,
-    title = {fairmetrics: Fairness evaluation metrics with confidence intervals},
-    author = {Jianhui Gao and Benjamin Smith and Benson Chou and Jessica Gronsbell},
-    year = {2025},
-    note = {R package version 1.0.0},
-    url = {https://jianhuig.github.io/fairmetrics/},
-  }</code></pre>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/bibentry.html" class="external-link">bibentry</a></span><span class="op">(</span></span>
+<span>  bibtype <span class="op">=</span> <span class="st">"Manual"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Sensitive Attributes"</span>,</span>
+<span>  author <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Jianhui"</span>, <span class="st">"Gao"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Benjamin"</span>, <span class="st">"Smith"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Benson"</span>, <span class="st">"Chou"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Jessica"</span>, <span class="st">"Gronsbell"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  year <span class="op">=</span> <span class="st">"2025"</span>,</span>
+<span>  url <span class="op">=</span> <span class="st">"https://github.com/jianhuig/fairmetrics"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/bibentry.html" class="external-link">bibentry</a></span><span class="op">(</span></span>
+<span>    bibtype <span class="op">=</span> <span class="st">"Misc"</span>,</span>
+<span>    key <span class="op">=</span> <span class="st">"Smith_Gao_Gronsbell_2025"</span>,</span>
+<span>    title <span class="op">=</span> <span class="st">"fairmetrics: An R package for group fairness evaluation"</span>,</span>
+<span>    author <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Benjamin"</span>, <span class="st">"Smith"</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Jianhui"</span>, <span class="st">"Gao"</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Jessica"</span>, <span class="st">"Gronsbell"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    year <span class="op">=</span> <span class="st">"2025"</span>,</span>
+<span>    month <span class="op">=</span> <span class="st">"jun"</span>,</span>
+<span>    note <span class="op">=</span> <span class="st">"arXiv:2506.06243"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"https://arxiv.org/abs/2506.06243"</span>,</span>
+<span>    textVersion <span class="op">=</span> <span class="st">"Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation. arXiv:2506.06243."</span></span>
+<span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/bibentry.html" class="external-link">bibentry</a></span><span class="op">(</span></span>
+<span>  bibtype <span class="op">=</span> <span class="st">"Misc"</span>,</span>
+<span>  key <span class="op">=</span> <span class="st">"Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"What is Fair? Defining Fairness in Machine Learning for Health"</span>,</span>
+<span>  author <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Jianhui"</span>, <span class="st">"Gao"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Benson"</span>, <span class="st">"Chou"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Zachary R."</span>, <span class="st">"McCaw"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Hilary"</span>, <span class="st">"Thurston"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Paul"</span>, <span class="st">"Varghese"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Chuan"</span>, <span class="st">"Hong"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Jessica"</span>, <span class="st">"Gronsbell"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  year <span class="op">=</span> <span class="st">"2024"</span>,</span>
+<span>  month <span class="op">=</span> <span class="st">"jun"</span>,</span>
+<span>  note <span class="op">=</span> <span class="st">"arXiv:2406.09307"</span>,</span>
+<span>  url <span class="op">=</span> <span class="st">"https://arxiv.org/abs/2406.09307"</span>,</span>
+<span>  textVersion <span class="op">=</span> <span class="st">"Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307."</span></span>
+<span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="similar-works">Similar Works<a class="anchor" aria-label="anchor" href="#similar-works"></a>
