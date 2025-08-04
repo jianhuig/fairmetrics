@@ -24,18 +24,18 @@ affiliations:
 date: "2025-06-10"
 bibliography: paper.bib
 output:
-  rticles::joss_article:
-    keep_tex: true
-  # md_document:
-  #    keep_tex: true
-  #    preserve_yaml: TRUE
-  #    variant: "markdown_strict"
+  # rticles::joss_article:
+  #   keep_tex: true
+  md_document:
+     #keep_tex: true
+     preserve_yaml: TRUE
+     variant: "markdown_strict"
 journal: JOSS
 ---
 
 # Summary
 
-Fairness is a growing area of machine learning (ML) that focuses on ensuring that models do not produce systematically biased outcomes across groups defined by protected attributes, such as race, gender, or age. The `fairmetrics` R package provides a user-friendly framework for rigorously evaluating group-based fairness criteria, including independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity). The package provides both point and interval estimates for a variety of commonly used criteria. `fairmetrics` also includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical] to demonstrate its use. 
+Fairness is a growing area of machine learning (ML) that focuses on ensuring that models do not produce systematically biased outcomes across groups defined by protected attributes, such as race, gender, or age. The `fairmetrics` R package provides a user-friendly framework for rigorously evaluating group-based fairness criteria, including independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity) for binary protected attributes. The package provides both point and interval estimates for a variety of commonly used criteria. `fairmetrics` also includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical] to demonstrate its use. 
 
 
 # Statement of Need
@@ -62,7 +62,7 @@ The input required to evaluate model fairness with the `fairmetrics` package is 
 
 A simple example of how to use the `fairmetrics` package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the Indwelling Arterial Catheter (IAC) Clinical dataset, from the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical; @raffa2016data]. 
 
-While the choice of fairness metric used is context dependent, we show all criteria available with the `get_fairness_metrics()` function for illustrative purposes. In this example, we evaluate the model's fairness with respect to the protected attribute `gender`. For conditional statistical parity, we condition on age greater than 60 years. The model is trained on a subset of the data and the predictions are made and evaluated on a test set.  A statistically significant difference across groups at a given level of significance is indicated when the confidence interval for a difference-based metric does not include zero or when the interval for a ratio-based metric does not include one.
+While the choice of fairness metric used is context dependent, we show all criteria available with the `get_fairness_metrics()` function for illustrative purposes. In this example, we evaluate the model's fairness with respect to the binary protected attribute `gender`. For conditional statistical parity, we condition on age greater than 60 years. The model is trained on a subset of the data and the predictions are made and evaluated on a test set.  A statistically significant difference across groups at a given level of significance is indicated when the confidence interval for a difference-based metric does not include zero or when the interval for a ratio-based metric does not include one.
 
 
 ```r
@@ -83,36 +83,35 @@ get_fairness_metrics(
 )
 
 $performance
-                                    Metric GroupFemale GroupMale
-1                 Positive Prediction Rate        0.18      0.09
-2                 Positive Prediction Rate        0.35      0.24
-3                      False Negative Rate        0.36      0.59
-4                      False Positive Rate        0.08      0.03
-5                     Avg. Predicted Prob.        0.47      0.37
-6                     Avg. Predicted Prob.        0.16      0.11
-7                Positive Predictive Value        0.62      0.67
-8                Negative Predictive Value        0.93      0.91
-9                              Brier Score        0.09      0.08
-10                                Accuracy        0.87      0.89
-11 (False Negative)/(False Positive) Ratio        0.93      2.89
+                                    Metric Group1 Group2
+1                 Positive Prediction Rate   0.17   0.08
+2     Conditional Positive Prediction Rate   0.34   0.21
+3                      False Negative Rate   0.38   0.62
+4                      False Positive Rate   0.08   0.03
+5            Avg. Predicted Positive Prob.   0.46   0.37
+6            Avg. Predicted Negative Prob.   0.15   0.10
+7                Positive Predictive Value   0.62   0.66
+8                Negative Predictive Value   0.92   0.90
+9                              Brier Score   0.09   0.08
+10                                Accuracy   0.87   0.88
+11 (False Negative)/(False Positive) Ratio   1.03   3.24
 
 $fairness
-                           Metric Difference    95% Diff CI Ratio 95% Ratio CI
-1              Statistical Parity       0.08   [0.04, 0.12]  2.00 [1.41, 2.83]
-2  Conditional Statistical Parity       0.10   [0.02, 0.18]  1.43 [1.05, 1.96]
-3               Equal Opportunity      -0.21 [-0.36, -0.06]  0.64  [0.45, 0.9]
-4             Predictive Equality       0.04   [0.01, 0.07]  2.33  [1.13, 4.8]
+                           Metric Difference        Diff_CI Ratio     Ratio_CI
+1              Statistical Parity       0.09   [0.05, 0.13]  2.12 [1.48, 3.05]
+2  Conditional Statistical Parity       0.13   [0.05, 0.21]  1.62 [1.17, 2.24]
+3               Equal Opportunity      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]
+4             Predictive Equality       0.05   [0.02, 0.08]  2.67 [1.38, 5.15]
 5      Balance for Positive Class       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]
 6      Balance for Negative Class       0.05   [0.03, 0.07]  1.50 [1.29, 1.75]
-7      Positive Predictive Parity      -0.06  [-0.23, 0.11]  0.92 [0.71, 1.18]
-8      Negative Predictive Parity       0.01  [-0.15, 0.17]  1.01 [0.79, 1.29]
+7      Positive Predictive Parity      -0.04  [-0.21, 0.13]  0.94 [0.71, 1.24]
+8      Negative Predictive Parity       0.02  [-0.02, 0.06]  1.02 [0.98, 1.07]
 9              Brier Score Parity       0.01  [-0.01, 0.03]  1.12 [0.89, 1.43]
-10        Overall Accuracy Parity      -0.01  [-0.05, 0.03]  0.99 [0.95, 1.03]
-11             Treatment Equality      -2.28  [-4.72, 0.16]  0.33 [0.15, 0.73]
+10        Overall Accuracy Parity      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]
+11             Treatment Equality      -2.21  [-4.44, 0.02]  0.32  [0.14, 0.7]
 ```
 
-Users can also compute individual metrics using functions like `eval_eq_opp()` to 
-test specific fairness conditions. Full usage examples are provided in the package documentation.
+Users can also compute individual metrics using functions like `eval_eq_opp()` to test specific fairness conditions. Full usage examples are provided in the package documentation.
 
 # Related Work
 

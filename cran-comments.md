@@ -7,6 +7,7 @@ The code here has been reformatted and edited for release with a associated arti
 * Separated exported functions into separate .R files.
 * Rmoved Helper.R as the functions contained are not used for function operations. 
 * Refactored `get_fairness_metrics` to only preform the bootstrap once (as opposed to repeating multiple times for each metric) improving speed. 
+* Emphasising in DESCRIPTION and README.md file (on Github) that the package scope is specifically for evaluating fairness of statistical/ML models accross binary protected attributes.
 
 
 ## Version 1.0.4
