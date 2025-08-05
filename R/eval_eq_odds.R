@@ -2,17 +2,16 @@
 #'
 #' This function evaluates whether a predictive model satisfies the Equalized
 #' Odds criterion by comparing both False Negative Rates (FNR) and False
-#' Positive Rates (FPR) across two groups defined by a binary sensitive
+#' Positive Rates (FPR) across two groups defined by a binary protected
 #' attribute. It reports the rate for each group, their differences, ratios, and
 #' bootstrap-based confidence regions. A Bonferroni-corrected union test is used
 #' to test whether the model violates the Equalized Odds criterion.
 #'
 #' @param data A data frame containing the true binary outcomes, predicted
-#' probabilities, and sensitive group membership.
+#' probabilities, and binary protected attribute.
 #' @param outcome A string specifying the name of the binary outcome variable in
 #' \code{data}.
-#' @param group A string specifying the name of the binary sensitive attribute
-#' variable (e.g., race, gender) used to define the comparison groups.
+#' @param group Name of the binary protected attribute. Must consist of only two groups.
 #' @param probs A string specifying the name of the variable containing
 #' predicted probabilities or risk scores.
 #' @param cutoff A numeric value used to threshold predicted probabilities into
@@ -64,7 +63,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Equalized Odds
@@ -80,10 +79,14 @@
 eval_eq_odds <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                          bootstraps = 2500, alpha = 0.05, digits = 2,
                          message = TRUE) {
-  # Check if outcome is binary
+  # Check if outcome and groups are binary
   unique_values <- unique(data[[outcome]])
+  groups <- unique(data[[group]])
   if (!(length(unique_values) == 2 && all(unique_values %in% c(0, 1)))) {
-    stop("Outcome must be binary (containing only 0 and 1).")
+    stop("`outcome` must be binary (containing only 0 and 1).")
+  }
+  if (!(length(groups) == 2)) {
+    stop("`group` argument must only consist of two groups (i.e. `length(unique(data[[group]])) == 2`")
   }
 
   fnr <- 1 - get_tpr(

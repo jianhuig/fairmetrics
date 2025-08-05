@@ -19,13 +19,12 @@ eval_eq_opp(
 }
 \arguments{
 \item{data}{A data frame containing the true binary outcomes, predicted
-probabilities, and sensitive group membership.}
+probabilities, and binary protected attribute.}
 
 \item{outcome}{A string specifying the name of the binary outcome variable in
 \code{data}.}
 
-\item{group}{A string specifying the name of the sensitive attribute variable
-(e.g., race, gender).}
+\item{group}{group Name of the binary protected attribute. Must consist of only two groups.}
 
 \item{probs}{A string specifying the name of the variable containing
 predicted probabilities or risk scores.}
@@ -64,7 +63,7 @@ following columns:
 \description{
 This function evaluates the fairness of a predictive model with respect to
 the Equal Opportunity criterion, which requires that the False Negative Rate
-(FNR) be comparable across groups defined by a sensitive attribute. The
+(FNR) be comparable across groups defined by a binary protected attribute. The
 function quantifies disparities in FNR between two groups and provides both
 the absolute difference and ratio, along with confidence intervals obtained
 via bootstrapping.
@@ -92,7 +91,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Equal Opportunity Compliance

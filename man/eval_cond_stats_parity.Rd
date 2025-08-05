@@ -21,11 +21,11 @@ eval_cond_stats_parity(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+binary protected attribute}
 
 \item{outcome}{Name of the outcome variable, it must be binary}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{Name of the binary protected attribute. Must consist of only two groups.}
 
 \item{group2}{Name of the group to condition on}
 
@@ -68,7 +68,7 @@ Rate
 }
 }
 \description{
-This function evaluates \emph{conditional statistical parity}, which measures fairness by comparing positive prediction rates across sensitive groups within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
+This function evaluates \emph{conditional statistical parity}, which measures fairness by comparing positive prediction rates across two groups defined by a binary protected attribute within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
 to a specified subset of the population, defined by a conditioning variable.
 }
 \details{
@@ -94,7 +94,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Conditional Statistical Parity

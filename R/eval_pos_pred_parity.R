@@ -1,14 +1,14 @@
 #' Examine Positive Predictive Parity of a Model
 #'
 #' This function evaluates *positive predictive predictive parity*, a key fairness criterion that
-#' compares the *Positive Predictive Value (PPV)* between groups defined by a sensitive attribute.
+#' compares the *Positive Predictive Value (PPV)* between groups defined by a binary protected attribute.
 #' In other words, it assesses whether, among individuals predicted to be positive,
 #' the probability of being truly positive is equal across subgroups.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' binary protected attribute
 #' @param outcome Name of the outcome variable, it must be binary
-#' @param group Name of the sensitive attribute
+#' @param group Name of the protected attribute. Must consist of only two groups.
 #' @param probs Name of the predicted outcome variable
 #' @param cutoff Threshold for the predicted outcome, default is 0.5
 #' @param confint Whether to compute 95% confidence interval, default is TRUE
@@ -50,7 +50,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Positive Predictive Parity
@@ -68,11 +68,16 @@
 eval_pos_pred_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                                  bootstraps = 2500, alpha = 0.05,
                                  digits = 2, message = TRUE) {
-  # Check if outcome is binary
-  unique_values <- sort(unique(data[[outcome]]))
+  # Check if outcome and groups are binary
+  unique_values <- unique(data[[outcome]])
+  groups <- unique(data[[group]])
   if (!(length(unique_values) == 2 && all(unique_values %in% c(0, 1)))) {
-    stop("Outcome must be binary (containing only 0 and 1).")
+    stop("`outcome` must be binary (containing only 0 and 1).")
   }
+  if (!(length(groups) == 2)) {
+    stop("`group` argument must only consist of two groups (i.e. `length(unique(data[[group]])) == 2`")
+  }
+
 
   ppv <- get_ppv(
     data = data, outcome = outcome, group = group, probs = probs,

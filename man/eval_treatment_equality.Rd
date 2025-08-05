@@ -19,11 +19,11 @@ eval_treatment_equality(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+binary protected attribute}
 
 \item{outcome}{Name of the outcome variable}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{group Name of the binary protected attribute. Must consist of only two groups.}
 
 \item{probs}{Predicted probabilities}
 
@@ -56,7 +56,7 @@ confidence interval for the ratio in False Negative / False Positive ratio
 }
 \description{
 This function evaluates \emph{Treatment Equality}, a fairness criterion that assesses whether the
-ratio of false negatives to false positives is similar across groups (e.g., based on gender or race).
+ratio of false negatives to false positives is similar across groups defined by a binary protected attribute.
 Treatment Equality ensures that the model does not disproportionately favor or disadvantage any group
 in terms of the relative frequency of missed detections (false negatives) versus false alarms (false positives).
 }
@@ -81,7 +81,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 
 # Evaluate Treatment Equality
 eval_treatment_equality(

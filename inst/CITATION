@@ -1,6 +1,6 @@
 bibentry(
   bibtype = "Manual",
-  title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Sensitive Attributes",
+  title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes",
   author = c(
     person("Jianhui", "Gao"),
     person("Benjamin", "Smith"),

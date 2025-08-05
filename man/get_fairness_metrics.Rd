@@ -23,7 +23,7 @@ get_fairness_metrics(
 
 \item{outcome}{The name of the column containing the true binary outcome.}
 
-\item{group}{The name of the column representing the sensitive attribute (e.g., race, gender).}
+\item{group}{The name of the column representing the binary protected attribute (e.g., race, gender).}
 
 \item{group2}{Define if conditional statistical parity is desired. Name of a secondary group variable used for conditional fairness analysis.}
 
@@ -53,7 +53,7 @@ A list containing:
 }
 }
 \description{
-Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a sensitive attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
+Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a binary protected attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
 }
 \details{
 The results are returned as a list of two data frames:
@@ -99,7 +99,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Get Fairness Metrics

@@ -1,13 +1,12 @@
 #' Examine Balance for Negative Class of a Model
 #'
 #' This function evaluates *Balance for the Negative Class*, a fairness criterion
-#' that checks whether the model assigns similar predicted probabilities across groups
-#' among individuals whose true outcome is negative (i.e. \eqn{Y = 0}).
+#' that checks whether the model assigns similar predicted probabilities among individuals whose true outcome is negative (i.e. \eqn{Y = 0}) accross groups defined by a binary protected attribute.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' binary protected attribute attribute
 #' @param outcome Name of the outcome variable
-#' @param group Name of the sensitive attribute
+#' @param group Name of the protected attribute. Must consist of only two groups.
 #' @param probs Predicted probabilities
 #' @param confint Logical indicating whether to calculate confidence intervals
 #' @param bootstraps Number of bootstraps to use for confidence intervals
@@ -46,7 +45,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #'
 #' # Evaluate Balance for Negative Class
 #' eval_neg_class_bal(
@@ -62,10 +61,14 @@
 eval_neg_class_bal <- function(data, outcome, group, probs, confint = TRUE,
                                alpha = 0.05, bootstraps = 2500,
                                digits = 2, message = TRUE) {
-  # Check if outcome is binary
+  # Check if outcome and groups are binary
   unique_values <- unique(data[[outcome]])
+  groups <- unique(data[[group]])
   if (!(length(unique_values) == 2 && all(unique_values %in% c(0, 1)))) {
-    stop("Outcome must be binary (containing only 0 and 1).")
+    stop("`outcome` must be binary (containing only 0 and 1).")
+  }
+  if (!(length(groups) == 2)) {
+    stop("`group` argument must only consist of two groups (i.e. `length(unique(data[[group]])) == 2`")
   }
 
   neg_data <- data[data[[outcome]] == 0, ]

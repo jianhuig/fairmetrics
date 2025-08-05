@@ -1,4 +1,4 @@
-# fairmetrics: Fairness evaluation metrics with confidence intervals for binary sensitive attributes <a href='https://github.com/jianhuig/fairmetrics'><img src='https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png' align="right" height="300" /></a>
+# fairmetrics: Fairness evaluation metrics with confidence intervals for binary protected attributes <a href='https://github.com/jianhuig/fairmetrics'><img src='https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png' align="right" height="300" /></a>
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/fairmetrics)](https://www.r-pkg.org/badges/version/fairmetrics)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/)
@@ -44,7 +44,7 @@ A BibTeX entry for LaTeX users is
 ```
 bibentry(
   bibtype = "Manual",
-  title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Sensitive Attributes",
+  title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes",
   author = c(
     person("Jianhui", "Gao"),
     person("Benjamin", "Smith"),

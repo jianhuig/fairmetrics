@@ -1,14 +1,14 @@
 #' Examine Conditional Statistical Parity of a Model
 #'
-#' This function evaluates *conditional statistical parity*, which measures fairness by comparing positive prediction rates across sensitive groups within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
+#' This function evaluates *conditional statistical parity*, which measures fairness by comparing positive prediction rates across two groups defined by a binary protected attribute within a defined subgroup of the population. This is useful in scenarios where fairness should be evaluated in a more context-specific way—e.g., within a particular hospital unit or age bracket. Conditional statistical parity is a refinement of standard statistical parity. Instead of comparing prediction rates across groups in the entire dataset, it restricts the comparison
 #' to a specified subset of the population, defined by a conditioning variable.
 #'
 #' The function supports both categorical and continuous conditioning variables. For continuous variables, you can supply a threshold expression like `"<50"` or `">=75"` to the \code{condition} parameter.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' binary protected attribute
 #' @param outcome Name of the outcome variable, it must be binary
-#' @param group Name of the sensitive attribute
+#' @param group Name of the binary protected attribute. Must consist of only two groups.
 #' @param group2 Name of the group to condition on
 #' @param condition If the conditional group is categorical, the condition
 #' supplied must be a character of the levels to condition on. If the conditional
@@ -57,7 +57,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Conditional Statistical Parity
@@ -82,10 +82,14 @@ eval_cond_stats_parity <- function(data, outcome, group,
                                    bootstraps = 2500, alpha = 0.05,
                                    message = TRUE,
                                    digits = 2) {
-  # Check if outcome is binary
+  # Check if outcome and groups are binary
   unique_values <- unique(data[[outcome]])
+  groups <- unique(data[[group]])
   if (!(length(unique_values) == 2 && all(unique_values %in% c(0, 1)))) {
-    stop("Outcome must be binary (containing only 0 and 1).")
+    stop("`outcome` must be binary (containing only 0 and 1).")
+  }
+  if (!(length(groups) == 2)) {
+    stop("`group` argument must only consist of two groups (i.e. `length(unique(data[[group]])) == 2`")
   }
 
   # check if the group2 is categorical or continuous

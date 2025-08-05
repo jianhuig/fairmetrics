@@ -19,13 +19,12 @@ eval_eq_odds(
 }
 \arguments{
 \item{data}{A data frame containing the true binary outcomes, predicted
-probabilities, and sensitive group membership.}
+probabilities, and binary protected attribute.}
 
 \item{outcome}{A string specifying the name of the binary outcome variable in
 \code{data}.}
 
-\item{group}{A string specifying the name of the binary sensitive attribute
-variable (e.g., race, gender) used to define the comparison groups.}
+\item{group}{Name of the binary protected attribute. Must consist of only two groups.}
 
 \item{probs}{A string specifying the name of the variable containing
 predicted probabilities or risk scores.}
@@ -65,7 +64,7 @@ differences.
 \description{
 This function evaluates whether a predictive model satisfies the Equalized
 Odds criterion by comparing both False Negative Rates (FNR) and False
-Positive Rates (FPR) across two groups defined by a binary sensitive
+Positive Rates (FPR) across two groups defined by a binary protected
 attribute. It reports the rate for each group, their differences, ratios, and
 bootstrap-based confidence regions. A Bonferroni-corrected union test is used
 to test whether the model violates the Equalized Odds criterion.
@@ -92,7 +91,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Equalized Odds

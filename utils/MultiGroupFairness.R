@@ -40,7 +40,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Maximum-Minimum Difference
@@ -102,7 +102,7 @@ eval_max_min_diff <- function(data, outcome, group, probs, cutoff = 0.5, digits 
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Maximum-Minimum Ratio
@@ -164,7 +164,7 @@ eval_max_min_ratio <- function(data, outcome, group, probs, cutoff = 0.5,
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Max Absolute Difference
@@ -227,7 +227,7 @@ eval_max_abs_diff <- function(data, outcome, group, probs, cutoff = 0.5,
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Mean Absolute Deviation
@@ -291,7 +291,7 @@ eval_mean_abs_dev <- function(data, outcome, group, probs, cutoff = 0.5,
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Variance
@@ -355,7 +355,7 @@ eval_variance <- function(data, outcome, group, probs, cutoff = 0.5,
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Evaluate Generalized Entropy Index

@@ -4,9 +4,9 @@
 
 #' Calculate the true positive rate
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -29,9 +29,9 @@ get_tpr <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
 
 #' Calculate the false positive rate
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -53,9 +53,9 @@ get_fpr <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
 
 #' Calculate the probability of positive prediction
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -78,9 +78,9 @@ get_ppr <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
 
 #' Calculate the positive predictive value
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -103,9 +103,9 @@ get_ppv <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
 
 #' Calculate the negative predictive value
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -128,9 +128,9 @@ get_npv <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
 
 #' Calculate the accuracy
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -155,9 +155,9 @@ get_acc <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
 
 #' Calculate the brier score
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param digits the number of digits to round the result to, default is 2
 #' @return a vector of brier score
@@ -175,9 +175,9 @@ get_brier_score <- function(data, outcome, group, probs, digits = 2) {
 
 #' Calculate the the ratio of false negative to false positive
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param cutoff the threshold for the predicted outcome, default is 0.5
 #' @param digits the number of digits to round the result to, default is 2
@@ -201,9 +201,9 @@ get_err_ratio <- function(data, outcome, group, probs, cutoff = 0.5,
 
 #' Calculate the average predicted probability
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' protected attribute
 #' @param outcome the name of the outcome variable, it must be binary
-#' @param group the name of the sensitive attribute
+#' @param group the name of the protected attribute
 #' @param probs the name of the predicted outcome variable
 #' @param digits the number of digits to round the result to, default is 2
 #' @return a vector of average predicted probability

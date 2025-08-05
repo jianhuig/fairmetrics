@@ -19,11 +19,11 @@ eval_neg_pred_parity(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+protected attribute}
 
 \item{outcome}{Name of the outcome variable, it must be binary}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{Name of the protected attribute. Must consist of only two groups.}
 
 \item{probs}{Name of the predicted outcome variable}
 
@@ -58,7 +58,7 @@ Value
 }
 \description{
 This function evaluates \emph{negative predictive predictive parity}, a key fairness criterion that
-compares the \emph{Negative Predictive Value (NPV)} between groups defined by a sensitive attribute.
+compares the \emph{Negative Predictive Value (NPV)} between groups defined by a binary protected attribute.
 In other words, it assesses whether, among individuals predicted to be negative,
 the probability of being truly negative is equal across subgroups.
 }
@@ -82,7 +82,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Negative Predictive Parity

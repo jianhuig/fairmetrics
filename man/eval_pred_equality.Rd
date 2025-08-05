@@ -19,11 +19,11 @@ eval_pred_equality(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+binary protected attribute}
 
 \item{outcome}{Name of the outcome variable, it must be binary}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{Name of the protected attribute. Must consist of only two groups.}
 
 \item{probs}{Name of the predicted outcome variable}
 
@@ -56,7 +56,7 @@ of the 95\% confidence interval for the ratio in False Positive Rate
 }
 \description{
 This function evaluates predictive equality, a fairness metric that compares the
-False Positive Rate (FPR) between groups defined by a sensitive attribute. It assesses
+False Positive Rate (FPR) between groups defined by a binary protected attribute. It assesses
 whether individuals from different groups are equally likely to be incorrectly flagged as
 positive when they are, in fact, negative.
 }
@@ -80,7 +80,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protectedR attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Predictive Equality

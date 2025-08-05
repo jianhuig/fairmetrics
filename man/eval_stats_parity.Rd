@@ -19,11 +19,11 @@ eval_stats_parity(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+protected attribute}
 
 \item{outcome}{Name of the outcome variable, it must be binary}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{Name of the protected attribute. Must consist of only two groups.}
 
 \item{probs}{Name of the predicted outcome variable}
 
@@ -57,7 +57,7 @@ Rate
 }
 }
 \description{
-This function assesses \emph{statistical parity} - also known as \emph{demographic parity} - in the predictions of a binary classifier across two groups defined by a sensitive attribute. Statistical parity compares the rate at which different groups receive a positive prediction, irrespective of the true outcome. It reports the Positive Prediction Rate (PPR) for each group, their differences, ratios, and bootstrap-based confidence regions.
+This function assesses \emph{statistical parity} - also known as \emph{demographic parity} - in the predictions of a binary classifier across two groups defined by a protected attribute. Statistical parity compares the rate at which different groups receive a positive prediction, irrespective of the true outcome. It reports the Positive Prediction Rate (PPR) for each group, their differences, ratios, and bootstrap-based confidence regions.
 }
 \examples{
 \donttest{
@@ -79,7 +79,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 # We choose threshold = 0.41 so that the overall FPR is around 5\%.
 
 # Evaluate Statistical Parity

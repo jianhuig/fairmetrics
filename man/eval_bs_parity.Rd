@@ -18,11 +18,11 @@ eval_bs_parity(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+binary protected attribute}
 
 \item{outcome}{Name of the outcome variable}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{Name of the binary protected attribute. Must consist of only two groups.}
 
 \item{probs}{Predicted probabilities}
 
@@ -52,9 +52,7 @@ confidence interval for the ratio in Brier Score
 }
 }
 \description{
-This function evaluates \emph{Brier Score Parity}, a fairness measure that checks whether the Brier score
-(a measure of the calibration of probabilistic predictions) is similar across different groups. Brier score
-parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
+This function evaluates \emph{Brier Score Parity}, a fairness measure that checks whether the Brier score (a measure of the calibration of probabilistic predictions) is similar across across two groups defined by a binary protected attribute. Brier score parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
 }
 \examples{
 \donttest{
@@ -76,7 +74,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 
 # Evaluate Brier Score Parity
 eval_bs_parity(

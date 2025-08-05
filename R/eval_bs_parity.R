@@ -1,13 +1,11 @@
 #' Examine Brier Score Parity of a Model
 #'
-#' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score
-#' (a measure of the calibration of probabilistic predictions) is similar across different groups. Brier score
-#' parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
+#' This function evaluates *Brier Score Parity*, a fairness measure that checks whether the Brier score (a measure of the calibration of probabilistic predictions) is similar across across two groups defined by a binary protected attribute. Brier score parity ensures that the model's predicted probabilities are equally well calibrated across subpopulations.
 #'
 #' @param data Data frame containing the outcome, predicted outcome, and
-#' sensitive attribute
+#' binary protected attribute
 #' @param outcome Name of the outcome variable
-#' @param group Name of the sensitive attribute
+#' @param group Name of the binary protected attribute. Must consist of only two groups.
 #' @param probs Predicted probabilities
 #' @param bootstraps Number of bootstraps to use for confidence intervals
 #' @param confint Logical indicating whether to calculate confidence intervals
@@ -46,7 +44,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #'
 #' # Evaluate Brier Score Parity
 #' eval_bs_parity(
@@ -63,12 +61,15 @@
 eval_bs_parity <- function(data, outcome, group, probs, confint = TRUE,
                            alpha = 0.05, bootstraps = 2500,
                            digits = 2, message = TRUE) {
-  # Check if outcome is binary
+  # Check if outcome and groups are binary
   unique_values <- unique(data[[outcome]])
+  groups <- unique(data[[group]])
   if (!(length(unique_values) == 2 && all(unique_values %in% c(0, 1)))) {
-    stop("Outcome must be binary (containing only 0 and 1).")
+    stop("`outcome` must be binary (containing only 0 and 1).")
   }
-
+  if (!(length(groups) == 2)) {
+    stop("`group` argument must only consist of two groups (i.e. `length(unique(data[[group]])) == 2`")
+  }
   bs <- get_brier_score(
     data = data, outcome = outcome, group = group, probs = probs,
     digits = digits

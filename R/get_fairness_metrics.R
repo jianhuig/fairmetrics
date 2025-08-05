@@ -1,6 +1,6 @@
 #' Compute Fairness Metrics for Binary Classification
 #'
-#' Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a sensitive attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
+#' Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a binary protected attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
 #'
 #' The results are returned as a list of two data frames:
 #' - `performance`: Contains performance metrics (e.g., TPR, FPR, PPV) by group.
@@ -23,7 +23,7 @@
 #'
 #' @param data A data frame containing the outcome, group, and predicted probabilities.
 #' @param outcome The name of the column containing the true binary outcome.
-#' @param group The name of the column representing the sensitive attribute (e.g., race, gender).
+#' @param group The name of the column representing the binary protected attribute (e.g., race, gender).
 #' @param group2 Define if conditional statistical parity is desired. Name of a secondary group variable used for conditional fairness analysis.
 #' @param condition Define if conditional statistical parity is desired. If the conditional group is categorical, the condition
 #' supplied must be a character of the levels to condition on. If the conditional
@@ -63,7 +63,7 @@
 #' test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 #'
 #' # Fairness evaluation
-#' # We will use sex as the sensitive attribute and day_28_flg as the outcome.
+#' # We will use sex as the protected attribute and day_28_flg as the outcome.
 #' # We choose threshold = 0.41 so that the overall FPR is around 5%.
 #'
 #' # Get Fairness Metrics
@@ -93,12 +93,16 @@ get_fairness_metrics <- function(data,
                                   bootstraps = 2500,
                                   alpha = 0.05,
                                   digits = 2) {
-  # Check if outcome is binary
+  # Check if outcome and groups are binary
   unique_values <- unique(data[[outcome]])
-  if (!(length(unique_values) == 2 &&
-        all(unique_values %in% c(0, 1)))) {
-    stop("Outcome must be binary (containing only 0 and 1).")
+  groups <- unique(data[[group]])
+  if (!(length(unique_values) == 2 && all(unique_values %in% c(0, 1)))) {
+    stop("`outcome` must be binary (containing only 0 and 1).")
   }
+  if (!(length(groups) == 2)) {
+    stop("`group` argument must only consist of two groups (i.e. `length(unique(data[[group]])) == 2`")
+  }
+
 
   pos_data <- data[data[[outcome]] == 1, ]
   neg_data <- data[data[[outcome]] == 0, ]

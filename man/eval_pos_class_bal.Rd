@@ -18,11 +18,11 @@ eval_pos_class_bal(
 }
 \arguments{
 \item{data}{Data frame containing the outcome, predicted outcome, and
-sensitive attribute}
+binary protected attribute}
 
 \item{outcome}{Name of the outcome variable}
 
-\item{group}{Name of the sensitive attribute}
+\item{group}{Name of the protected attribute. Must consist of only two groups.}
 
 \item{probs}{Predicted probabilities}
 
@@ -53,8 +53,7 @@ confidence interval for the ratio in average predicted probability
 }
 \description{
 This function evaluates \emph{Balance for the Positive Class}, a fairness criterion
-that checks whether the model assigns similar predicted probabilities across groups
-among individuals whose true outcome is positive (i.e. \eqn{Y = 1}).
+that checks whether the model assigns similar predicted probabilities among individuals whose true outcome is positive (i.e. \eqn{Y = 1}) accross groups defined by a binary protected attribute.
 }
 \examples{
 \donttest{
@@ -76,7 +75,7 @@ test_data <- mimic_preprocessed \%>\%
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness evaluation
-# We will use sex as the sensitive attribute and day_28_flg as the outcome.
+# We will use sex as the protected attribute and day_28_flg as the outcome.
 
 # Evaluate Balance for Positive Class
 eval_pos_class_bal(
