@@ -1,5 +1,5 @@
 ---
-title: "Binary Protected Attributes"
+title: "Tutorial: Assessing Model Fairness Across Binary Protected Attributes"
 authors:
   - name: "Jianhui Gao"
     orcid: "0000-0003-0915-1473"
