@@ -176,10 +176,10 @@ $$
 
 4.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <https://arxiv.org/abs/2406.09307> (2024).
 
-5. Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
+6.  Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
 
-6.  Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
+7. Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
 
-7.  Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
+8.  Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
 
-8.  Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
+9.  Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
