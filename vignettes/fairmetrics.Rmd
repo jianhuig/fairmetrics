@@ -133,7 +133,7 @@ The result returned here divides the results between the model performance and t
 While `fairmetrics` focuses only of assessing fairness of models accross binary protected attributes, it is possible to work with protected attributes which consist of more than two groups by using "one-vs-all" comparisons and a little bit of data wrangling to create the appropriate columns. 
 
 
-# Appendix A: Confidence Interval Construction
+# Appendix: Confidence Interval Construction
 
 The function `get_fairness_metrics()` computes Wald-type confidence intervals for both group-specific and disparity metrics using nonparametric bootstrap. To illustrate the construction of confidence intervals (CIs), we use the following example involving the false positive rate ($FPR$).
 
