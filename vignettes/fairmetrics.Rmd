@@ -189,7 +189,9 @@ result <- fairmetrics::get_fairness_metrics(
   probs = "pred",
   cutoff = cut_off
  )
+```
 
+```{r echo=FALSE}
 kableExtra::kable(result$fairness, booktabs = TRUE, escape = FALSE) %>%
   kableExtra::kable_styling(full_width = FALSE) %>%
   kableExtra::pack_rows("Independence-based criteria", 1, 2) %>%
