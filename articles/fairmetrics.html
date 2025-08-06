@@ -766,7 +766,7 @@ the predicted probabilities using a fixed cutoff. We set a threshold of
 data with its predicted results into the
 <code>get_fairness_metrics</code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">fairmetrics</span><span class="fu">::</span><span class="fu"><a href="../reference/get_fairness_metrics.html">get_fairness_metrics</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_fairness_metrics.html">get_fairness_metrics</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
 <span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
@@ -774,19 +774,7 @@ data with its predicted results into the
 <span>  condition <span class="op">=</span> <span class="st">"&gt;=60"</span>,</span>
 <span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="va">cut_off</span></span>
-<span> <span class="op">)</span></span>
-<span></span>
-<span><span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">fairness</span>, booktabs <span class="op">=</span> <span class="cn">TRUE</span>, escape <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Independence-based criteria"</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Separation-based criteria"</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Sufficiency-based criteria"</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/group_rows.html" class="external-link">pack_rows</a></span><span class="op">(</span><span class="st">"Other criteria"</span>, <span class="fl">9</span>, <span class="fl">11</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu">kableExtra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span></span>
-<span>    full_width <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    font_size <span class="op">=</span> <span class="fl">10</span>,         <span class="co"># Controls font size manually</span></span>
-<span>    latex_options <span class="op">=</span> <span class="st">"hold_position"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span> <span class="op">)</span></span></code></pre></div>
 <table class="table table table" style="width: auto !important; margin-left: auto; margin-right: auto; font-size: 10px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
