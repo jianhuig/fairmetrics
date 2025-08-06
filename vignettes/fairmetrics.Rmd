@@ -32,7 +32,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This vingette demonstrates how to obtain, report and interpret model fairness metrics for binary protected attributes with the `fairmetrics` package. We illustrate this through a case study based on a preprocessed version of the MIMIC II clinical database [1], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [2]. The original, unprocessed dataset is publicly available through [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [3]. A preprocessed version of this dataset is included in the `fairmetrics` package as the `mimic_preprocessed` and is used in this 
+This vingette demonstrates how to obtain, report and interpret model fairness metrics for binary protected attributes with the `fairmetrics` package. We illustrate this through a case study based on a preprocessed version of the MIMIC II clinical database [1], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [2]. The original, unprocessed dataset is publicly available through [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [3]. A preprocessed version of this dataset is included in the `fairmetrics` package as the `mimic_preprocessed` and is used in this vingette.
 
 ```{r setup, message=FALSE, warning=FALSE, include=FALSE}
 # Packages we are using for the analysis
@@ -48,9 +48,7 @@ library(fairmetrics)
 
 # Data Split and Model Construction
 
-In this setting, we construct a model that will predict 28-day mortality (`day_28_flg`). To do this, we split the dataset into a training and testing sets and fit a random forest model. The first 700 patients are used as the training set and the remaining patients are used as the testing set. 
-
-After the model is fit, it is used to predict 28-day mortality. The predicted probabilities are saved as new column in the testing data and are used to assess model fairness. 
+In this setting, we construct a model that will predict 28-day mortality (`day_28_flg`). To do this, we split the dataset into a training and testing sets and fit a random forest model. The first 700 patients are used as the training set and the remaining patients are used as the testing set. After the model is fit, it is used to predict 28-day mortality. The predicted probabilities are saved as new column in the testing data and are used to assess model fairness. 
 
 ```{r}
 # Load required libraries
@@ -58,7 +56,7 @@ library(dplyr)
 library(pROC)
 library(fairmetrics)
 # Set seed for reproducibility
-set.seed(123)
+set.seed(1)
 # Load the MIMIC-II preprocessed data
 data("mimic_preprocessed")
 # Use 700 labels to train the mimic
@@ -77,7 +75,7 @@ test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
 # Fairness Evaluation
 
-The `fairmetrics` package is used to assess model fairness accross binary protected attributes. This means that the unique values in the protected attribute column need to be exactly two. To evaluate fairness of the random forest model which we fit, we examine patient gender as the binary protected attribute.
+The `fairmetrics` package is used to assess model fairness across binary protected attributes. This means that the unique values in the protected attribute column need to be exactly two. To evaluate fairness of the random forest model which we fit, we examine patient gender as the binary protected attribute.
 
 ```{r}
 # Recode gender variable explicitly for readability: 
@@ -100,7 +98,7 @@ eval_stats_parity(
 
 The dataframe returned gives the positive prediction rate between the groups defined by the binary protected attribute (`GroupFemale` and `GroupMale` in this case), the difference and ratios between the groups and the bootstrap calculated confidence intervals for the estimated difference and ratios. For inference, it can be considered that confidence interval which contains 0 in its range for difference or 1 for ratio as insignificant.
 
-All the `eval_*` functions follow a the same syntax with the exception of `eval_cond_stats_partiy()` which is used to evaluate conditional statistical parity, which requires a group to condition on. If we are interested in calculating statitistical parity across male and female patients aged 60 and up, we would write:
+All the `eval_*` functions follow a the same syntax with the exception of `eval_cond_stats_partiy()` which is used to evaluate conditional statistical parity, which requires a group to condition on. If we are interested in calculating statistical parity across male and female patients aged 60 and up, we would write:
 
 ```{r}
 eval_cond_stats_parity(
@@ -132,32 +130,17 @@ get_fairness_metrics(
 
 The result returned here divides the results between the model performance and the fairness criteria. 
 
-<!---
-```{r echo=FALSE}
-kableExtra::kable(result$fairness, booktabs = TRUE, escape = FALSE) %>%
-  kableExtra::kable_styling(full_width = FALSE) %>%
-  kableExtra::pack_rows("Independence-based criteria", 1, 2) %>%
-  kableExtra::pack_rows("Separation-based criteria", 3, 6) %>%
-  kableExtra::pack_rows("Sufficiency-based criteria", 7, 8) %>%
-  kableExtra::pack_rows("Other criteria", 9, 11) %>%
-  kableExtra::kable_styling(
-    full_width = FALSE,
-    font_size = 10,         # Controls font size manually
-    latex_options = "hold_position"
-  )
-```
---->
-
+<!--
 From the outputted fairness metrics we note:
 
-- Independence is likely violated, as evidenced by the statistical parity metric which shows a 9% difference (95% CI: [5%, 13%]) or a ratio of 2.12 (95% CI: [1.49, 3.04]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
+- Independence is likely violated, as evidenced by the statistical parity metric which shows a 6% difference (95% CI: [2%, 10%]) or a ratio of 2 (95% CI: [1.33, 3.01]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
 
-- With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -24% difference (95% CI: [-39%, -9%]) in false negative rate (FNR) between females and males. This indicates the model is less likely to detect males at risk of mortality compared to females.
+- With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -14% difference (95% CI: [-29%, -9%]) in false negative rate (FNR) between females and males. This indicates the model is less likely to detect males at risk of mortality compared to females.
 
 - On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
 
 - Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
-
+--->
 
 # Appendix A: Confidence Interval Construction
 
@@ -190,6 +173,7 @@ $$
 \right].
 $$
 
+<!--
 # Appendix B: Practical Fairness Considerations
 
 In the above example, both **separation** and **sufficiency**-based fairness criteria are important:
@@ -203,6 +187,7 @@ Given this, enforcing **independence** is likely not advisable in this case, as 
 
 See [Hort et al. (2022)](https://arxiv.org/abs/2207.07068) for strategies to reduce disparities in separation-based metrics.
 
+--->
 # References
 
 
@@ -212,9 +197,9 @@ See [Hort et al. (2022)](https://arxiv.org/abs/2207.07068) for strategies to red
 
 3.  Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.
 
-4.  Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
+4.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <https://arxiv.org/abs/2406.09307> (2024).
 
-5.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <https://arxiv.org/abs/2406.09307> (2024).
+5. Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
 
 6.  Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
 

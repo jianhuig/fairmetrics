@@ -398,7 +398,7 @@ get_fairness_metrics <- function(data,
         digits = digits
       )
 
-      if (!(is.null(group2) & is.null(condition))) {
+      if (!is.null(group2) && !is.null(condition)){
         # Getting Diff and Ratio Vals
         diff_vals <- list(
           ppr_diff = ppr[[1]] - ppr[[2]],

@@ -142,13 +142,10 @@ get_acc <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   acc <- c()
   groups <- sort(unique(data[, group]))
   for (i in groups) {
-    tp <- sum(data[, outcome] == 1 &
-      data[, group] == i &
-      data[, probs] >= cutoff, na.rm=TRUE)
-    tn <- sum(data[, outcome] == 0 &
-      data[, group] == i &
-      data[, probs] < cutoff)
-    p <- sum(data[, group] == i, na.rm = TRUE)
+    groups <- sort(unique(data[[group]]))
+    tp <- sum(data[, outcome] == 1 & data[,group] == i & data[,probs] >= cutoff, na.rm=TRUE)
+    tn <- sum(data[, outcome] == 0 & data[,group] == i & data[,probs] < cutoff, na.rm=TRUE)
+    p <- sum(data[,group] == i, na.rm = TRUE)
     acc <- c(acc, round((tp + tn) / p, digits))
   }
   return(acc)
@@ -215,7 +212,7 @@ get_avg_prob <- function(data, outcome, group, probs, digits = 2) {
   groups <- sort(unique(data[, group]))
   for (i in groups) {
     sub_data <- data[data[, group] == i, ]
-    avg_prob <- c(avg_prob, round(mean(sub_data[, probs]), digits))
+    avg_prob <- c(avg_prob, round(mean(sub_data[, probs],na.rm=TRUE), digits))
   }
   return(avg_prob)
 }
