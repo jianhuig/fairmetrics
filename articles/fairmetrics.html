@@ -211,17 +211,11 @@ we pass our test data with its predicted results into the
 <span><span class="co">#&gt; 11             Treatment Equality      -1.86 [-4.27, 0.55]  0.38  [0.16, 0.9]</span></span></code></pre></div>
 <p>The result returned here divides the results between the model
 performance and the fairness criteria.</p>
-<!--
-From the outputted fairness metrics we note:
-
-- Independence is likely violated, as evidenced by the statistical parity metric which shows a 6% difference (95% CI: [2%, 10%]) or a ratio of 2 (95% CI: [1.33, 3.01]) between females and males. The measures in the independence category indicate that the model predicts a significantly higher mortality rate for females, even after conditioning on age.
-
-- With respect to separation, we observe that all metrics show significant disparities. For instance, equal opportunity shows a -14% difference (95% CI: [-29%, -9%]) in false negative rate (FNR) between females and males. This indicates the model is less likely to detect males at risk of mortality compared to females.
-
-- On the other hand, the sufficiency criterion is satisfied as predictive parity shows no significant difference between males and females (difference: -4%, 95% CI: [-21%, 13%]; ratio: 0.94, 95% CI: [0.72, 1.23]). This suggests that given the same prediction, the actual mortality rates are similar for both males and females.
-
-- Among the additional metrics that assess calibration and discrimination, Brier Score Parity and Overall Accuracy Equality do not show significant disparities. However, Treatment Equality shows a statistically significant difference (difference: –2.21, 95% CI: [–4.35, –0.07]; ratio: 0.32, 95% CI: [0.15, 0.68]), indicating that males have a substantially higher false negative to false positive ratio compared to females. This suggests that male patients are more likely to be missed by the model relative to being incorrectly flagged.
---->
+<p>While <code>fairmetrics</code> focuses only of assessing fairness of
+models accross binary protected attributes, it is possible to work with
+protected attributes which consist of more than two groups by using
+“one-vs-all” comparisons and a little bit of data wrangling to create
+the appropriate columns.</p>
 </div>
 <div class="section level2">
 <h2 id="appendix-a-confidence-interval-construction">Appendix A: Confidence Interval Construction<a class="anchor" aria-label="anchor" href="#appendix-a-confidence-interval-construction"></a>
@@ -266,21 +260,6 @@ ratio on the original scale:</p>
 \exp\left\{\log(\widehat{\rho}_{\textrm{FPR}}) + z_{1-\alpha/2} \cdot \widehat{\textrm{se}}\left[\log(\widehat{\rho}_{\textrm{FPR}})\right]\right\}
 \right].
 </annotation></semantics></math></p>
-<!--
-# Appendix B: Practical Fairness Considerations
-
-In the above example, both **separation** and **sufficiency**-based fairness criteria are important:
-
--   **Separation** ensures that patients at true risk are identified across groups, reducing under-detection in specific sub-populations.
--   **Sufficiency** ensures interventions are based solely on predicted need, not protected attributes.
-
-However, 28-day mortality differs by sex (19% for females vs. 14% for males), making it impossible to satisfy multiple fairness criteria simultaneously.
-
-Given this, enforcing **independence** is likely not advisable in this case, as it could blind the model to true mortality differences. However, the model **violates separation**, potentially leading to higher false negative rates among male patients and delayed interventions. 
-
-See [Hort et al. (2022)](https://arxiv.org/abs/2207.07068) for strategies to reduce disparities in separation-based metrics.
-
---->
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
