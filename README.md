@@ -32,10 +32,10 @@ To cite package ‘fairmetrics’ in publications use:
 
 >  Gao J, Smith B, Chou B, Gronsbell J (2025). _fairmetrics: Fairness Evaluation Metrics with Confidence
   Intervals_. <https://github.com/jianhuig/fairmetrics>.
-  
+>  
 >  Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation.
   arXiv:2506.06243.
-
+>
 >  Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307.
 
 
