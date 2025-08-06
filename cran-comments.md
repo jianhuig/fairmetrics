@@ -10,6 +10,7 @@ The code here has been reformatted and edited for release with a associated arti
 * Emphasising in DESCRIPTION and README.md file (on Github) that the package scope is specifically for evaluating fairness of statistical/ML models accross binary protected attributes.
 * Edited documentation to use the term "binary protected attribute" over "sensitive attribute" (personal preference)
 * Updating functions to ensure that `group` arguments are strictly binary. 
+* Handling `NA` inputs with helper functions in `ModelPreformance.R`
 
 ## Version 1.0.4
 

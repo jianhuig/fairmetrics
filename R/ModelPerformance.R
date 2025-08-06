@@ -18,8 +18,8 @@ get_tpr <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   groups <- sort(unique(data[, group])) # Get sorted unique groups
 
   for (i in groups) {
-    tp <- sum(data[, outcome] == 1 & data[, group] == i & data[, probs] >= cutoff)
-    p <- sum(data[, outcome] == 1 & data[, group] == i)
+    tp <- sum(data[, outcome] == 1 & data[, group] == i & data[, probs] >= cutoff, na.rm=TRUE)
+    p <- sum(data[, outcome] == 1 & data[, group] == i, na.rm = TRUE)
     tpr <- c(tpr, round(tp / p, digits)) # Calculate TPR and add to vector
   }
 
@@ -44,8 +44,8 @@ get_fpr <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   for (i in groups) {
     fp <- sum(data[, outcome] == 0 &
       data[, group] == i &
-      data[, probs] >= cutoff)
-    n <- sum(data[, outcome] == 0 & data[, group] == i)
+      data[, probs] >= cutoff, na.rm = TRUE)
+    n <- sum(data[, outcome] == 0 & data[, group] == i, na.rm=TRUE)
     fpr <- c(fpr, round(fp / n, digits))
   }
   return(fpr)
@@ -68,9 +68,10 @@ get_ppr <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   for (i in groups) {
     pp <- sum(
       data[, group] == i &
-        data[, probs] >= cutoff
+        data[, probs] >= cutoff,
+      na.rm = TRUE
     )
-    n <- sum(data[, group] == i)
+    n <- sum(data[, group] == i, na.rm=TRUE)
     ppr <- c(ppr, round(pp / n, digits))
   }
   return(ppr)
@@ -93,9 +94,9 @@ get_ppv <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   for (i in groups) {
     tp <- sum(data[, outcome] == 1 &
       data[, group] == i &
-      data[, probs] >= cutoff)
+      data[, probs] >= cutoff, na.rm=TRUE)
     pp <- sum(data[, group] == i &
-      data[, probs] >= cutoff)
+      data[, probs] >= cutoff, na.rm=TRUE)
     ppv <- c(ppv, round(tp / pp, digits))
   }
   return(ppv)
@@ -118,9 +119,9 @@ get_npv <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   for (i in groups) {
     tn <- sum(data[, outcome] == 0 &
       data[, group] == i &
-      data[, probs] < cutoff)
+      data[, probs] < cutoff, na.rm =TRUE)
     nn <- sum(data[, group] == i &
-      data[, probs] < cutoff)
+      data[, probs] < cutoff, na.rm = TRUE)
     npv <- c(npv, round(tn / nn, digits))
   }
   return(npv)
@@ -143,11 +144,11 @@ get_acc <- function(data, outcome, group, probs, cutoff = 0.5, digits = 2) {
   for (i in groups) {
     tp <- sum(data[, outcome] == 1 &
       data[, group] == i &
-      data[, probs] >= cutoff)
+      data[, probs] >= cutoff, na.rm=TRUE)
     tn <- sum(data[, outcome] == 0 &
       data[, group] == i &
       data[, probs] < cutoff)
-    p <- sum(data[, group] == i)
+    p <- sum(data[, group] == i, na.rm = TRUE)
     acc <- c(acc, round((tp + tn) / p, digits))
   }
   return(acc)
@@ -168,7 +169,7 @@ get_brier_score <- function(data, outcome, group, probs, digits = 2) {
   groups <- sort(unique(data[, group]))
   for (i in groups) {
     sub_data <- data[data[, group] == i, ]
-    brier_score <- c(brier_score, round(mean((sub_data[, outcome] - sub_data[, probs])^2), digits))
+    brier_score <- c(brier_score, round(mean((sub_data[, outcome] - sub_data[, probs])^2, na.rm=TRUE), digits))
   }
   return(brier_score)
 }
@@ -191,9 +192,9 @@ get_err_ratio <- function(data, outcome, group, probs, cutoff = 0.5,
   for (i in groups) {
     sub_data <- data[data[, group] == i, ]
     fp <- sum(sub_data[, outcome] == 0 &
-      sub_data[, probs] >= cutoff)
+      sub_data[, probs] >= cutoff, na.rm =TRUE)
     fn <- sum(sub_data[, outcome] == 1 &
-      sub_data[, probs] < cutoff)
+      sub_data[, probs] < cutoff, na.rm =TRUE)
     err_ratio <- c(err_ratio, round(fn / fp, digits))
   }
   return(err_ratio)

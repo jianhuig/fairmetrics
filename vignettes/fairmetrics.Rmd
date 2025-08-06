@@ -1,5 +1,5 @@
 ---
-title: "Tutorial: Assessing Model Fairness Across Binary Protected Attributes"
+title: "Assessing Model Fairness Across Binary Protected Attributes"
 authors:
   - name: "Jianhui Gao"
     orcid: "0000-0003-0915-1473"
@@ -32,11 +32,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-We illustrate the usage of the `fairmetrics` package through a case study using a publicly available dataset of 1,776 ICU patients from the MIMIC-II clinical database, focusing on predicting 28-day mortality and evaluating disparities in model performance across sex.
+This vingette demonstrates how to obtain, report and interpret model fairness metrics for binary protected attributes with the `fairmetrics` package. We illustrate this through a case study based on a preprocessed version of the MIMIC II clinical database [1], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [2]. The original, unprocessed dataset is publicly available through [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [3]. A preprocessed version of this dataset is included in the `fairmetrics` package as the `mimic_preprocessed` and is used in this 
 
-The following packages are used for the analysis along with the `fairmetrics` package:
-
-```{r setup, message=FALSE, warning=FALSE}
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
 # Packages we are using for the analysis
 library(dplyr)
 library(corrplot)
@@ -44,153 +42,97 @@ library(randomForest)
 library(pROC)
 library(SpecsVerification)
 library(kableExtra)
-library(naniar)
 # Our package
 library(fairmetrics)
 ```
 
-The "Data Preprocessing" section discusses the dataset, the handling of missing data, model construction and standard predictive model evaluation through train-test splitting for binary classification. The "Fairness Evaluation" section shows how to evaluate the model's fairness toward binary protected attributes with the `fairmetrics` package.
+# Data Split and Model Construction
 
-```{=html}
-<!--
-Finally, the “Practical Considerations” section discusses the inherent trade-offs between different fairness definitions in clinical settings and highlights the challenges of enforcing fairness when outcome prevalence differs across groups. Details regarding the construction of 95% confidence intervals are provided in the appendix.
---->
-```
+In this setting, we construct a model that will predict 28-day mortality (`day_28_flg`). To do this, we split the dataset into a training and testing sets and fit a random forest model. The first 700 patients are used as the training set and the remaining patients are used as the testing set. 
 
-# Data Preprocessing
-
-The dataset used in this analysis is the MIMIC II clinical database [2], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [3]. It includes 46 variables which cover demographics and clinical characteristics (including white blood cell count, heart rate during ICU stays and others) along with a 28-day mortality indicator (`day_28_flg`) for 1,776 patients. The data has been made publicly available by [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [4] and is available in the `fairmetrics` package as the `mimic` dataset.
-
-## Handling Missing Data
-
-We first assess the extent of missingness in the dataset. For each variable, we calculate both the total number and the percentage of missing values with `naniar::miss_var_summary()`.
+After the model is fit, it is used to predict 28-day mortality. The predicted probabilities are saved as new column in the testing data and are used to assess model fairness. 
 
 ```{r}
-# Loading mimic dataset 
-# (available in fairmetrics)
-data("mimic") 
-
-missing_data_summary<- naniar::miss_var_summary(mimic, digits= 3)
-
-kableExtra::kable(missing_data_summary, booktabs = TRUE, escape = FALSE) %>%
-  kableExtra::kable_styling(
-    latex_options = "hold_position"
-  )
-
-```
-
-To ensure data quality, the following procedure is applied to handle missing data:
-
-- Removal of that variables which had more than 10% missing values. Three variables had more than 10% of missing values: body mass index (`bmi`; 26.2%), first partial pressure of oxygen (`po2_first`; 10.5%), and first partial pressure of carbon dioxide (`pco2_first`; 10.5%).
-
-- Remaining missing values are imputed using the median value of the variable which they belong to.
-
-```{r}
-# Remove columns with more than 10% missing values
-columns_to_remove <- missing_data_summary %>%
-  dplyr::filter(pct_miss > 10) %>%
-  dplyr::pull(variable)
-  
-mimic <- dplyr::select(mimic, 
-                       -dplyr::one_of(columns_to_remove)
-                       )
-
-# Impute remaining missing values with median
-mimic <- mimic %>% 
-  dplyr::mutate(
-    dplyr::across(
-      dplyr::where(~any(is.na(.))), 
-                  ~ifelse(is.na(.), median(., na.rm = TRUE), .)
-                  )
-    )
-```
-
-We additionally remove `sepsis_flg` column from the dataset as it contains a single unique value across all observations. Since this does not provide any useful information for model training, it is excluded.
-
-```{r}
-# Identify columns that have only one unique value
-cols_with_one_value <- sapply(mimic, function(x) length(unique(x)) == 1)
-# Subset the dataframe to remove these columns
-mimic <- mimic[, !cols_with_one_value]
-```
-
-## Model Building
-
-Before training the model, we further remove variables that are directly correlated with patient outcomes to prevent [data leakage](https://en.wikipedia.org/wiki/Leakage_%28machine_learning%29). In particular, we inspect the correlation matrix of the numeric features and exclude variables such as the hospital expiration flag (`hosp_exp_flg`), the ICU expiration flag (`icu_exp_flg`), the mortality censoring day (`mort_day_censored`), and the censoring flag (`censor_flg`), which are strongly associated patient outcomes.
-
-```{r}
-# Remove columns that are highly correlated with the outcome variable
-corrplot::corrplot(cor(select_if(mimic, is.numeric)), method = "color", tl.cex = 0.5)
-
-mimic <- mimic %>% 
-  dplyr::select(-c("hosp_exp_flg", "icu_exp_flg", "mort_day_censored", "censor_flg"))
-```
-
-We split the dataset into a training and testing sets. The first 700 patients are used as the training set and the remaining patients are used as the testing set. The hyperparameters for the random forest (RF) model are set to use 1000 trees and a random sampling of 6 variables at each split, determined by the square root of the number of predictors. After training, the overall area under the receiver operating characteristic curve (AUC) for the model on the test set is 0.90 and the overall accuracy of the model on the test set is 0.88.
-
-```{r}
-# Use 700 labels to train the mimic
-train_data <- mimic %>% 
-  dplyr::filter(
-    dplyr::row_number() <= 700
-    )
-
-# Fit a random forest model
+# Load required libraries
+library(dplyr)
+library(pROC)
+library(fairmetrics)
+# Set seed for reproducibility
 set.seed(123)
-rf_model <- randomForest::randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+# Load the MIMIC-II preprocessed data
+data("mimic_preprocessed")
+# Use 700 labels to train the mimic
+train_data <- mimic_preprocessed %>%
+  filter(row_number() <= 700)
 
 # Test the model on the remaining data
-test_data <- mimic %>% 
-  dplyr::filter(
-    dplyr::row_number() > 700
-    )
+test_data <- mimic %>%
+  filter(row_number() > 700)
 
-test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[,2]
-
-# Check the AUC
-roc_obj <- pROC::roc(test_data$day_28_flg, test_data$pred)
-roc_auc <- pROC::auc(roc_obj)
-roc_auc
+# Fit a random forest model
+rf_model <- randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
+# Save model predcition
+test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 ```
 
 # Fairness Evaluation
 
-To evaluate fairness, we use the testing set results to examine patient gender as a binary protected attribute and 28-day mortality (`day_28_flg`) as the outcome of interest.
+The `fairmetrics` package is used to assess model fairness accross binary protected attributes. This means that the unique values in the protected attribute column need to be exactly two. To evaluate fairness of the random forest model which we fit, we examine patient gender as the binary protected attribute.
 
 ```{r}
 # Recode gender variable explicitly for readability: 
-
 test_data <- test_data %>%
-  dplyr::mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
+  mutate(gender = ifelse(gender_num == 1, "Male", "Female"))
 ```
 
-Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We set a threshold of 0.41 to maintain the overall false positive rate (FPR) at approximately 5%.
+Since many fairness metrics require binary predictions, we threshold the predicted probabilities using a fixed cutoff. We set a threshold of 0.41 to maintain the overall false positive rate (FPR) at approximately 5%. To evaluate specific fairness metrics, its possible to do so with the `eval_*` functions (for a list of the functions contained in `fairmetrics` see [here](https://jianhuig.github.io/fairmetrics/reference/index.html)). For example, if we are interested in calculating the statistical parity of our model across gender (here assumed to be binary), we write: 
 
 ```{r}
-# Control the overall false positive rate (FPR) at 5% by setting a threshold.
-
-cut_off <- 0.41
-
-test_data %>%
-  dplyr::mutate(pred = ifelse(pred > cut_off, 1, 0)) %>%
-  dplyr::filter(day_28_flg == 0) %>%
-  dplyr::summarise(fpr = mean(pred))
+eval_stats_parity(
+  data = test_data, 
+  outcome = "day_28_flg",
+  group = "gender",
+  probs = "pred",
+  cutoff = 0.41,
+  message = TRUE
+)
 ```
 
-To calculate various fairness metrics for the model, we pass our test data with its predicted results into the `get_fairness_metrics` function.
+The dataframe returned gives the positive prediction rate between the groups defined by the binary protected attribute (`GroupFemale` and `GroupMale` in this case), the difference and ratios between the groups and the bootstrap calculated confidence intervals for the estimated difference and ratios. For inference, it can be considered that confidence interval which contains 0 in its range for difference or 1 for ratio as insignificant.
+
+All the `eval_*` functions follow a the same syntax with the exception of `eval_cond_stats_partiy()` which is used to evaluate conditional statistical parity, which requires a group to condition on. If we are interested in calculating statitistical parity across male and female patients aged 60 and up, we would write:
 
 ```{r}
-result <- get_fairness_metrics(
+eval_cond_stats_parity(
+  data = test_data, 
+  outcome = "day_28_flg",
+  group = "gender",
+  group2 = "age",
+  condition = ">=60",
+  probs = "pred",
+  cutoff = 0.41,
+  message = TRUE
+)
+```
+
+
+To calculate various fairness metrics for the model simultaneously, we pass our test data with its predicted results into the `get_fairness_metrics` function.
+
+```{r}
+get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",
   group2 = "age",
   condition = ">=60",
   probs = "pred",
-  cutoff = cut_off
+  cutoff = 0.41
  )
 ```
 
+The result returned here divides the results between the model performance and the fairness criteria. 
+
+<!---
 ```{r echo=FALSE}
 kableExtra::kable(result$fairness, booktabs = TRUE, escape = FALSE) %>%
   kableExtra::kable_styling(full_width = FALSE) %>%
@@ -204,6 +146,7 @@ kableExtra::kable(result$fairness, booktabs = TRUE, escape = FALSE) %>%
     latex_options = "hold_position"
   )
 ```
+--->
 
 From the outputted fairness metrics we note:
 
@@ -262,18 +205,19 @@ See [Hort et al. (2022)](https://arxiv.org/abs/2207.07068) for strategies to red
 
 # References
 
-1.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <https://arxiv.org/abs/2406.09307> (2024).
 
-2.  Raffa, J. (2016). Clinical data from the MIMIC-II database for a case study on indwelling arterial catheters (version 1.0). PhysioNet. <https://doi.org/10.13026/C2NC7F>.
+1.  Raffa, J. (2016). Clinical data from the MIMIC-II database for a case study on indwelling arterial catheters (version 1.0). PhysioNet. <https://doi.org/10.13026/C2NC7F>.
 
-3.  Raffa J.D., Ghassemi M., Naumann T., Feng M., Hsu D. (2016) Data Analysis. In: Secondary Analysis of Electronic Health Records. Springer, Cham
+2.  Raffa J.D., Ghassemi M., Naumann T., Feng M., Hsu D. (2016) Data Analysis. In: Secondary Analysis of Electronic Health Records. Springer, Cham
 
-4.  Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.
+3.  Goldberger, A., Amaral, L., Glass, L., Hausdorff, J., Ivanov, P. C., Mark, R., ... & Stanley, H. E. (2000). PhysioBank, PhysioToolkit, and PhysioNet: Components of a new research resource for complex physiologic signals. Circulation [Online]. 101 (23), pp. e215–e220.
 
-5.  Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
+4.  Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
 
-6.  Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
+5.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <https://arxiv.org/abs/2406.09307> (2024).
 
-7.  Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).
+6.  Hsu, D. J. et al. The association between indwelling arterial catheters and mortality in hemodynamically stable patients with respiratory failure. CHEST Journal 148, 1470–1476 (2015).
 
-8.  Hort, M., Chen, Z., Zhang, J. M., Harman, M. & Sarro, F. Bias Mitigation for Machine Learning Classifiers: A Comprehensive survey. arXiv.org <https://arxiv.org/abs/2207.07068> (2022).
+7.  Gronsbell, J. L. & Cai, T. Semi-Supervised approaches to efficient evaluation of model prediction performance. Journal of the Royal Statistical Society Series B (Statistical Methodology) 80, 579–594 (2017).
+
+8.  Efron, B. & Tibshirani, R. Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science 1, (1986).

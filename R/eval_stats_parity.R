@@ -75,9 +75,14 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
   }
 
   ppr <- get_ppr(
-    data = data, outcome = outcome, group = group, probs = probs,
-    cutoff = cutoff, digits = digits
+    data = data,
+    outcome = outcome,
+    group = group,
+    probs = probs,
+    cutoff = cutoff,
+    digits = digits
   )
+
 
   ppr_diff <- ppr[[1]] - ppr[[2]]
   ppr_ratio <- ppr[[1]] / ppr[[2]]
