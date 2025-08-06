@@ -180,7 +180,7 @@ test_data %>%
 To calculate various fairness metrics for the model, we pass our test data with its predicted results into the `get_fairness_metrics` function.
 
 ```{r}
-result <- fairmetrics::get_fairness_metrics(
+result <- get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",
