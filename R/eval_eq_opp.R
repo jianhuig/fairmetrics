@@ -33,9 +33,9 @@
 #'   \item \code{Group1} Estimated FNR and FPR for the first group.
 #'   \item \code{Group2} Estimated FNR and FPR for the second group.
 #'   \item \code{Difference} The difference in FNR between the two groups, computed as the FNR of Group1 minus the FNR of Group2.
-#'   \item \code{95\% Diff CI} The (1 - \code{alpha}) confidence interval for the FNR difference.
+#'   \item \code{1-alpha\% Diff CI} The (1 - \code{alpha}) confidence interval for the FNR difference.
 #'   \item \code{Ratio} The ratio of FNRs between Group1 and Group2, computed as FNR for Group1 divided by FNR for Group2.
-#'   \item \code{95\% Ratio CI} The corresponding confidence interval for the FNR ratio.
+#'   \item \code{1-alpha\% Ratio CI} The corresponding confidence interval for the FNR ratio.
 #' }
 #'
 #' @importFrom stats qnorm sd
@@ -139,7 +139,10 @@ eval_eq_opp <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRU
     colnames(results_df) <- c(
       "Metric", paste0("Group", sort(unique(data[[group]]))[[1]]),
       paste0("Group", sort(unique(data[[group]]))[[2]]),
-      "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
+      "Difference", 
+      paste0((1-alpha)*100, "% Diff CI"),
+      "Ratio",
+      paste0((1-alpha)*100, "% Ratio CI")
     )
 
     # Print message if desired

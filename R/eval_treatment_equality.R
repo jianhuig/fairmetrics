@@ -129,9 +129,9 @@ eval_treatment_equality <- function(data, outcome, group, probs, cutoff = 0.5, c
       paste0("Group", sort(unique(data[[group]]))[1]),
       paste0("Group", sort(unique(data[[group]]))[2]),
       "Difference",
-      "95% Diff CI",
+      paste0((1-alpha)*100, "% Diff CI"),
       "Ratio",
-      "95% Ratio CI"
+      paste0((1-alpha)*100, "% Ratio CI")
     )
 
     if (message) {

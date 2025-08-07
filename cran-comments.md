@@ -11,6 +11,7 @@ The code here has been reformatted and edited for release with a associated arti
 * Edited documentation to use the term "binary protected attribute" over "sensitive attribute" (personal preference)
 * Updating functions to ensure that `group` arguments are strictly binary. 
 * Handling `NA` inputs with helper functions in `ModelPreformance.R`
+* Confidence interval lengths are now reflected dynamically in the column names. 
 
 ## Version 1.0.4
 

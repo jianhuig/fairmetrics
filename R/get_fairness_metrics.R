@@ -537,7 +537,18 @@ get_fairness_metrics <- function(data,
         row.names = NULL
       )
 
-
+      colnames(model_summary) <- c(
+        "Metric", 
+        paste0("Group", sort(unique(data[[group]]))[1]), 
+        paste0("Group", sort(unique(data[[group]]))[2])
+        )
+      colnames(fairness_summary) <- c(
+        "Metric",
+        "Difference",
+        paste0((1 - alpha) * 100, "% Diff CI"),
+        "Ratio",
+        paste0((1 - alpha) * 100, "% Ratio CI")
+      )
     } else{
       model_summary <- data.frame(
         Metric = c(
@@ -581,6 +592,12 @@ get_fairness_metrics <- function(data,
         row.names = NULL
 
       )
+
+      colnames(model_summary) <- c(
+        "Metric", 
+        paste0("Group", sort(unique(data[[group]]))[1]), 
+        paste0("Group", sort(unique(data[[group]]))[2])
+        )
 
     }
   } else{

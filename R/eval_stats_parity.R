@@ -124,7 +124,10 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
       "Metric",
       paste0("Group", sort(unique(data[[group]]))[[1]]),
       paste0("Group", sort(unique(data[[group]]))[[2]]),
-      "Difference", "95% Diff CI", "Ratio", "95% Ratio CI"
+      "Difference", 
+      paste0((1-alpha)*100, "% Diff CI"),
+      "Ratio",
+      paste0((1-alpha)*100, "% Ratio CI")
     )
 
 
