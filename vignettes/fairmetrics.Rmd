@@ -53,8 +53,8 @@ In this setting, we construct a model that will predict 28-day mortality (`day_2
 ```{r}
 # Load required libraries
 library(dplyr)
-library(pROC)
 library(fairmetrics)
+library(randomForest)
 # Set seed for reproducibility
 set.seed(1)
 # Load the MIMIC-II preprocessed data
