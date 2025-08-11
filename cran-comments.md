@@ -12,6 +12,7 @@ The code here has been reformatted and edited for release with a associated arti
 * Updating functions to ensure that `group` arguments are strictly binary. 
 * Handling `NA` inputs with helper functions in `ModelPreformance.R`
 * Confidence interval lengths are now reflected dynamically in the column names. 
+* Removed `eval_cond_stats_parity` and conditional statistical parity as a metric in `get_fairness_metrics`
 
 ## Version 1.0.4
 

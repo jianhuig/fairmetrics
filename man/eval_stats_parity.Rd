@@ -92,6 +92,3 @@ eval_stats_parity(
 )
 }
 }
-\seealso{
-\code{\link{eval_cond_stats_parity}}
-}

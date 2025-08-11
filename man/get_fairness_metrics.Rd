@@ -8,8 +8,6 @@ get_fairness_metrics(
   data,
   outcome,
   group,
-  group2 = NULL,
-  condition = NULL,
   probs,
   confint = TRUE,
   cutoff = 0.5,
@@ -24,14 +22,6 @@ get_fairness_metrics(
 \item{outcome}{The name of the column containing the true binary outcome.}
 
 \item{group}{The name of the column representing the binary protected attribute (e.g., race, gender).}
-
-\item{group2}{Define if conditional statistical parity is desired. Name of a secondary group variable used for conditional fairness analysis.}
-
-\item{condition}{Define if conditional statistical parity is desired. If the conditional group is categorical, the condition
-supplied must be a character of the levels to condition on. If the conditional
-group is continuous, the conditions supplied must be a character containing
-the sign of the condition and the value to threshold the continuous variable
-(e.g. "<50", ">50", "<=50", ">=50").}
 
 \item{probs}{The name of the column with predicted probabilities.}
 
@@ -53,7 +43,7 @@ A list containing:
 }
 }
 \description{
-Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a binary protected attribute (e.g., race, gender). Optionally, conditional fairness can be evaluated using a second attribute and a specified condition. The function also computes corresponding performance metrics used in the fairness calculations.
+Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a binary protected attribute. The function also computes corresponding performance metrics used in the fairness calculations.
 }
 \details{
 The results are returned as a list of two data frames:
@@ -64,8 +54,6 @@ The results are returned as a list of two data frames:
 \subsection{Fairness Metrics Included:}{
 \itemize{
 \item \strong{Statistical Parity}: Difference in positive prediction rates across groups.
-\item \strong{Conditional Statistical Parity} \emph{(if group2 and condition are specified)}:
-Parity conditioned on a second group and value.
 \item \strong{Equal Opportunity}: Difference in true positive rates (TPR) across groups.
 \item \strong{Predictive Equality}: Difference in false positive rates (FPR) across groups.
 \item \strong{Balance for Positive Class}: Checks whether the predicted probability distributions for
@@ -107,8 +95,6 @@ get_fairness_metrics(
  data = test_data,
  outcome = "day_28_flg",
  group = "gender",
- group2 = "age",
- condition = ">=60",
  probs = "pred",
  confint = TRUE,
  cutoff = 0.41,

@@ -59,7 +59,6 @@
 #'   cutoff = 0.41
 #' )
 #' }
-#' @seealso \code{\link{eval_cond_stats_parity}}
 #' @export
 eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint = TRUE,
                               bootstraps = 2500, alpha = 0.05, digits = 2,
@@ -124,7 +123,7 @@ eval_stats_parity <- function(data, outcome, group, probs, cutoff = 0.5, confint
       "Metric",
       paste0("Group", sort(unique(data[[group]]))[[1]]),
       paste0("Group", sort(unique(data[[group]]))[[2]]),
-      "Difference", 
+      "Difference",
       paste0((1-alpha)*100, "% Diff CI"),
       "Ratio",
       paste0((1-alpha)*100, "% Ratio CI")

@@ -18,7 +18,7 @@ affiliations:
     index: 1
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Binary Protected Attributes}
+  %\VignetteIndexEntry{Assessing Model Fairness Across Binary Protected Attributes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -94,33 +94,16 @@ eval_stats_parity(
 )
 ```
 
+
 The dataframe returned gives the positive prediction rate between the groups defined by the binary protected attribute (`GroupFemale` and `GroupMale` in this case), the difference and ratios between the groups and the bootstrap calculated confidence intervals for the estimated difference and ratios. For inference, it can be considered that confidence interval which contains 0 in its range for difference or 1 for ratio as insignificant.
 
-All the `eval_*` functions follow a the same syntax with the exception of `eval_cond_stats_partiy()` which is used to evaluate conditional statistical parity, which requires a group to condition on. If we are interested in calculating statistical parity across male and female patients aged 60 and up, we would write:
-
-```{r}
-eval_cond_stats_parity(
-  data = test_data, 
-  outcome = "day_28_flg",
-  group = "gender",
-  group2 = "age",
-  condition = ">=60",
-  probs = "pred",
-  cutoff = 0.41,
-  message = TRUE
-)
-```
-
-
-To calculate various fairness metrics for the model simultaneously, we pass our test data with its predicted results into the `get_fairness_metrics` function.
+The above syntax can be extended to the other `eval_*` functions as well. Additionally, if one wishes to calculate various fairness metrics for the model simultaneously, we pass our test data with its predicted results into the `get_fairness_metrics` function.
 
 ```{r}
 get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",
-  group2 = "age",
-  condition = ">=60",
   probs = "pred",
   cutoff = 0.41
  )
