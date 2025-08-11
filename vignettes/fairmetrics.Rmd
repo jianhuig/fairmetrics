@@ -57,19 +57,17 @@ library(fairmetrics)
 library(randomForest)
 # Set seed for reproducibility
 set.seed(1)
-# Load the MIMIC-II preprocessed data
-data("mimic_preprocessed")
-# Use 700 labels to train the mimic
+# Use 700 labels to train on the mimic_preprocessed dataset
 train_data <- mimic_preprocessed %>%
   filter(row_number() <= 700)
 
 # Test the model on the remaining data
-test_data <- mimic %>%
+test_data <- mimic_preprocessed %>%
   filter(row_number() > 700)
 
 # Fit a random forest model
 rf_model <- randomForest(factor(day_28_flg) ~ ., data = train_data, ntree = 1000)
-# Save model predcition
+# Save model prediction
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 ```
 
