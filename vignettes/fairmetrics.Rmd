@@ -34,23 +34,11 @@ knitr::opts_chunk$set(
 
 This vingette demonstrates how to obtain, report and interpret model fairness metrics for binary protected attributes with the `fairmetrics` package. We illustrate this through a case study based on a preprocessed version of the MIMIC II clinical database [1], which has been previously studied to explore the relationship between indwelling arterial catheters in hemodynamically stable patients and respiratory failure in relation to mortality outcomes [2]. The original, unprocessed dataset is publicly available through [PhysioNet](https://physionet.org/content/mimic2-iaccd/1.0/) [3]. A preprocessed version of this dataset is included in the `fairmetrics` package as the `mimic_preprocessed` and is used in this vingette.
 
-```{r setup, message=FALSE, warning=FALSE, include=FALSE}
-# Packages we are using for the analysis
-library(dplyr)
-library(corrplot)
-library(randomForest)
-library(pROC)
-library(SpecsVerification)
-library(kableExtra)
-# Our package
-library(fairmetrics)
-```
-
 # Data Split and Model Construction
 
 In this setting, we construct a model that will predict 28-day mortality (`day_28_flg`). To do this, we split the dataset into a training and testing sets and fit a random forest model. The first 700 patients are used as the training set and the remaining patients are used as the testing set. After the model is fit, it is used to predict 28-day mortality. The predicted probabilities are saved as new column in the testing data and are used to assess model fairness. 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # Load required libraries
 library(dplyr)
 library(fairmetrics)
