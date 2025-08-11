@@ -91,19 +91,17 @@ fairness.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span>
 <span><span class="co"># Set seed for reproducibility</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co"># Load the MIMIC-II preprocessed data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"mimic_preprocessed"</span><span class="op">)</span></span>
-<span><span class="co"># Use 700 labels to train the mimic</span></span>
+<span><span class="co"># Use 700 labels to train on the mimic_preprocessed dataset</span></span>
 <span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">mimic_preprocessed</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">700</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Test the model on the remaining data</span></span>
-<span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">mimic</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">mimic_preprocessed</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">700</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fit a random forest model</span></span>
 <span><span class="va">rf_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">day_28_flg</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train_data</span>, ntree <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
-<span><span class="co"># Save model predcition</span></span>
+<span><span class="co"># Save model prediction</span></span>
 <span><span class="va">test_data</span><span class="op">$</span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf_model</span>, newdata <span class="op">=</span> <span class="va">test_data</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -136,10 +134,10 @@ of our model across gender (here assumed to be binary), we write:</p>
 <span>  message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; There is evidence that model does not satisfy statistical parity.</span></span>
-<span><span class="co">#&gt;                     Metric GroupFemale GroupMale Difference 95% Diff CI Ratio</span></span>
-<span><span class="co">#&gt; 1 Positive Prediction Rate        0.12      0.06       0.06 [0.02, 0.1]     2</span></span>
+<span><span class="co">#&gt;                     Metric GroupFemale GroupMale Difference  95% Diff CI Ratio</span></span>
+<span><span class="co">#&gt; 1 Positive Prediction Rate        0.17      0.09       0.08 [0.04, 0.12]  1.89</span></span>
 <span><span class="co">#&gt;   95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1 [1.32, 3.03]</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 [1.35, 2.64]</span></span></code></pre></div>
 <p>The dataframe returned gives the positive prediction rate between the
 groups defined by the binary protected attribute
 (<code>GroupFemale</code> and <code>GroupMale</code> in this case), the
@@ -163,12 +161,11 @@ across male and female patients aged 60 and up, we would write:</p>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.41</span>,</span>
 <span>  message <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
-<span><span class="co">#&gt;             statistical parity.</span></span>
-<span><span class="co">#&gt;                     Metric GroupFemale GroupMale Difference 95% Diff CI Ratio</span></span>
-<span><span class="co">#&gt; 1 Positive Prediction Rate        0.24      0.17       0.07   [0, 0.14]  1.41</span></span>
+<span><span class="co">#&gt; There is evidence that model does not satisfy statistical parity.</span></span>
+<span><span class="co">#&gt;                     Metric GroupFemale GroupMale Difference  95% Diff CI Ratio</span></span>
+<span><span class="co">#&gt; 1 Positive Prediction Rate        0.34      0.25       0.09 [0.01, 0.17]  1.36</span></span>
 <span><span class="co">#&gt;   95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1 [0.97, 2.05]</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 [1.01, 1.82]</span></span></code></pre></div>
 <p>To calculate various fairness metrics for the model simultaneously,
 we pass our test data with its predicted results into the
 <code>get_fairness_metrics</code> function.</p>
@@ -184,31 +181,31 @@ we pass our test data with its predicted results into the
 <span> <span class="op">)</span></span>
 <span><span class="co">#&gt; $performance</span></span>
 <span><span class="co">#&gt;                                     Metric GroupFemale GroupMale</span></span>
-<span><span class="co">#&gt; 1                 Positive Prediction Rate        0.12      0.06</span></span>
-<span><span class="co">#&gt; 2     Conditional Positive Prediction Rate        0.24      0.17</span></span>
-<span><span class="co">#&gt; 3                      False Negative Rate        0.56      0.70</span></span>
-<span><span class="co">#&gt; 4                      False Positive Rate        0.06      0.03</span></span>
-<span><span class="co">#&gt; 5            Avg. Predicted Positive Prob.        0.45      0.35</span></span>
+<span><span class="co">#&gt; 1                 Positive Prediction Rate        0.17      0.09</span></span>
+<span><span class="co">#&gt; 2     Conditional Positive Prediction Rate        0.34      0.25</span></span>
+<span><span class="co">#&gt; 3                      False Negative Rate        0.38      0.57</span></span>
+<span><span class="co">#&gt; 4                      False Positive Rate        0.08      0.03</span></span>
+<span><span class="co">#&gt; 5            Avg. Predicted Positive Prob.        0.46      0.37</span></span>
 <span><span class="co">#&gt; 6            Avg. Predicted Negative Prob.        0.15      0.11</span></span>
-<span><span class="co">#&gt; 7                Positive Predictive Value        0.61      0.65</span></span>
+<span><span class="co">#&gt; 7                Positive Predictive Value        0.62      0.68</span></span>
 <span><span class="co">#&gt; 8                Negative Predictive Value        0.92      0.91</span></span>
 <span><span class="co">#&gt; 9                              Brier Score        0.09      0.08</span></span>
-<span><span class="co">#&gt; 10                                Accuracy        0.74      0.73</span></span>
-<span><span class="co">#&gt; 11 (False Negative)/(False Positive) Ratio        1.14      3.00</span></span>
+<span><span class="co">#&gt; 10                                Accuracy        0.87      0.89</span></span>
+<span><span class="co">#&gt; 11 (False Negative)/(False Positive) Ratio        1.03      2.78</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $fairness</span></span>
-<span><span class="co">#&gt;                            Metric Difference   95% Diff CI Ratio 95% Ratio CI</span></span>
-<span><span class="co">#&gt; 1              Statistical Parity       0.06   [0.02, 0.1]  2.00 [1.33, 3.01]</span></span>
-<span><span class="co">#&gt; 2  Conditional Statistical Parity       0.07 [-0.01, 0.15]  1.41 [0.97, 2.06]</span></span>
-<span><span class="co">#&gt; 3               Equal Opportunity      -0.14 [-0.29, 0.01]  0.80 [0.63, 1.02]</span></span>
-<span><span class="co">#&gt; 4             Predictive Equality       0.03     [0, 0.06]  2.00 [0.95, 4.19]</span></span>
-<span><span class="co">#&gt; 5      Balance for Positive Class       0.10  [0.04, 0.16]  1.29   [1.1, 1.5]</span></span>
-<span><span class="co">#&gt; 6      Balance for Negative Class       0.04  [0.02, 0.06]  1.36  [1.16, 1.6]</span></span>
-<span><span class="co">#&gt; 7      Positive Predictive Parity      -0.04 [-0.24, 0.16]  0.94 [0.68, 1.29]</span></span>
-<span><span class="co">#&gt; 8      Negative Predictive Parity       0.01 [-0.03, 0.05]  1.01 [0.97, 1.05]</span></span>
-<span><span class="co">#&gt; 9              Brier Score Parity       0.01 [-0.01, 0.03]  1.12 [0.87, 1.46]</span></span>
-<span><span class="co">#&gt; 10        Overall Accuracy Parity       0.01 [-0.04, 0.06]  1.01 [0.94, 1.09]</span></span>
-<span><span class="co">#&gt; 11             Treatment Equality      -1.86 [-4.27, 0.55]  0.38  [0.16, 0.9]</span></span></code></pre></div>
+<span><span class="co">#&gt;                            Metric Difference    95% Diff CI Ratio 95% Ratio CI</span></span>
+<span><span class="co">#&gt; 1              Statistical Parity       0.08   [0.04, 0.12]  1.89 [1.35, 2.64]</span></span>
+<span><span class="co">#&gt; 2  Conditional Statistical Parity       0.09      [0, 0.18]  1.36    [1, 1.84]</span></span>
+<span><span class="co">#&gt; 3               Equal Opportunity      -0.19 [-0.34, -0.04]  0.67 [0.47, 0.94]</span></span>
+<span><span class="co">#&gt; 4             Predictive Equality       0.05   [0.02, 0.08]  2.67 [1.41, 5.03]</span></span>
+<span><span class="co">#&gt; 5      Balance for Positive Class       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]</span></span>
+<span><span class="co">#&gt; 6      Balance for Negative Class       0.04   [0.02, 0.06]  1.36 [1.17, 1.59]</span></span>
+<span><span class="co">#&gt; 7      Positive Predictive Parity      -0.06   [-0.22, 0.1]  0.91 [0.71, 1.17]</span></span>
+<span><span class="co">#&gt; 8      Negative Predictive Parity       0.01  [-0.03, 0.05]  1.01 [0.97, 1.05]</span></span>
+<span><span class="co">#&gt; 9              Brier Score Parity       0.01  [-0.01, 0.03]  1.12 [0.88, 1.43]</span></span>
+<span><span class="co">#&gt; 10        Overall Accuracy Parity      -0.02  [-0.06, 0.02]  0.98 [0.93, 1.02]</span></span>
+<span><span class="co">#&gt; 11             Treatment Equality      -1.75    [-3.6, 0.1]  0.37  [0.17, 0.8]</span></span></code></pre></div>
 <p>The result returned here divides the results between the model
 performance and the fairness criteria.</p>
 <p>While <code>fairmetrics</code> focuses only of assessing fairness of
