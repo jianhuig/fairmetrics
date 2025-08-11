@@ -64,7 +64,7 @@
 <p>This vingette demonstrates how to obtain, report and interpret model
 fairness metrics for binary protected attributes with the
 <code>fairmetrics</code> package. We illustrate this through a case
-study based on a preprocessed version of the MIMIC II clinical database
+study based on a preprocessed version of the MIMIC-II clinical database
 [1], which has been previously studied to explore the relationship
 between indwelling arterial catheters in hemodynamically stable patients
 and respiratory failure in relation to mortality outcomes [2]. The
@@ -108,10 +108,10 @@ fairness.</p>
 <h2 id="fairness-evaluation">Fairness Evaluation<a class="anchor" aria-label="anchor" href="#fairness-evaluation"></a>
 </h2>
 <p>The <code>fairmetrics</code> package is used to assess model fairness
-across binary protected attributes. This means that the unique values in
-the protected attribute column need to be exactly two. To evaluate
-fairness of the random forest model which we fit, we examine patient
-gender as the binary protected attribute.</p>
+across binary protected attributes. This means that the number of unique
+values in the protected attribute column need to be exactly two. To
+evaluate fairness of the random forest model which we fit, we examine
+patient gender as the binary protected attribute.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Recode gender variable explicitly for readability: </span></span>
 <span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">test_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -186,7 +186,7 @@ function.</p>
 <p>The result returned here divides the results between the model
 performance and the fairness criteria.</p>
 <p>While <code>fairmetrics</code> focuses only of assessing fairness of
-models accross binary protected attributes, it is possible to work with
+models across binary protected attributes, it is possible to work with
 protected attributes which consist of more than two groups by using
 “one-vs-all” comparisons and a little bit of data wrangling to create
 the appropriate columns.</p>
