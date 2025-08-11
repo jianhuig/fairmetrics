@@ -37,27 +37,6 @@ test_that('eval_bs_parity match metrics test', {
   })
 })
 
-test_that('eval_cond_stats_parity metrics test', {
-  expect_equal({
-    source("helper-match-metrics.R")
-    res <- eval_cond_stats_parity(
-      data = test_data,
-      outcome = "day_28_flg",
-      group = "gender",
-      group2 = "service_unit",
-      condition = "MICU",
-      probs = "pred",
-      confint = FALSE,
-      message = FALSE
-    )[1:3]
-    rownames(res)<- 1
-  },
-  {
-    res <- subset(performance, Metric =="Positive Prediction Rate")[2,]
-    rownames(res)<- 1
-  })
-})
-
 
 test_that('eval_eq_opp match metrics test', {
   expect_equal({

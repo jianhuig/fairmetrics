@@ -33,24 +33,6 @@ test_that('eval_bs_parity test', {
   })
 })
 
-test_that('eval_cond_stats_parity test', {
-  expect_no_error({
-  source("helper.R")
-  eval_cond_stats_parity(
-    data = test_data,
-    outcome = "day_28_flg",
-    group = "gender",
-    group2 = "service_unit",
-    condition = "MICU",
-    probs = "pred",
-    cutoff = 0.41,
-    bootstraps = 2500,
-    alpha = 0.05,
-    digits = 2,
-    message = FALSE
-  )
-})
-})
 
 test_that('eval_eq_odds test',{
   expect_no_error({

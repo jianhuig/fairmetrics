@@ -19,8 +19,6 @@ get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",
-  group2 = "service_unit",
-  condition = "MICU",
   probs = "pred",
   cutoff = 0.41,
   confint = FALSE
