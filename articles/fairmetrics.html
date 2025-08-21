@@ -193,14 +193,14 @@ indicating that there is not evidence indicating that the fairness
 criterion is violated, while the confidence interval for the ratio
 crosses 1 - indicating that there is.</p>
 <blockquote>
-<p>[!WARNING] Statistical inference from bootstrapped confidence
-intervals should be interpreted with caution. A confidence interval
-crossing 0 (for differences) or 1 (for ratios) means the evidence is
-inconclusive rather than proving the absence of unfairness. Apparent
-violations may reflect sampling variability rather than systematic bias.
-Always complement these results with domain knowledge, sensitivity
-analyses, and additional fairness diagnostics before drawing strong
-conclusions.</p>
+<p><strong>NOTE:</strong></p>
+<p>Statistical inference from bootstrapped confidence intervals should
+be interpreted with caution. A confidence interval crossing 0 (for
+differences) or 1 (for ratios) means the evidence is inconclusive rather
+than proving the absence of unfairness. Apparent violations may reflect
+sampling variability rather than systematic bias. Always complement
+these results with domain knowledge, sensitivity analyses, and
+additional fairness diagnostics before drawing strong conclusions.</p>
 </blockquote>
 <p>While <code>fairmetrics</code> focuses only on assessing fairness of
 models across binary protected attributes, it is possible to work with
