@@ -36,11 +36,7 @@ get_fairness_metrics(
 \item{digits}{Number of digits to round the metrics to. Default is 2.}
 }
 \value{
-A list containing:
-\describe{
-\item{performance}{Data frame with performance metrics by group.}
-\item{fairness}{Data frame with computed fairness metrics and optional confidence intervals.}
-}
+A dataframe containing fairness assessments, the performance metrics they use and the evaluated results for each (binary) group (specified by the \code{group} parameter) along with the difference and ratio between them. If \code{confint} is  set to \code{TRUE}, then the estimated \verb{(1-alpha)*100\%} bootstrap confidence intervals are returned as well.
 }
 \description{
 Computes a comprehensive set of fairness metrics for binary classification models, disaggregated by a binary protected attribute. The function also computes corresponding performance metrics used in the fairness calculations.

@@ -97,8 +97,6 @@ get_fairness_metrics(
  )
 ```
 
-The result returned here divides the results between the model performance and the fairness criteria. 
-
 While `fairmetrics` focuses only of assessing fairness of models across binary protected attributes, it is possible to work with protected attributes which consist of more than two groups by using "one-vs-all" comparisons and a little bit of data wrangling to create the appropriate columns. 
 
 

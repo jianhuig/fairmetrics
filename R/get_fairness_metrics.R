@@ -29,11 +29,7 @@
 #' @param alpha Significance level for confidence intervals. Default is 0.05.
 #' @param digits Number of digits to round the metrics to. Default is 2.
 #'
-#' @return A list containing:
-#' \describe{
-#'   \item{performance}{Data frame with performance metrics by group.}
-#'   \item{fairness}{Data frame with computed fairness metrics and optional confidence intervals.}
-#' }
+#' @return A dataframe containing fairness assessments, the performance metrics they use and the evaluated results for each (binary) group (specified by the `group` parameter) along with the difference and ratio between them. If `confint` is  set to `TRUE`, then the estimated `(1-alpha)*100%` bootstrap confidence intervals are returned as well.
 #'
 #' @examples
 #' \donttest{
@@ -364,7 +360,20 @@ get_fairness_metrics <- function(data,
     lower_ratio_cis <-  round(exp(log(ratio_vals) - qnorm(1 - alpha / 2) * ratio_sds), digits)
     upper_ratio_cis <-  round(exp(log(ratio_vals) + qnorm(1 - alpha / 2) * ratio_sds), digits)
 
-    model_summary <- data.frame(
+
+    fairness_summary <- data.frame(
+      Fairness_Assesment = c(
+        "Statistical Parity",
+        "Equal Opportunity",
+        "Predictive Equality",
+        "Balance for Positive Class",
+        "Balance for Negative Class",
+        "Positive Predictive Parity",
+        "Negative Predictive Parity",
+        "Brier Score Parity",
+        "Overall Accuracy Parity",
+        "Treatment Equality"
+      ),
       Metric = c(
         "Positive Prediction Rate",
         "False Negative Rate",
@@ -381,12 +390,28 @@ get_fairness_metrics <- function(data,
         x[[1]]),
       Group2 = sapply(metrics, function(x)
         x[[2]]),
+      Difference = diff_vals,
+      Diff_CI  = paste0("[", lower_cis, ", ", upper_cis, "]"),
+      Ratio = round(ratio_vals, digits),
+      Ratio_CI = paste0("[", lower_ratio_cis, ", ", upper_ratio_cis, "]"),
       row.names = NULL
 
     )
 
+    colnames(fairness_summary) <- c(
+      "Fairness Assesment",
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      paste0((1-alpha)*100, "% Diff CI"),
+      "Ratio",
+      paste0((1-alpha)*100, "% Ratio CI")
+    )
+
+  } else{
     fairness_summary <- data.frame(
-      Metric = c(
+      Fairness_Assesment = c(
         "Statistical Parity",
         "Equal Opportunity",
         "Predictive Equality",
@@ -398,57 +423,36 @@ get_fairness_metrics <- function(data,
         "Overall Accuracy Parity",
         "Treatment Equality"
       ),
-
+      Metric = c(
+        "Positive Prediction Rate",
+        "False Negative Rate",
+        "False Positive Rate",
+        "Avg. Predicted Positive Prob.",
+        "Avg. Predicted Negative Prob.",
+        "Positive Predictive Value",
+        "Negative Predictive Value",
+        "Brier Score",
+        "Accuracy",
+        "(False Negative)/(False Positive) Ratio"
+      ),
+      Group1 = sapply(metrics, function(x)
+        x[[1]]),
+      Group2 = sapply(metrics, function(x)
+        x[[2]]),
       Difference = diff_vals,
       Ratio = round(ratio_vals, digits),
       row.names = NULL
 
     )
 
-    colnames(model_summary) <- c("Metric", paste0("Group", sort(unique(data[[group]]))[1]), paste0("Group", sort(unique(data[[group]]))[2]))
-
-  } else{
-    model_summary <- data.frame(
-      Metric = c(
-        "Positive Prediction Rate",
-        "False Negative Rate",
-        "False Positive Rate",
-        "Avg. Predicted Positive Prob.",
-        "Avg. Predicted Negative Prob.",
-        "Positive Predictive Value",
-        "Negative Predictive Value",
-        "Brier Score",
-        "Accuracy",
-        "(False Negative)/(False Positive) Ratio"
-      ),
-      Group1 = sapply(metrics, function(x)
-        x[[1]]),
-      Group2 = sapply(metrics, function(x)
-        x[[2]]),
-      row.names = NULL
-
+    colnames(fairness_summary) <- c(
+      "Fairness Assesment",
+      "Metric",
+      paste0("Group", sort(unique(data[[group]]))[1]),
+      paste0("Group", sort(unique(data[[group]]))[2]),
+      "Difference",
+      "Ratio"
     )
-
-    fairness_summary <- data.frame(
-      Metric = c(
-        "Statistical Parity",
-        "Equal Opportunity",
-        "Predictive Equality",
-        "Balance for Positive Class",
-        "Balance for Negative Class",
-        "Positive Predictive Parity",
-        "Negative Predictive Parity",
-        "Brier Score Parity",
-        "Overall Accuracy Parity",
-        "Treatment Equality"
-      ),
-
-      Difference = diff_vals,
-      Ratio = round(ratio_vals, 2),
-      row.names = NULL
-
-    )
-
   }
-  return(list(performance = model_summary, fairness = fairness_summary))
+  return(fairness_summary)
 }

@@ -24,8 +24,8 @@ affiliations:
 date: "2025-06-10"
 bibliography: paper.bib
 output:
-  # rticles::joss_article:
-  #   keep_tex: true
+  rticles::joss_article:
+    keep_tex: true
   md_document:
      #keep_tex: true
      preserve_yaml: TRUE
@@ -80,31 +80,29 @@ get_fairness_metrics(
  alpha = 0.05
 )
 
-$performance
-                                    Metric GroupFemale GroupMale
-1                 Positive Prediction Rate        0.17      0.08
-2                      False Negative Rate        0.38      0.62
-3                      False Positive Rate        0.08      0.03
-4            Avg. Predicted Positive Prob.        0.46      0.37
-5            Avg. Predicted Negative Prob.        0.15      0.10
-6                Positive Predictive Value        0.62      0.66
-7                Negative Predictive Value        0.92      0.90
-8                              Brier Score        0.09      0.08
-9                                Accuracy        0.87      0.88
-10 (False Negative)/(False Positive) Ratio        1.03      3.24
+           Fairness Assesment                                  Metric
+1          Statistical Parity                Positive Prediction Rate
+2           Equal Opportunity                     False Negative Rate
+3         Predictive Equality                     False Positive Rate
+4  Balance for Positive Class           Avg. Predicted Positive Prob.
+5  Balance for Negative Class           Avg. Predicted Negative Prob.
+6  Positive Predictive Parity               Positive Predictive Value
+7  Negative Predictive Parity               Negative Predictive Value
+8          Brier Score Parity                             Brier Score
+9     Overall Accuracy Parity                                Accuracy
+10         Treatment Equality (False Negative)/(False Positive) Ratio
 
-$fairness
-                           Metric Difference    95% Diff CI Ratio 95% Ratio CI
-1              Statistical Parity       0.09   [0.05, 0.13]  2.12 [1.48, 3.05]
-2               Equal Opportunity      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]
-3             Predictive Equality       0.05   [0.02, 0.08]  2.67 [1.38, 5.15]
-4      Balance for Positive Class       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]
-5      Balance for Negative Class       0.05   [0.03, 0.07]  1.50 [1.29, 1.75]
-6      Positive Predictive Parity      -0.04  [-0.21, 0.13]  0.94 [0.71, 1.24]
-7      Negative Predictive Parity       0.02  [-0.02, 0.06]  1.02 [0.98, 1.07]
-8              Brier Score Parity       0.01  [-0.01, 0.03]  1.12 [0.89, 1.43]
-9         Overall Accuracy Parity      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]
-10             Treatment Equality      -2.21  [-4.44, 0.02]  0.32  [0.14, 0.7]
+   GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI
+1         0.17      0.08       0.09   [0.05, 0.13]  2.12 [1.49, 3.04]
+2         0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]
+3         0.08      0.03       0.05   [0.02, 0.08]  2.67  [1.4, 5.08]
+4         0.46      0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]
+5         0.15      0.10       0.05   [0.03, 0.07]  1.50 [1.29, 1.74]
+6         0.62      0.66      -0.04  [-0.21, 0.13]  0.94 [0.72, 1.22]
+7         0.92      0.90       0.02  [-0.02, 0.06]  1.02 [0.98, 1.07]
+8         0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.89, 1.43]
+9         0.87      0.88      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]
+10        1.03      3.24      -2.21 [-4.38, -0.04]  0.32 [0.15, 0.68]
 ```
 
 Users can also compute individual metrics using functions like `eval_eq_opp()` to test specific fairness conditions. Full usage examples are provided in the package documentation.
