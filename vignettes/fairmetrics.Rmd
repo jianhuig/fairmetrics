@@ -100,7 +100,8 @@ get_fairness_metrics(
 
 With `get_fairness_metrics`, it is possible to see through the bootstrapped confidence intervals which fairness critereon are violated and which are not. From the above output, we observe that Statistical Parity, Equal Opportunity, Predictive Equality, Balance for Positive Class and Balance for Negative Class possess some evidence of being violated, while Positive Predictive Parity, Negative Predictive Parity, Brier Score Parity and Overall Accuracy Parity do not. Treatment equality remains ambiguous based on the measure. If  difference is considered, the 95%  bootstrapped confidence interval crosses 0 - indicating that there is not evidence indicating that the fairness criterion is violated, while the confidence interval for the ratio crosses 1 - indicating that there is. 
 
->[!WARNING]
+> __NOTE:__
+>
 > Statistical inference from bootstrapped confidence intervals should be interpreted with caution. A confidence interval crossing 0 (for differences) or 1 (for ratios) means the evidence is inconclusive rather than proving the absence of unfairness. Apparent violations may reflect sampling variability rather than systematic bias. Always complement these results with domain knowledge, sensitivity analyses, and additional fairness diagnostics before drawing strong conclusions.  
 
 
