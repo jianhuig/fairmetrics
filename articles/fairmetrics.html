@@ -147,9 +147,9 @@ inference, it can be considered that confidence interval which contains
 0 in its range for difference or 1 for ratio as insignificant.</p>
 <p>The above syntax can be extended to the other <code>eval_*</code>
 functions as well. Additionally, if one wishes to calculate various
-fairness metrics for the model simultaneously, we pass our test data
-with its predicted results into the <code>get_fairness_metrics</code>
-function.</p>
+fairness metrics (and their confidence intervals) for the model
+simultaneously, we pass our test data with its predicted results into
+the <code>get_fairness_metrics</code> function.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_fairness_metrics.html">get_fairness_metrics</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">test_data</span>,</span>
@@ -180,6 +180,28 @@ function.</p>
 <span><span class="co">#&gt; 8         0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.88, 1.43]</span></span>
 <span><span class="co">#&gt; 9         0.87      0.89      -0.02  [-0.06, 0.02]  0.98 [0.93, 1.02]</span></span>
 <span><span class="co">#&gt; 10        1.03      2.78      -1.75    [-3.6, 0.1]  0.37 [0.17, 0.79]</span></span></code></pre></div>
+<p>With <code>get_fairness_metrics</code>, it is possible to see through
+the bootstrapped confidence intervals which fairness critereon are
+violated and which are not. From the above output, we observe that
+Statistical Parity, Equal Opportunity, Predictive Equality, Balance for
+Positive Class and Balance for Negative Class possess some evidence of
+being violated, while Positive Predictive Parity, Negative Predictive
+Parity, Brier Score Parity and Overall Accuracy Parity do not. Treatment
+equality remains ambiguous based on the measure. If difference is
+considered, the 95% bootstrapped confidence interval crosses 0 -
+indicating that there is not evidence indicating that the fairness
+criterion is violated, while the confidence interval for the ratio
+crosses 1 - indicating that there is.</p>
+<blockquote>
+<p>[!WARNING] Statistical inference from bootstrapped confidence
+intervals should be interpreted with caution. A confidence interval
+crossing 0 (for differences) or 1 (for ratios) means the evidence is
+inconclusive rather than proving the absence of unfairness. Apparent
+violations may reflect sampling variability rather than systematic bias.
+Always complement these results with domain knowledge, sensitivity
+analyses, and additional fairness diagnostics before drawing strong
+conclusions.</p>
+</blockquote>
 <p>While <code>fairmetrics</code> focuses only on assessing fairness of
 models across binary protected attributes, it is possible to work with
 protected attributes which consist of more than two groups by using
