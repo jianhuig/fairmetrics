@@ -93,14 +93,8 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list containing:</p><dl><dt>performance</dt>
-<dd><p>Data frame with performance metrics by group.</p></dd>
-
-<dt>fairness</dt>
-<dd><p>Data frame with computed fairness metrics and optional confidence intervals.</p></dd>
-
-
-</dl></div>
+    <p>A dataframe containing fairness assessments, the performance metrics they use and the evaluated results for each (binary) group (specified by the <code>group</code> parameter) along with the difference and ratio between them. If <code>confint</code> is  set to <code>TRUE</code>, then the estimated <code>(1-alpha)*100%</code> bootstrap confidence intervals are returned as well.</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The results are returned as a list of two data frames:</p><ul><li><p><code>performance</code>: Contains performance metrics (e.g., TPR, FPR, PPV) by group.</p></li>
@@ -157,32 +151,28 @@ positive outcomes are similar across groups.</p></li>
 <span class="r-in"><span> cutoff <span class="op">=</span> <span class="fl">0.41</span>,</span></span>
 <span class="r-in"><span> alpha <span class="op">=</span> <span class="fl">0.05</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $performance</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                     Metric GroupFemale GroupMale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                 Positive Prediction Rate        0.17      0.08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                      False Negative Rate        0.38      0.62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                      False Positive Rate        0.08      0.03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4            Avg. Predicted Positive Prob.        0.46      0.37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5            Avg. Predicted Negative Prob.        0.15      0.10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                Positive Predictive Value        0.62      0.66</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7                Negative Predictive Value        0.92      0.90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8                              Brier Score        0.09      0.08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9                                 Accuracy        0.87      0.88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 (False Negative)/(False Positive) Ratio        1.03      3.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $fairness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        Metric Difference Ratio</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          Statistical Parity       0.09  2.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           Equal Opportunity      -0.24  0.61</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         Predictive Equality       0.05  2.67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Balance for Positive Class       0.09  1.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Balance for Negative Class       0.05  1.50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Positive Predictive Parity      -0.04  0.94</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Negative Predictive Parity       0.02  1.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8          Brier Score Parity       0.01  1.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9     Overall Accuracy Parity      -0.01  0.99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10         Treatment Equality      -2.21  0.32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Fairness Assesment                                  Metric</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          Statistical Parity                Positive Prediction Rate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           Equal Opportunity                     False Negative Rate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         Predictive Equality                     False Positive Rate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Balance for Positive Class           Avg. Predicted Positive Prob.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Balance for Negative Class           Avg. Predicted Negative Prob.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Positive Predictive Parity               Positive Predictive Value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Negative Predictive Parity               Negative Predictive Value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8          Brier Score Parity                             Brier Score</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     Overall Accuracy Parity                                Accuracy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         Treatment Equality (False Negative)/(False Positive) Ratio</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         0.17      0.08       0.09   [0.05, 0.13]  2.12 [1.48, 3.05]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         0.38      0.62      -0.24 [-0.39, -0.09]  0.61 [0.44, 0.86]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         0.08      0.03       0.05   [0.02, 0.08]  2.67 [1.38, 5.15]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         0.46      0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         0.15      0.10       0.05   [0.03, 0.07]  1.50 [1.29, 1.75]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         0.62      0.66      -0.04  [-0.21, 0.13]  0.94 [0.71, 1.24]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         0.92      0.90       0.02  [-0.02, 0.06]  1.02 [0.98, 1.07]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.89, 1.43]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         0.87      0.88      -0.01  [-0.05, 0.03]  0.99 [0.94, 1.04]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10        1.03      3.24      -2.21  [-4.44, 0.02]  0.32  [0.14, 0.7]</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>

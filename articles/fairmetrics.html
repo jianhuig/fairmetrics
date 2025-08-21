@@ -158,33 +158,28 @@ function.</p>
 <span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.41</span></span>
 <span> <span class="op">)</span></span>
-<span><span class="co">#&gt; $performance</span></span>
-<span><span class="co">#&gt;                                     Metric GroupFemale GroupMale</span></span>
-<span><span class="co">#&gt; 1                 Positive Prediction Rate        0.17      0.09</span></span>
-<span><span class="co">#&gt; 2                      False Negative Rate        0.38      0.57</span></span>
-<span><span class="co">#&gt; 3                      False Positive Rate        0.08      0.03</span></span>
-<span><span class="co">#&gt; 4            Avg. Predicted Positive Prob.        0.46      0.37</span></span>
-<span><span class="co">#&gt; 5            Avg. Predicted Negative Prob.        0.15      0.11</span></span>
-<span><span class="co">#&gt; 6                Positive Predictive Value        0.62      0.68</span></span>
-<span><span class="co">#&gt; 7                Negative Predictive Value        0.92      0.91</span></span>
-<span><span class="co">#&gt; 8                              Brier Score        0.09      0.08</span></span>
-<span><span class="co">#&gt; 9                                 Accuracy        0.87      0.89</span></span>
-<span><span class="co">#&gt; 10 (False Negative)/(False Positive) Ratio        1.03      2.78</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $fairness</span></span>
-<span><span class="co">#&gt;                        Metric Difference Ratio</span></span>
-<span><span class="co">#&gt; 1          Statistical Parity       0.08  1.89</span></span>
-<span><span class="co">#&gt; 2           Equal Opportunity      -0.19  0.67</span></span>
-<span><span class="co">#&gt; 3         Predictive Equality       0.05  2.67</span></span>
-<span><span class="co">#&gt; 4  Balance for Positive Class       0.09  1.24</span></span>
-<span><span class="co">#&gt; 5  Balance for Negative Class       0.04  1.36</span></span>
-<span><span class="co">#&gt; 6  Positive Predictive Parity      -0.06  0.91</span></span>
-<span><span class="co">#&gt; 7  Negative Predictive Parity       0.01  1.01</span></span>
-<span><span class="co">#&gt; 8          Brier Score Parity       0.01  1.12</span></span>
-<span><span class="co">#&gt; 9     Overall Accuracy Parity      -0.02  0.98</span></span>
-<span><span class="co">#&gt; 10         Treatment Equality      -1.75  0.37</span></span></code></pre></div>
-<p>The result returned here divides the results between the model
-performance and the fairness criteria.</p>
+<span><span class="co">#&gt;            Fairness Assesment                                  Metric</span></span>
+<span><span class="co">#&gt; 1          Statistical Parity                Positive Prediction Rate</span></span>
+<span><span class="co">#&gt; 2           Equal Opportunity                     False Negative Rate</span></span>
+<span><span class="co">#&gt; 3         Predictive Equality                     False Positive Rate</span></span>
+<span><span class="co">#&gt; 4  Balance for Positive Class           Avg. Predicted Positive Prob.</span></span>
+<span><span class="co">#&gt; 5  Balance for Negative Class           Avg. Predicted Negative Prob.</span></span>
+<span><span class="co">#&gt; 6  Positive Predictive Parity               Positive Predictive Value</span></span>
+<span><span class="co">#&gt; 7  Negative Predictive Parity               Negative Predictive Value</span></span>
+<span><span class="co">#&gt; 8          Brier Score Parity                             Brier Score</span></span>
+<span><span class="co">#&gt; 9     Overall Accuracy Parity                                Accuracy</span></span>
+<span><span class="co">#&gt; 10         Treatment Equality (False Negative)/(False Positive) Ratio</span></span>
+<span><span class="co">#&gt;    GroupFemale GroupMale Difference    95% Diff CI Ratio 95% Ratio CI</span></span>
+<span><span class="co">#&gt; 1         0.17      0.09       0.08   [0.04, 0.12]  1.89 [1.35, 2.64]</span></span>
+<span><span class="co">#&gt; 2         0.38      0.57      -0.19 [-0.34, -0.04]  0.67 [0.47, 0.94]</span></span>
+<span><span class="co">#&gt; 3         0.08      0.03       0.05   [0.02, 0.08]  2.67  [1.4, 5.08]</span></span>
+<span><span class="co">#&gt; 4         0.46      0.37       0.09   [0.04, 0.14]  1.24 [1.09, 1.42]</span></span>
+<span><span class="co">#&gt; 5         0.15      0.11       0.04   [0.02, 0.06]  1.36 [1.17, 1.59]</span></span>
+<span><span class="co">#&gt; 6         0.62      0.68      -0.06  [-0.23, 0.11]  0.91 [0.71, 1.18]</span></span>
+<span><span class="co">#&gt; 7         0.92      0.91       0.01  [-0.03, 0.05]  1.01 [0.97, 1.05]</span></span>
+<span><span class="co">#&gt; 8         0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.88, 1.43]</span></span>
+<span><span class="co">#&gt; 9         0.87      0.89      -0.02  [-0.06, 0.02]  0.98 [0.93, 1.02]</span></span>
+<span><span class="co">#&gt; 10        1.03      2.78      -1.75    [-3.6, 0.1]  0.37 [0.17, 0.79]</span></span></code></pre></div>
 <p>While <code>fairmetrics</code> focuses only of assessing fairness of
 models across binary protected attributes, it is possible to work with
 protected attributes which consist of more than two groups by using
