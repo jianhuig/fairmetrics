@@ -19,7 +19,7 @@
 #' - **Overall Accuracy Parity**: Difference in overall accuracy across groups.
 #' - **Treatment Equality**: Ratio of false negatives to false positives across groups.
 #'
-#' **NOTE:** Statistical inference from bootstrapped confidence intervals should be interpreted with caution. A confidence interval crossing 0 (for differences) or 1 (for ratios) means the evidence is inconclusive rather than proving absence of unfairness. Apparent violations may reflect sampling variability rather than systematic bias. Always complement these results with domain knowledge, sensitivity analyses, and additional fairness diagnostics before drawing strong conclusions about a specific fairness assesment.
+#' **NOTE:** Statistical inference from bootstrapped confidence intervals should be interpreted with caution. A confidence interval crossing 0 (for differences) or 1 (for ratios) means the evidence is inconclusive rather than proving absence of unfairness. Apparent violations may reflect sampling variability rather than systematic bias. Always complement these results with domain knowledge, sensitivity analyses, and additional fairness diagnostics before drawing strong conclusions about a specific fairness assessment.
 #'
 #' @param data A data frame containing the outcome, group, and predicted probabilities.
 #' @param outcome The name of the column containing the true binary outcome.

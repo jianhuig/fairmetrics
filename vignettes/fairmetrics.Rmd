@@ -102,7 +102,7 @@ With the `get_fairness_metrics` function, it's possible to examine the bootstrap
 
 > __NOTE:__
 >
-> Statistical inference from bootstrapped confidence intervals should be interpreted with caution. A confidence interval crossing 0 (for differences) or 1 (for ratios) means the evidence is inconclusive rather than proving absence of unfairness. Apparent violations may reflect sampling variability rather than systematic bias. Always complement these results with domain knowledge, sensitivity analyses, and additional fairness diagnostics before drawing strong conclusions about a specific fairness assesment.
+> Statistical inference from bootstrapped confidence intervals should be interpreted with caution. A confidence interval crossing 0 (for differences) or 1 (for ratios) means the evidence is inconclusive rather than proving absence of unfairness. Apparent violations may reflect sampling variability rather than systematic bias. Always complement these results with domain knowledge, sensitivity analyses, and additional fairness diagnostics before drawing strong conclusions about a specific fairness assessment.
 
 While `fairmetrics` focuses only on assessing fairness of models across binary protected attributes, it is possible to work with protected attributes which consist of more than two groups by using "one-vs-all" comparisons and a little bit of data wrangling to create the appropriate columns.
 
