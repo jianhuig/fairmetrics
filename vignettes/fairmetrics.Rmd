@@ -108,7 +108,7 @@ While `fairmetrics` focuses only on assessing fairness of models across binary p
 
 # Conditional Fairness Evaluation
 
-To evaluate a model's fairness for a specific subgroup, simply subset the data. For example, to evaluate the conditional statistical parity among subjects aged 60 and older using the previously fitted random forest model, subsetting the test data and and passing it through the `eval_stats_parity` is all thats required. 
+To evaluate a model's fairness for a specific subgroup, simply subset the data. For example, to evaluate the conditional statistical parity among subjects aged 60 and older using the previously fitted random forest model, subsetting the test data and and passing it through the `eval_stats_parity` is all that's required. 
 
 ```{r}
 eval_stats_parity(
