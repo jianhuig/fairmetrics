@@ -1,7 +1,7 @@
 # fairmetrics: Fairness evaluation metrics with confidence intervals for binary protected attributes <a href='https://github.com/jianhuig/fairmetrics'><img src='https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png' align="right" height="300" /></a>
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/fairmetrics)](https://www.r-pkg.org/badges/version/fairmetrics)
-[![R-CMD-check](https://github.com/jianhuig/FairnessTutorial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jianhuig/FairnessTutorial/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/jianhuig/FairnessTutorial/actions/workflows/R-CMD-check/badge.svg)](https://github.com/jianhuig/FairnessTutorial/actions/workflows/R-CMD-check.yaml)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/)
 [![Downloads](https://cranlogs.r-pkg.org/badges/fairmetrics)](https://cran.rstudio.com/web/packages/fairmetrics/index.html)
 [![total](https://cranlogs.r-pkg.org/badges/grand-total/fairmetrics)](https://shinyus.ipub.com/cranview/)
