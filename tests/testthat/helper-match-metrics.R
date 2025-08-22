@@ -15,11 +15,11 @@ test_data <- mimic_preprocessed |>
 
 test_data$pred <- predict(rf_model, newdata = test_data, type = "prob")[, 2]
 
-get_fairness_metrics(
+performance <- get_fairness_metrics(
   data = test_data,
   outcome = "day_28_flg",
   group = "gender",
   probs = "pred",
   cutoff = 0.41,
   confint = FALSE
-) |> list2env(envir = environment())
+)

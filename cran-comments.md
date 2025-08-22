@@ -5,15 +5,16 @@ The code here has been reformatted and edited for release with a associated arti
 ## Version 1.0.5
 
 * Separated exported functions into separate .R files.
-* Rmoved Helper.R as the functions contained are not used for function operations. 
+* Removed Helper.R as the functions contained are not used for function operations. 
 * Refactored `get_fairness_metrics` to only preform the bootstrap once (as opposed to repeating multiple times for each metric) improving speed. 
-* Emphasising in DESCRIPTION and README.md file (on Github) that the package scope is specifically for evaluating fairness of statistical/ML models accross binary protected attributes.
+* Emphasizing in DESCRIPTION and README.md file (on Github) that the package scope is specifically for evaluating fairness of statistical/ML models accross binary protected attributes.
 * Edited documentation to use the term "binary protected attribute" over "sensitive attribute" (personal preference)
 * Updating functions to ensure that `group` arguments are strictly binary. 
 * Handling `NA` inputs with helper functions in `ModelPreformance.R`
 * Confidence interval lengths are now reflected dynamically in the column names. 
 * Removed `eval_cond_stats_parity` and conditional statistical parity as a metric in `get_fairness_metrics`
-* `get_fairness_metrics` returns a single dataframe.
+* `get_fairness_metrics` returns a single data frame.
+* Added note to `get_fairness_metrics` and to vigbette discussing limitations of statistical inferece with bootstraped CIs. 
 
 ## Version 1.0.4
 

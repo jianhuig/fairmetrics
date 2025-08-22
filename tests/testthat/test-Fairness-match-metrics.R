@@ -12,7 +12,7 @@ test_that('eval_acc_parity match metrics test', {
     rownames(res)<- 1
   },
   {
-    res <- subset(performance, Metric =="Accuracy")
+    res <- subset(performance, Metric =="Accuracy")[,2:4]
     rownames(res)<- 1
 
   })
@@ -32,7 +32,7 @@ test_that('eval_bs_parity match metrics test', {
     rownames(res)<- 1
   },
   {
-    res <- subset(performance, Metric =="Brier Score")
+    res <- subset(performance, Metric =="Brier Score")[,2:4]
     rownames(res)<- 1
   })
 })
@@ -52,7 +52,7 @@ test_that('eval_eq_opp match metrics test', {
     rownames(res)<- 1
     },
     {
-      res <- subset(performance, Metric =="False Negative Rate")
+      res <- subset(performance, Metric =="False Negative Rate")[,2:4]
       rownames(res)<- 1
     }
     )
@@ -75,7 +75,7 @@ test_that('eval_neg_class_bal match metrics test', {
     rownames(res) <- 1
   },
   {
-    res <- subset(performance, Metric == "Avg. Predicted Prob.")[2,]
+    res <- subset(performance, Metric == "Avg. Predicted Negative Prob.")[,2:4]
     rownames(res) <- 1
   }
   )
@@ -95,7 +95,7 @@ test_that('eval_pos_class_bal match metrics test', {
     rownames(res) <- 1
   },
   {
-    res <- subset(performance, Metric =="Avg. Predicted Prob.")[1,]
+    res <- subset(performance, Metric =="Avg. Predicted Positive Prob.")[,2:4]
     rownames(res) <- 1
   }
   )
@@ -116,7 +116,7 @@ test_that('eval_pred_equality metrics test', {
     rownames(res) <- 1
   },
   {
-    res <- subset(performance, Metric =="False Positive Rate")
+    res <- subset(performance, Metric =="False Positive Rate")[,2:4]
     rownames(res) <- 1
   }
   )
@@ -137,7 +137,7 @@ test_that('eval_stats_parity metrics test', {
     rownames(res) <- 1
   },
   {
-    res <- subset(performance, Metric =="Positive Prediction Rate")[1,]
+    res <- subset(performance, Metric =="Positive Prediction Rate")[,2:4]
     rownames(res) <- 1
   }
   )
@@ -159,7 +159,7 @@ test_that('eval_treatment_equality metrics test', {
     rownames(res) <- 1
   },
   {
-    res <- subset(performance, Metric =="(False Negative)/(False Positive) Ratio")[1,]
+    res <- subset(performance, Metric =="(False Negative)/(False Positive) Ratio")[,2:4]
     rownames(res) <- 1
   }
   )
