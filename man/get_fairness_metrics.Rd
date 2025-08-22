@@ -61,6 +61,8 @@ positive outcomes are similar across groups.
 \item \strong{Overall Accuracy Parity}: Difference in overall accuracy across groups.
 \item \strong{Treatment Equality}: Ratio of false negatives to false positives across groups.
 }
+
+\strong{NOTE:} Statistical inference from bootstrapped confidence intervals should be interpreted with caution. A confidence interval crossing 0 (for differences) or 1 (for ratios) means the evidence is inconclusive rather than proving absence of unfairness. Apparent violations may reflect sampling variability rather than systematic bias. Always complement these results with domain knowledge, sensitivity analyses, and additional fairness diagnostics before drawing strong conclusions about a specific fairness assesment.
 }
 }
 \examples{
