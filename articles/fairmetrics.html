@@ -180,33 +180,104 @@ the <code>get_fairness_metrics</code> function.</p>
 <span><span class="co">#&gt; 8         0.09      0.08       0.01  [-0.01, 0.03]  1.12 [0.88, 1.43]</span></span>
 <span><span class="co">#&gt; 9         0.87      0.89      -0.02  [-0.06, 0.02]  0.98 [0.93, 1.02]</span></span>
 <span><span class="co">#&gt; 10        1.03      2.78      -1.75    [-3.6, 0.1]  0.37 [0.17, 0.79]</span></span></code></pre></div>
-<p>With <code>get_fairness_metrics</code>, it is possible to see through
-the bootstrapped confidence intervals which fairness critereon are
-violated and which are not. From the above output, we observe that
+<p>With the <code>get_fairness_metrics</code> function, it’s possible to
+examine the bootstrapped confidence intervals to determine which
+fairness criterion show evidence of violation. From the above output,
 Statistical Parity, Equal Opportunity, Predictive Equality, Balance for
-Positive Class and Balance for Negative Class possess some evidence of
-being violated, while Positive Predictive Parity, Negative Predictive
-Parity, Brier Score Parity and Overall Accuracy Parity do not. Treatment
-equality remains ambiguous based on the measure. If difference is
-considered, the 95% bootstrapped confidence interval crosses 0 -
-indicating that there is not evidence indicating that the fairness
-criterion is violated, while the confidence interval for the ratio
-crosses 1 - indicating that there is.</p>
+Positive Class and Balance for Negative Class show evidence of being
+violated, while Positive Predictive Parity, Negative Predictive Parity,
+Brier Score Parity and Overall Accuracy Parity do not. Treatment
+Equality remains ambiguous: when assessed by difference, the 95%
+bootstrapped confidence interval crosses 0 - indicating that there is no
+evidence indicating that the fairness criterion is violated, but when
+assessed by ratio, the interval crosses 1 - which indicates that there
+is.</p>
 <blockquote>
 <p><strong>NOTE:</strong></p>
 <p>Statistical inference from bootstrapped confidence intervals should
 be interpreted with caution. A confidence interval crossing 0 (for
 differences) or 1 (for ratios) means the evidence is inconclusive rather
-than proving the absence of unfairness. Apparent violations may reflect
+than proving absence of unfairness. Apparent violations may reflect
 sampling variability rather than systematic bias. Always complement
 these results with domain knowledge, sensitivity analyses, and
-additional fairness diagnostics before drawing strong conclusions.</p>
+additional fairness diagnostics before drawing strong conclusions about
+a specific fairness assesment.</p>
 </blockquote>
 <p>While <code>fairmetrics</code> focuses only on assessing fairness of
 models across binary protected attributes, it is possible to work with
 protected attributes which consist of more than two groups by using
 “one-vs-all” comparisons and a little bit of data wrangling to create
 the appropriate columns.</p>
+</div>
+<div class="section level2">
+<h2 id="conditional-fairness-evaluation">Conditional Fairness Evaluation<a class="anchor" aria-label="anchor" href="#conditional-fairness-evaluation"></a>
+</h2>
+<p>To evaluate a model’s fairness for a specific subgroup, simply subset
+the data. For example, to evaluate the conditional statistical parity
+among subjects aged 60 and older using the previously fitted random
+forest model, subsetting the test data and and passing it through the
+<code>eval_stats_parity</code> is all thats required.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/eval_stats_parity.html">eval_stats_parity</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">test_data</span>, <span class="va">age</span> <span class="op">&gt;=</span> <span class="fl">60</span><span class="op">)</span>, </span>
+<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
+<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
+<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
+<span>  cutoff <span class="op">=</span> <span class="fl">0.41</span>,</span>
+<span>  message <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; There is not enough evidence that the model does not satisfy</span></span>
+<span><span class="co">#&gt;             statistical parity.</span></span>
+<span><span class="co">#&gt;                     Metric GroupFemale GroupMale Difference 95% Diff CI Ratio</span></span>
+<span><span class="co">#&gt; 1 Positive Prediction Rate        0.34      0.25       0.09   [0, 0.18]  1.36</span></span>
+<span><span class="co">#&gt;   95% Ratio CI</span></span>
+<span><span class="co">#&gt; 1 [1.01, 1.84]</span></span></code></pre></div>
+<p>From the bootstrapped confidence intervals for the difference and the
+ratio, we note that there is evidence that statistical parity is
+violated based on the difference and ratio confidence intervals between
+the male and female subjects aged 60 and over. A similar example can be
+constructed with <code>get_fairness_metrics</code> for a more
+comprehensive view of the conditional fairness of the model.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_fairness_metrics.html">get_fairness_metrics</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">test_data</span>, <span class="va">age</span> <span class="op">&gt;=</span> <span class="fl">60</span><span class="op">)</span>, </span>
+<span>  outcome <span class="op">=</span> <span class="st">"day_28_flg"</span>,</span>
+<span>  group <span class="op">=</span> <span class="st">"gender"</span>,</span>
+<span>  probs <span class="op">=</span> <span class="st">"pred"</span>,</span>
+<span>  cutoff <span class="op">=</span> <span class="fl">0.41</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;            Fairness Assesment                                  Metric</span></span>
+<span><span class="co">#&gt; 1          Statistical Parity                Positive Prediction Rate</span></span>
+<span><span class="co">#&gt; 2           Equal Opportunity                     False Negative Rate</span></span>
+<span><span class="co">#&gt; 3         Predictive Equality                     False Positive Rate</span></span>
+<span><span class="co">#&gt; 4  Balance for Positive Class           Avg. Predicted Positive Prob.</span></span>
+<span><span class="co">#&gt; 5  Balance for Negative Class           Avg. Predicted Negative Prob.</span></span>
+<span><span class="co">#&gt; 6  Positive Predictive Parity               Positive Predictive Value</span></span>
+<span><span class="co">#&gt; 7  Negative Predictive Parity               Negative Predictive Value</span></span>
+<span><span class="co">#&gt; 8          Brier Score Parity                             Brier Score</span></span>
+<span><span class="co">#&gt; 9     Overall Accuracy Parity                                Accuracy</span></span>
+<span><span class="co">#&gt; 10         Treatment Equality (False Negative)/(False Positive) Ratio</span></span>
+<span><span class="co">#&gt;    GroupFemale GroupMale Difference   95% Diff CI Ratio 95% Ratio CI</span></span>
+<span><span class="co">#&gt; 1         0.34      0.25       0.09  [0.01, 0.17]  1.36 [1.01, 1.83]</span></span>
+<span><span class="co">#&gt; 2         0.30      0.46      -0.16    [-0.32, 0]  0.65 [0.41, 1.04]</span></span>
+<span><span class="co">#&gt; 3         0.18      0.11       0.07 [-0.01, 0.15]  1.64 [0.91, 2.96]</span></span>
+<span><span class="co">#&gt; 4         0.50      0.41       0.09  [0.04, 0.14]  1.22 [1.08, 1.38]</span></span>
+<span><span class="co">#&gt; 5         0.26      0.22       0.04  [0.01, 0.07]  1.18 [1.03, 1.36]</span></span>
+<span><span class="co">#&gt; 6         0.63      0.69      -0.06  [-0.22, 0.1]  0.91 [0.71, 1.17]</span></span>
+<span><span class="co">#&gt; 7         0.86      0.81       0.05 [-0.03, 0.13]  1.06 [0.96, 1.17]</span></span>
+<span><span class="co">#&gt; 8         0.14      0.16      -0.02 [-0.05, 0.01]  0.88 [0.71, 1.07]</span></span>
+<span><span class="co">#&gt; 9         0.78      0.78       0.00 [-0.08, 0.08]  1.00  [0.91, 1.1]</span></span>
+<span><span class="co">#&gt; 10        0.71      1.88      -1.17  [-2.54, 0.2]  0.38 [0.16, 0.89]</span></span></code></pre></div>
+<p>Conditioning on subjects aged 60 and older, Statistical Parity,
+Balance for Positive Class and Balance for Negative Class posses
+evidence for being violated based on 95% bootstrapped confidence
+intervals. While Predictive Equality, Positive Predictive Parity,
+Negative Predictive Parity, Brier Score Parity and Overall Accuracy
+Parity do not. Similar to the unconditioned case, Treatment Equality
+remains ambiguous based on the contrast between the difference and ratio
+confidence intervals. If difference is considered, there is evidence of
+Treatment equality being violated. If ratio is considered, there does
+not.</p>
 </div>
 <div class="section level2">
 <h2 id="appendix-confidence-interval-construction">Appendix: Confidence Interval Construction<a class="anchor" aria-label="anchor" href="#appendix-confidence-interval-construction"></a>
