@@ -401,7 +401,7 @@ get_fairness_metrics <- function(data,
     )
 
     colnames(fairness_summary) <- c(
-      "Fairness Assesment",
+      "Fairness Assessment",
       "Metric",
       paste0("Group", sort(unique(data[[group]]))[1]),
       paste0("Group", sort(unique(data[[group]]))[2]),
