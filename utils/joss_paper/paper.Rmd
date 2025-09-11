@@ -24,18 +24,18 @@ affiliations:
 date: "2025-06-10"
 bibliography: paper.bib
 output:
+  rticles::joss_article:
+    keep_tex: true
   md_document:
      #keep_tex: true
      preserve_yaml: TRUE
      variant: "markdown_strict"
-  rticles::joss_article:
-    keep_tex: true
 journal: JOSS
 ---
 
 # Summary
 
-Fairness is a growing area of machine learning (ML) that focuses on ensuring that models do not produce systematically biased outcomes across groups defined by protected attributes, such as race, gender, or age. The `fairmetrics` R package provides a user-friendly framework for rigorously evaluating group-based fairness criteria, including independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity) for binary protected attributes. The package provides both point and interval estimates for a variety of commonly used criteria. `fairmetrics` also includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical] to demonstrate its use. 
+Fairness is a growing area of machine learning (ML) that focuses on ensuring that models do not produce systematically biased outcomes across groups defined by protected attributes, such as race, gender, or age. The `fairmetrics` R package provides a user-friendly framework for rigorously evaluating group-based fairness criteria, including independence (e.g., statistical parity), separation (e.g., equalized odds), and sufficiency (e.g., predictive parity) for binary protected attributes. The package provides both point and interval estimates for a variety of commonly used criteria. `fairmetrics` also includes an example dataset derived from the Medical Information Mart for Intensive Care, version II (MIMIC-II) database [@goldberger2000physiobank; @raffa2016clinical; @raffa2016data] to demonstrate its use. 
 
 
 # Statement of Need
