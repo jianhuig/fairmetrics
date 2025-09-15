@@ -331,9 +331,9 @@ justice, healthcare, finance, employment, and education (Mehrabi et al.
 software report point estimates and/or visualizations, without any
 measures of uncertainty. This limits users' ability to determine whether
 observed disparities are statistically significant. \texttt{fairmetrics}
-addresses this limitation by including confidence intervals for both
-difference and ratio based fairness metrics to enable more robust and
-statistically grounded fairness assessments.
+addresses this limitation by including confidence intervals (CIs) for
+both difference and ratio based fairness metrics to enable more robust
+and statistically grounded fairness assessments.
 
 \section{Fairness Criteria}\label{fairness-criteria}
 
@@ -396,9 +396,8 @@ model's fairness with respect to the binary protected attribute
 \texttt{gender}. The model is trained on a subset of the data and the
 predictions are made and evaluated on a test set. A statistically
 significant difference across groups at a given level of significance is
-indicated when the confidence interval for a difference-based metric
-does not include zero or when the interval for a ratio-based metric does
-not include one.
+indicated when the CI for a difference-based metric does not include
+zero or when the interval for a ratio-based metric does not include one.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -406,7 +405,7 @@ not include one.
 \CommentTok{\# Add the vector of predicted probabilities to the test data}
 \CommentTok{\# to evaluate fairness.}
 \FunctionTok{library}\NormalTok{(fairmetrics)}
-\CommentTok{\# Setting alpha=0.05 for 95\% confidence intervals}
+\CommentTok{\# Setting alpha=0.05 for 95\% CIs}
 \FunctionTok{get\_fairness\_metrics}\NormalTok{(}
  \AttributeTok{data =}\NormalTok{ test\_data,}
  \AttributeTok{outcome =} \StringTok{"day\_28\_flg"}\NormalTok{,}
@@ -453,11 +452,10 @@ Other R packages similar to \texttt{fairmetrics} include
 (Wiśniewski and Biecek 2022) and \texttt{mlr3fairness} (Pfisterer, Siyi,
 and Lang 2024). \texttt{fairmetrics} differs from these packages in two
 ways. The first difference is that \texttt{fairmetrics} calculates ratio
-and difference-based group fairness metrics and their corresponding
-confidence intervals, allowing for more meaningful inferences about the
-fairness criteria. The second difference is that \texttt{fairmetrics}
-does not possess any external dependencies and has a lower memory
-footprint.
+and difference-based group fairness metrics and their corresponding CIs,
+allowing for more meaningful inferences about the fairness criteria. The
+second difference is that \texttt{fairmetrics} does not possess any
+external dependencies and has a lower memory footprint.
 \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows
 the comparison of memory used and dependencies required when loading
 each library.
