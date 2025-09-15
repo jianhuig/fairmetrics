@@ -66,9 +66,6 @@ While the choice of fairness metric used is context dependent, we show all crite
 
 
 ```r
-# Train a classification model (e.g., random forest).
-# Add the vector of predicted probabilities to the test data
-# to evaluate fairness.
 library(fairmetrics)
 # Setting alpha=0.05 for 95% CIs
 get_fairness_metrics(
