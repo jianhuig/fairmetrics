@@ -6,6 +6,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/fairmetrics)](https://cran.rstudio.com/web/packages/fairmetrics/index.html)
 [![total](https://cranlogs.r-pkg.org/badges/grand-total/fairmetrics)](https://shinyus.ipub.com/cranview/)
 [![arXiv](https://img.shields.io/badge/arXiv-2406.09307-b31b1b.svg)](https://arxiv.org/abs/2406.09307)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17100723.svg)](https://doi.org/10.5281/zenodo.17100723)
 
 
 A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary protected attributes. It is based on the overview of fairness in machine learning written by Gao et al (2024) (https://arxiv.org/abs/2406.09307).
