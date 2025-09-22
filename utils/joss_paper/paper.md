@@ -23,14 +23,6 @@ affiliations:
     index: 1
 date: "2025-06-10"
 bibliography: paper.bib
-output:
-  # rticles::joss_article:
-  #   keep_tex: true
-  md_document:
-     #keep_tex: true
-     preserve_yaml: TRUE
-     variant: "markdown_strict"
-journal: JOSS
 ---
 
 # Summary
