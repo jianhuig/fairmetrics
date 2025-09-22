@@ -48,9 +48,9 @@ The package also includes additional metrics, such as the Brier Score Parity (co
 
 # Evaluating Fairness Criteria
 
-The input required to evaluate model fairness with the `fairmetrics` package is a `data.frame` or `tibble` containing the model's predicted probabilities, the true outcomes, and the protected attribute. \hyperref[workflow]{Figure ~\ref*{workflow}} shows the workflow for using `fairmetrics`.
+The input required to evaluate model fairness with the `fairmetrics` package is a `data.frame` or `tibble` containing the model's predicted probabilities, the true outcomes, and the protected attribute. Figure 1 shows the workflow for using `fairmetrics`.
 
-![Workflow for using `fairmetrics` to evaluate model fairness across multiple criteria. \label{workflow}](fairmetrics-workflow.png)
+![Workflow for using `fairmetrics` to evaluate model fairness across multiple criteria.](fairmetrics-workflow.png)
 
 A simple example of how to use the `fairmetrics` package is illustrated below. The example makes use of the `mimic_preprocessed` dataset, a pre-processed version of the Indwelling Arterial Catheter (IAC) Clinical dataset, from the MIMIC-II clinical database [@goldberger2000physiobank; @raffa2016clinical; @raffa2016data]. 
 
@@ -98,7 +98,7 @@ Users can also compute individual metrics using functions like `eval_eq_opp()` t
 
 # Related Work
 
-Other R packages similar to `fairmetrics` include `fairness` [@fairness_package], `fairmodels` [@wisniewski2022fairmodels] and `mlr3fairness` [@mlr3fairness_package]. `fairmetrics` differs from these packages in two ways. The first difference is that `fairmetrics` calculates ratio and difference-based group fairness metrics and their corresponding CIs, allowing for more meaningful inferences about the fairness criteria. The second difference is that `fairmetrics` does not possess any external dependencies and has a lower memory footprint. \hyperref[tab:memory_dep_usage]{Table~\ref*{tab:memory_dep_usage}} shows the comparison of memory used and dependencies required when loading each library. 
+Other R packages similar to `fairmetrics` include `fairness` [@fairness_package], `fairmodels` [@wisniewski2022fairmodels] and `mlr3fairness` [@mlr3fairness_package]. `fairmetrics` differs from these packages in two ways. The first difference is that `fairmetrics` calculates ratio and difference-based group fairness metrics and their corresponding CIs, allowing for more meaningful inferences about the fairness criteria. The second difference is that `fairmetrics` does not possess any external dependencies and has a lower memory footprint. Table 1 shows the comparison of memory used and dependencies required when loading each library. 
 
 \begin{table}[ht]
 \centering
@@ -113,7 +113,6 @@ fairmetrics & 0.05   & 0  \\
 \hline
 \end{tabular}
 \caption{Memory usage (in MB) and dependencies of `fairmetrics` vs similar packages.}
-\label{tab:memory_dep_usage}
 \end{table}
 
 For Python users, the `fairlearn` library [@fairlearn_paper] provides additional fairness metrics and algorithms. The `fairmetrics` package is designed for seamless integration with R workflows, making it a more convenient choice for R users.
