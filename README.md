@@ -6,6 +6,7 @@
 [![Downloads](https://cranlogs.r-pkg.org/badges/fairmetrics)](https://cran.rstudio.com/web/packages/fairmetrics/index.html)
 [![total](https://cranlogs.r-pkg.org/badges/grand-total/fairmetrics)](https://shinyus.ipub.com/cranview/)
 [![arXiv](https://img.shields.io/badge/arXiv-2406.09307-b31b1b.svg)](https://arxiv.org/abs/2406.09307)
+[![JOSS](https://joss.theoj.org/papers/bb9ceb57768bad45865e148e6bc0a426/status.svg)](https://joss.theoj.org/papers/bb9ceb57768bad45865e148e6bc0a426)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17100723.svg)](https://doi.org/10.5281/zenodo.17100723)
 
 
