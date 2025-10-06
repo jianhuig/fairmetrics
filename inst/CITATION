@@ -1,3 +1,24 @@
+citHeader("To cite fairmetrics in publications, please use one of the following:")
+
+bibentry(
+  bibtype = "Article",
+  title   = "fairmetrics: An R package for group fairness evaluation",
+  author  = c(
+    person("Benjamin", "Smith"),
+    person("Jianhui", "Gao"),
+    person("Benson", "Chou"),
+    person("Jessica", "Gronsbell")
+  ),
+  year    = "2025",
+  journal = "Journal of Open Source Software",
+  volume  = "10",
+  number  = "113",
+  pages   = "8497",
+  doi     = "10.21105/joss.08497",
+  url     = "https://doi.org/10.21105/joss.08497",
+  publisher = "The Open Journal"
+)
+
 bibentry(
   bibtype = "Manual",
   title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes",
@@ -10,23 +31,6 @@ bibentry(
   year = "2025",
   url = "https://github.com/jianhuig/fairmetrics"
 )
-
-bibentry(
-    bibtype = "Misc",
-    key = "Smith_Gao_Gronsbell_2025",
-    title = "fairmetrics: An R package for group fairness evaluation",
-    author = c(
-      person("Benjamin", "Smith"),
-      person("Jianhui", "Gao"),
-      person("Jessica", "Gronsbell")
-    ),
-    year = "2025",
-    month = "jun",
-    note = "arXiv:2506.06243",
-    url = "https://arxiv.org/abs/2506.06243",
-    textVersion = "Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation. arXiv:2506.06243."
-
-  )
 
 bibentry(
   bibtype = "Misc",
