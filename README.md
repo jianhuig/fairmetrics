@@ -33,33 +33,33 @@ devtools::install_github("jianhuig/fairmetrics")
 
 To cite package ‘fairmetrics’ in publications use:
 
->  Smith B, Gao J, Chou B, Gronsbell J (2025). "fairmetrics: An R package for group fairness
-  evaluation." _Journal of Open Source Software_, *10*(113), 8497. doi:10.21105/joss.08497
+>  Smith et al., (2025). fairmetrics: An R package for group fairness evaluation. Journal of Open Source Software, 10(113), 8497, https://doi.org/10.21105/joss.08497
 >
-> Gao J, Smith B, Chou B, Gronsbell J (2025). _fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes_. <https://github.com/jianhuig/fairmetrics>.
->
-> Gao J, Chou B, McCaw ZR, Thurston H, Varghese P, Hong C, Gronsbell J (2025). "What Is Fair?
-  Defining Fairness in Machine Learning for Health.", Statistics in Medicine, 44(20-22), e70234.
+>   Gao J, Smith B, Chou B, Gronsbell J (2025). _fairmetrics: Fairness Evaluation Metrics with Confidence
+  Intervals_. <https://github.com/jianhuig/fairmetrics>.
+>  
+>  Gao et al. (2025). What is Fair? Defining Fairness in Machine Learning for Health. Statistics in Medicine, 44(20-22), e70234.
   doi:10.1002/sim.70234
-
 
 
 A BibTeX entry for LaTeX users is
 
 ```
-bibentry(
-  bibtype = "Manual",
-  title = "fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes",
-  author = c(
-    person("Jianhui", "Gao"),
-    person("Benjamin", "Smith"),
-    person("Benson", "Chou"),
-    person("Jessica", "Gronsbell")
-  ),
-  year = "2025",
-  url = "https://github.com/jianhuig/fairmetrics"
-)
+  @Article{
+    Smith2025,
+    title = {fairmetrics: An R package for group fairness evaluation},
+    author = {Benjamin Smith and Jianhui Gao and Benson Chou and Jessica Gronsbell},
+    year = {2025},
+    journal = {Journal of Open Source Software},
+    volume = {10},
+    number = {113},
+    pages = {8497},
+    doi = {10.21105/joss.08497},
+    url = {https://doi.org/10.21105/joss.08497},
+    publisher = {The Open Journal},
+  }
 
+<<<<<<< HEAD
 bibentry(
   bibtype = "Article",
   key = "Smith_Gao_Gronsbell_2025",
@@ -113,6 +113,25 @@ bibentry(
   )
 )
 
+=======
+  @Manual{
+    Smith2025Package,
+    title = {fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes},
+    author = {Jianhui Gao and Benjamin Smith and Benson Chou and Jessica Gronsbell},
+    year = {2025},
+    url = {https://github.com/jianhuig/fairmetrics},
+  }
+
+
+ @Misc{Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024,
+    title = {What is Fair? Defining Fairness in Machine Learning for Health},
+    author = {Jianhui Gao and Benson Chou and Zachary R. McCaw and Hilary Thurston and Paul Varghese and Chuan Hong and Jessica Gronsbell},
+    year = {2024},
+    month = {jun},
+    note = {arXiv:2406.09307},
+    url = {https://arxiv.org/abs/2406.09307},
+  }
+>>>>>>> b003c936e07fe8eced5adbe83741019b829ac5c6
 ```
 
 ## Similar Works
