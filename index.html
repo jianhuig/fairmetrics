@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes">
-<meta name="description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary protected attributes. It is based on the overview of fairness in machine learning written by Gao et al (2024) &lt;doi:10.48550/arXiv.2406.09307&gt;.">
-<meta property="og:description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary protected attributes. It is based on the overview of fairness in machine learning written by Gao et al (2024) &lt;doi:10.48550/arXiv.2406.09307&gt;.">
+<meta name="description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary protected attributes. It is based on the overview of fairness in machine learning written by Gao et al (2025) &lt;doi:10.1002/sim.70234&gt;.">
+<meta property="og:description" content="A collection of functions for computing fairness metrics for machine learning and statistical models, including confidence intervals for each metric. The package supports the evaluation of group-level fairness criterion commonly used in fairness research, particularly in healthcare for binary protected attributes. It is based on the overview of fairness in machine learning written by Gao et al (2025) &lt;doi:10.1002/sim.70234&gt;.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">fairmetrics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
 <blockquote>
 <p>Smith et al., (2025). fairmetrics: An R package for group fairness evaluation. Journal of Open Source Software, 10(113), 8497, <a href="https://doi.org/10.21105/joss.08497" class="external-link uri">https://doi.org/10.21105/joss.08497</a></p>
 <p>Gao J, Smith B, Chou B, Gronsbell J (2025). <em>fairmetrics: Fairness Evaluation Metrics with Confidence Intervals</em>. <a href="https://github.com/jianhuig/fairmetrics" class="external-link uri">https://github.com/jianhuig/fairmetrics</a>.</p>
-<p>Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307.</p>
+<p>Gao et al. (2025). What is Fair? Defining Fairness in Machine Learning for Health. Statistics in Medicine, 44(20-22), e70234. <a href="doi:10.1002/sim.70234" class="uri">doi:10.1002/sim.70234</a></p>
 </blockquote>
 <p>A BibTeX entry for LaTeX users is</p>
 <pre><code>  @Article{
@@ -91,6 +91,61 @@
     publisher = {The Open Journal},
   }
 
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+bibentry(
+  bibtype = "Article",
+  key = "Smith_Gao_Gronsbell_2025",
+  author = c(
+    person("Benjamin", "Smith"),
+    person("Jianhui", "Gao"),
+    person("Benson", "Chou"),
+    person("Jessica", "Gronsbell")
+  ),
+  title = "fairmetrics: An R package for group fairness evaluation",
+  journal = "Journal of Open Source Software",
+  year = "2025",
+  volume = "10",
+  number = "113",
+  pages = "8497",
+  doi = "10.21105/joss.08497",
+  url = "https://doi.org/10.21105/joss.08497",
+  textVersion = paste(
+    "Smith B, Gao J, Chou B, Gronsbell J (2025).",
+    "\"fairmetrics: An R package for group fairness evaluation.\",",
+    "Journal of Open Source Software, 10(113), 8497.",
+    "doi:10.21105/joss.08497"
+  )
+)
+
+bibentry(
+  bibtype = "Article",
+  key = "Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2025",
+  title = "What Is Fair? Defining Fairness in Machine Learning for Health",
+  journal = "Statistics in Medicine",
+  author = c(
+    person("Jianhui", "Gao"),
+    person("Benson", "Chou"),
+    person("Zachary R.", "McCaw"),
+    person("Hilary", "Thurston"),
+    person("Paul", "Varghese"),
+    person("Chuan", "Hong"),
+    person("Jessica", "Gronsbell")
+  ),
+  year = "2025",
+  volume = "44",
+  number = "20-22",
+  pages = "e70234",
+  doi = "10.1002/sim.70234",
+  url = "https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.70234",
+  textVersion = paste(
+    "Gao J, Chou B, McCaw ZR, Thurston H, Varghese P, Hong C, Gronsbell J (2025).",
+    "\"What Is Fair? Defining Fairness in Machine Learning for Health.\",",
+    "Statistics in Medicine, 44(20-22), e70234.",
+    "doi:10.1002/sim.70234"
+  )
+)
+
+=======
   @Manual{
     Smith2025Package,
     title = {fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes},
@@ -107,7 +162,8 @@
     month = {jun},
     note = {arXiv:2406.09307},
     url = {https://arxiv.org/abs/2406.09307},
-  }</code></pre>
+  }
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; b003c936e07fe8eced5adbe83741019b829ac5c6</code></pre>
 </div>
 <div class="section level2">
 <h2 id="similar-works">Similar Works<a class="anchor" aria-label="anchor" href="#similar-works"></a>
@@ -122,7 +178,7 @@
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ol style="list-style-type: decimal">
-<li>Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org <a href="https://arxiv.org/abs/2406.09307" class="external-link uri">https://arxiv.org/abs/2406.09307</a> (2024).</li>
+<li>Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. Statistics in Medicine <a href="https://doi.org/10.1002/sim.70234" class="external-link uri">https://doi.org/10.1002/sim.70234</a> (2025)</li>
 </ol>
 </div>
 </div>
@@ -176,7 +232,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

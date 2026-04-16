@@ -1,0 +1,196 @@
+# fairmetrics: Fairness evaluation metrics with confidence intervals for binary protected attributes [![](https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png)](https://github.com/jianhuig/fairmetrics)
+
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/fairmetrics)](https://www.r-pkg.org/badges/version/fairmetrics)
+[![R-CMD-check](https://github.com/jianhuig/FairnessTutorial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/jianhuig/FairnessTutorial/actions/workflows/R-CMD-check.yaml)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](http://choosealicense.com/licenses/mit/)
+[![Downloads](https://cranlogs.r-pkg.org/badges/fairmetrics)](https://cran.rstudio.com/web/packages/fairmetrics/index.html)
+[![total](https://cranlogs.r-pkg.org/badges/grand-total/fairmetrics)](https://shinyus.ipub.com/cranview/)
+[![arXiv](https://img.shields.io/badge/arXiv-2406.09307-b31b1b.svg)](https://arxiv.org/abs/2406.09307)
+[![JOSS](https://joss.theoj.org/papers/bb9ceb57768bad45865e148e6bc0a426/status.svg)](https://joss.theoj.org/papers/bb9ceb57768bad45865e148e6bc0a426)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17100723.svg)](https://doi.org/10.5281/zenodo.17100723)
+
+A collection of functions for computing fairness metrics for machine
+learning and statistical models, including confidence intervals for each
+metric. The package supports the evaluation of group-level fairness
+criterion commonly used in fairness research, particularly in healthcare
+for binary protected attributes. It is based on the overview of fairness
+in machine learning written by Gao et al (2024)
+(<https://arxiv.org/abs/2406.09307>).
+
+- [Link](https://jianhuig.github.io/fairmetrics/articles/fairmetrics.html)
+  to online tutorial.
+- [Link](https://arxiv.org/abs/2406.09307) to preprint.
+
+## Installation
+
+To install the latest CRAN release run:
+
+``` r
+install.packages("fairmetrics")
+```
+
+To install the package from the Github repository run:
+
+``` r
+devtools::install_github("jianhuig/fairmetrics")
+```
+
+## Citation
+
+To cite package ‘fairmetrics’ in publications use:
+
+> Smith et al., (2025). fairmetrics: An R package for group fairness
+> evaluation. Journal of Open Source Software, 10(113), 8497,
+> <https://doi.org/10.21105/joss.08497>
+>
+> Gao J, Smith B, Chou B, Gronsbell J (2025). *fairmetrics: Fairness
+> Evaluation Metrics with Confidence Intervals*.
+> <https://github.com/jianhuig/fairmetrics>.
+>
+> Gao et al. (2025). What is Fair? Defining Fairness in Machine Learning
+> for Health. Statistics in Medicine, 44(20-22), e70234.
+> <doi:10.1002/sim.70234>
+
+A BibTeX entry for LaTeX users is
+
+      @Article{
+        Smith2025,
+        title = {fairmetrics: An R package for group fairness evaluation},
+        author = {Benjamin Smith and Jianhui Gao and Benson Chou and Jessica Gronsbell},
+        year = {2025},
+        journal = {Journal of Open Source Software},
+        volume = {10},
+        number = {113},
+        pages = {8497},
+        doi = {10.21105/joss.08497},
+        url = {https://doi.org/10.21105/joss.08497},
+        publisher = {The Open Journal},
+      }
+
+    <<<<<<< HEAD
+    bibentry(
+      bibtype = "Article",
+      key = "Smith_Gao_Gronsbell_2025",
+      author = c(
+        person("Benjamin", "Smith"),
+        person("Jianhui", "Gao"),
+        person("Benson", "Chou"),
+        person("Jessica", "Gronsbell")
+      ),
+      title = "fairmetrics: An R package for group fairness evaluation",
+      journal = "Journal of Open Source Software",
+      year = "2025",
+      volume = "10",
+      number = "113",
+      pages = "8497",
+      doi = "10.21105/joss.08497",
+      url = "https://doi.org/10.21105/joss.08497",
+      textVersion = paste(
+        "Smith B, Gao J, Chou B, Gronsbell J (2025).",
+        "\"fairmetrics: An R package for group fairness evaluation.\",",
+        "Journal of Open Source Software, 10(113), 8497.",
+        "doi:10.21105/joss.08497"
+      )
+    )
+
+    bibentry(
+      bibtype = "Article",
+      key = "Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2025",
+      title = "What Is Fair? Defining Fairness in Machine Learning for Health",
+      journal = "Statistics in Medicine",
+      author = c(
+        person("Jianhui", "Gao"),
+        person("Benson", "Chou"),
+        person("Zachary R.", "McCaw"),
+        person("Hilary", "Thurston"),
+        person("Paul", "Varghese"),
+        person("Chuan", "Hong"),
+        person("Jessica", "Gronsbell")
+      ),
+      year = "2025",
+      volume = "44",
+      number = "20-22",
+      pages = "e70234",
+      doi = "10.1002/sim.70234",
+      url = "https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.70234",
+      textVersion = paste(
+        "Gao J, Chou B, McCaw ZR, Thurston H, Varghese P, Hong C, Gronsbell J (2025).",
+        "\"What Is Fair? Defining Fairness in Machine Learning for Health.\",",
+        "Statistics in Medicine, 44(20-22), e70234.",
+        "doi:10.1002/sim.70234"
+      )
+    )
+
+    =======
+      @Manual{
+        Smith2025Package,
+        title = {fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes},
+        author = {Jianhui Gao and Benjamin Smith and Benson Chou and Jessica Gronsbell},
+        year = {2025},
+        url = {https://github.com/jianhuig/fairmetrics},
+      }
+
+
+     @Misc{Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024,
+        title = {What is Fair? Defining Fairness in Machine Learning for Health},
+        author = {Jianhui Gao and Benson Chou and Zachary R. McCaw and Hilary Thurston and Paul Varghese and Chuan Hong and Jessica Gronsbell},
+        year = {2024},
+        month = {jun},
+        note = {arXiv:2406.09307},
+        url = {https://arxiv.org/abs/2406.09307},
+      }
+    >>>>>>> b003c936e07fe8eced5adbe83741019b829ac5c6
+
+## Similar Works
+
+- [`fairness` R package](https://github.com/kozodoi/fairness)
+- [`fairmodels` R package](https://github.com/ModelOriented/fairmodels)
+- [`fairlearn` Python package](https://github.com/fairlearn/fairlearn)
+
+## References
+
+1.  Gao, J. et al. What is Fair? Defining Fairness in Machine Learning
+    for Health. Statistics in Medicine
+    <https://doi.org/10.1002/sim.70234> (2025)
+
+# Package index
+
+## All functions
+
+- [`eval_acc_parity()`](eval_acc_parity.md) : Examine Accuracy Parity of
+  a Model
+- [`eval_bs_parity()`](eval_bs_parity.md) : Examine Brier Score Parity
+  of a Model
+- [`eval_cond_acc_equality()`](eval_cond_acc_equality.md) : Examine
+  Conditional Use Accuracy Equality of a Model
+- [`eval_eq_odds()`](eval_eq_odds.md) : Examine Equalized Odds of a
+  Predictive Model
+- [`eval_eq_opp()`](eval_eq_opp.md) : Evaluate Equal Opportunity
+  Compliance of a Predictive Model
+- [`eval_neg_class_bal()`](eval_neg_class_bal.md) : Examine Balance for
+  Negative Class of a Model
+- [`eval_neg_pred_parity()`](eval_neg_pred_parity.md) : Examine Negative
+  Predictive Parity of a Model
+- [`eval_pos_class_bal()`](eval_pos_class_bal.md) : Examine Balance for
+  the Positive Class of a Model
+- [`eval_pos_pred_parity()`](eval_pos_pred_parity.md) : Examine Positive
+  Predictive Parity of a Model
+- [`eval_pred_equality()`](eval_pred_equality.md) : Examine Predictive
+  Equality of a Model
+- [`eval_stats_parity()`](eval_stats_parity.md) : Examine Statistical
+  Parity of a Model
+- [`eval_treatment_equality()`](eval_treatment_equality.md) : Examine
+  Treatment Equality of a Model
+- [`get_fairness_metrics()`](get_fairness_metrics.md) : Compute Fairness
+  Metrics for Binary Classification
+- [`mimic`](mimic.md) : Clinical data from the MIMIC-II database for a
+  case study on indwelling arterial catheters
+- [`mimic_preprocessed`](mimic_preprocessed.md) : Preprocessed Clinical
+  Data from the MIMIC-II Database
+
+# Articles
+
+### All vignettes
+
+- [Assessing Model Fairness Across Binary Protected
+  Attributes](fairmetrics.md):
