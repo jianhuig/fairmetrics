@@ -11,3 +11,5 @@ vingettes
 ^cran-comments\.md$
 ^README.md$
 ^CONTRIBUTING\.md$
+^\.positai$
+^\.claude$

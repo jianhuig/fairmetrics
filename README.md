@@ -33,13 +33,15 @@ devtools::install_github("jianhuig/fairmetrics")
 
 To cite package ‘fairmetrics’ in publications use:
 
->  Gao J, Smith B, Chou B, Gronsbell J (2025). _fairmetrics: Fairness Evaluation Metrics with Confidence
-  Intervals_. <https://github.com/jianhuig/fairmetrics>.
->  
->  Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation.
-  arXiv:2506.06243.
+>  Smith B, Gao J, Chou B, Gronsbell J (2025). "fairmetrics: An R package for group fairness
+  evaluation." _Journal of Open Source Software_, *10*(113), 8497. doi:10.21105/joss.08497
 >
->  Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307.
+> Gao J, Smith B, Chou B, Gronsbell J (2025). _fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes_. <https://github.com/jianhuig/fairmetrics>.
+>
+> Gao J, Chou B, McCaw ZR, Thurston H, Varghese P, Hong C, Gronsbell J (2025). "What Is Fair?
+  Defining Fairness in Machine Learning for Health.", Statistics in Medicine, 44(20-22), e70234.
+  doi:10.1002/sim.70234
+
 
 
 A BibTeX entry for LaTeX users is
@@ -59,26 +61,35 @@ bibentry(
 )
 
 bibentry(
-    bibtype = "Misc",
-    key = "Smith_Gao_Gronsbell_2025",
-    title = "fairmetrics: An R package for group fairness evaluation",
-    author = c(
-      person("Benjamin", "Smith"),
-      person("Jianhui", "Gao"),
-      person("Jessica", "Gronsbell")
-    ),
-    year = "2025",
-    month = "jun",
-    note = "arXiv:2506.06243",
-    url = "https://arxiv.org/abs/2506.06243",
-    textVersion = "Smith, Gao, and Gronsbell (2025). fairmetrics: An R package for group fairness evaluation. arXiv:2506.06243."
-
+  bibtype = "Article",
+  key = "Smith_Gao_Gronsbell_2025",
+  author = c(
+    person("Benjamin", "Smith"),
+    person("Jianhui", "Gao"),
+    person("Benson", "Chou"),
+    person("Jessica", "Gronsbell")
+  ),
+  title = "fairmetrics: An R package for group fairness evaluation",
+  journal = "Journal of Open Source Software",
+  year = "2025",
+  volume = "10",
+  number = "113",
+  pages = "8497",
+  doi = "10.21105/joss.08497",
+  url = "https://doi.org/10.21105/joss.08497",
+  textVersion = paste(
+    "Smith B, Gao J, Chou B, Gronsbell J (2025).",
+    "\"fairmetrics: An R package for group fairness evaluation.\",",
+    "Journal of Open Source Software, 10(113), 8497.",
+    "doi:10.21105/joss.08497"
   )
+)
 
 bibentry(
-  bibtype = "Misc",
-  key = "Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024",
-  title = "What is Fair? Defining Fairness in Machine Learning for Health",
+  bibtype = "Article",
+  key = "Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2025",
+  title = "What Is Fair? Defining Fairness in Machine Learning for Health",
+  journal = "Statistics in Medicine",
   author = c(
     person("Jianhui", "Gao"),
     person("Benson", "Chou"),
@@ -88,12 +99,20 @@ bibentry(
     person("Chuan", "Hong"),
     person("Jessica", "Gronsbell")
   ),
-  year = "2024",
-  month = "jun",
-  note = "arXiv:2406.09307",
-  url = "https://arxiv.org/abs/2406.09307",
-  textVersion = "Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307."
+  year = "2025",
+  volume = "44",
+  number = "20-22",
+  pages = "e70234",
+  doi = "10.1002/sim.70234",
+  url = "https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.70234",
+  textVersion = paste(
+    "Gao J, Chou B, McCaw ZR, Thurston H, Varghese P, Hong C, Gronsbell J (2025).",
+    "\"What Is Fair? Defining Fairness in Machine Learning for Health.\",",
+    "Statistics in Medicine, 44(20-22), e70234.",
+    "doi:10.1002/sim.70234"
+  )
 )
+
 ```
 
 ## Similar Works
@@ -104,4 +123,4 @@ bibentry(
   
 ## References
 
-1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. arXiv.org https://arxiv.org/abs/2406.09307 (2024).
+1. Gao, J. et al. What is Fair? Defining Fairness in Machine Learning for Health. Statistics in Medicine https://doi.org/10.1002/sim.70234 (2025)

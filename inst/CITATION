@@ -33,9 +33,7 @@ bibentry(
 )
 
 bibentry(
-  bibtype = "Misc",
-  key = "Gao_Chou_McCaw_Thurston_Varghese_Hong_Gronsbell_2024",
-  title = "What is Fair? Defining Fairness in Machine Learning for Health",
+  bibtype = "Article",
   author = c(
     person("Jianhui", "Gao"),
     person("Benson", "Chou"),
@@ -45,10 +43,20 @@ bibentry(
     person("Chuan", "Hong"),
     person("Jessica", "Gronsbell")
   ),
-  year = "2024",
-  month = "jun",
-  note = "arXiv:2406.09307",
-  url = "https://arxiv.org/abs/2406.09307",
-  textVersion = "Gao et al. (2024). What is Fair? Defining Fairness in Machine Learning for Health. arXiv:2406.09307."
+  title = "What Is Fair? Defining Fairness in Machine Learning for Health",
+  journal = "Statistics in Medicine",
+  year = "2025",
+  volume = "44",
+  number = "20-22",
+  pages = "e70234",
+  doi = "10.1002/sim.70234",
+  url = "https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.70234",
+  textVersion = paste(
+    "Gao J, Chou B, McCaw ZR, Thurston H, Varghese P, Hong C, Gronsbell J (2025).",
+    "\"What Is Fair? Defining Fairness in Machine Learning for Health.\",",
+    "Statistics in Medicine, 44(20-22), e70234.",
+    "doi:10.1002/sim.70234"
+  )
 )
+
 

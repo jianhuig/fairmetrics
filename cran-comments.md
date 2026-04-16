@@ -2,11 +2,16 @@
 
 The code here has been reformatted and edited for release with a associated article in the Journal of Open Source Software. I am in contact with the Journal Editors and they will be reviewing this reviewing this version of the package.
 
+## Version 1.0.8
+
+* Switching ArXiv manuscript with published version from Statistics in Medicine in the CITATION file. 
+
 ## Version 1.0.7
 
 * Adding the JOSS article to the CITATION file. 
 
 ## Version 1.0.6
+
 * Typo fix.
 
 ## Version 1.0.5
@@ -51,6 +56,7 @@ The code here has been reformatted and edited for release with a associated arti
 
 
 ## Version 1.0.0
+
 * This is a new release.
 * Addressed submission issues listed in automated response.
 * "Gao", "et" and "al" are not typos
