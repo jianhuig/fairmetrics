@@ -41,8 +41,7 @@ To cite package ‘fairmetrics’ in publications use:
 
 > Smith B, Gao J, Chou B, Gronsbell J (2025). “fairmetrics: An R package
 > for group fairness evaluation.” *Journal of Open Source Software*,
-> *10*(113), 8497.
-> <doi:10.21105/joss.08497><https://doi.org/10.21105/joss.08497>
+> *10*(113), 8497. <doi:10.21105/joss.08497>
 >
 > Gao J, Smith B, Chou B, Gronsbell J (2025). *fairmetrics: Fairness
 > Evaluation Metrics with Confidence Intervals for Binary Protected
