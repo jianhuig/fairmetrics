@@ -33,7 +33,7 @@ devtools::install_github("jianhuig/fairmetrics")
 
 To cite package ‘fairmetrics’ in publications use:
 
-> Smith B, Gao J, Chou B, Gronsbell J (2025). “fairmetrics: An R package for group fairness evaluation.” _Journal of Open Source Software_, *10*(113), 8497. doi:10.21105/joss.08497<https://doi.org/10.21105/joss.08497>
+> Smith B, Gao J, Chou B, Gronsbell J (2025). “fairmetrics: An R package for group fairness evaluation.” _Journal of Open Source Software_, *10*(113), 8497. doi:10.21105/joss.08497
 >
 > Gao J, Smith B, Chou B, Gronsbell J (2025). _fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes_. <https://github.com/jianhuig/fairmetrics>.
 >
