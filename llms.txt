@@ -1,4 +1,4 @@
-# fairmetrics: Fairness evaluation metrics with confidence intervals for binary protected attributes [![](https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png)](https://github.com/jianhuig/fairmetrics)
+# fairmetrics: Fairness Evaluation Metrics with Confidence Intervals for Binary Protected Attributes [![](https://raw.githubusercontent.com/jianhuig/fairmetrics/main/utils/png/hex_sticker.png)](https://github.com/jianhuig/fairmetrics)
 
 [![Journal](https://img.shields.io/badge/Journal-Statistics%20in%20Medicine%20(2025)-1f2937)](https://doi.org/10.1002/sim.70234)
 [![arXiv](https://img.shields.io/badge/arXiv-2406.09307-8b2332.svg)](https://arxiv.org/abs/2406.09307)
